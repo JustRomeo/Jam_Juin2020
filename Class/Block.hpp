@@ -1,8 +1,10 @@
 #ifndef __BLOCK__
 #define __BLOCK__
 
+#include <iostream>
 #include "../include/LibGraphics.hpp"
 
+using namespace std;
 class Block {
     public:
         Block(int X = 0, int Y = 0, int heigh = 0, int width = 0);

@@ -6,12 +6,16 @@
 ##
 
 SRCP =		src/
-CLAP =		Class/
+CLAP =		src/class/
 
-SRC =		$(SRCP)main.cpp		\
-			$(CLAP)Block.cpp	\
-			$(CLAP)Mapper.cpp	\
-			$(CLAP)System.cpp	\
+SRC =		$(CLAP)Block.cpp		\
+			$(CLAP)Exception.cpp	\
+			$(CLAP)GameLoop.cpp		\
+			$(CLAP)Mapper.cpp		\
+			$(CLAP)Sprite.cpp		\
+			$(CLAP)System.cpp		\
+			$(CLAP)Window.cpp		\
+			$(SRCP)main.cpp			\
 
 OBJ =		$(SRC:.cpp=.o)
 
@@ -23,8 +27,13 @@ CRITERION =	unit_tests
 
 NAME = soundwaves
 
-CPPFLAGS +=	-I./include/	\
-			-I./Class/		\
+SFML =	-lsfml-system	\
+		-lsfml-window	\
+		-lsfml-graphics	\
+		-lsfml-audio	\
+
+
+CPPFLAGS =	-I./include/ -I./Class/ $(SFML)
 
 RM =	rm -rvf
 
@@ -48,9 +57,9 @@ clean_test:		$(SRCT)
 				$(RM) *.gcda
 				$(RM) $(CRITERION)
 
-valgrind:	$(OBJCLI)
-			$(CCO) $(NAME) -g3 $(OBJCLI) $(CPPFLAGS) $(WALL)
-			$(RM) $(OBJCLI)
+valgrind:	$(OBJ)
+			$(CCO) $(NAME) -g3 $(OBJ) $(CPPFLAGS) $(WALL)
+			$(RM) $(OBJ)
 			valgrind ./$(NAME)
 
 clean:

@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "System.hpp"
-#include "Class/Exception.hpp"
+#include "Exception.hpp"
 
 System::System() {}
 System::~System() {}
