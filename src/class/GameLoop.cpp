@@ -33,8 +33,8 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    window->draw(background->getSprite());
     window->display();
+    window->draw(background->getSprite());
 }
 
 int GameLoop::checkOpen()
@@ -65,12 +65,16 @@ int GameLoop::getEvent()
 
 }
 
-int GameLoop::gameLoop()
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
 {
     while (window->isOpen()) {
+        size_t i = 0;
+
+        getEvent();
+        for (; i < mapSFML.size(); i ++)
+            window->draw(mapSFML[i]->getSprite());
         display();
         clear();
-        getEvent();
     }
     return (0);
 }

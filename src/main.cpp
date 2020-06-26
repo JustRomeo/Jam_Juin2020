@@ -38,10 +38,11 @@ int main(int ac, char **av, char **env) {
     try {
         mapper.setMap(map);
         mapSFML = mapper.generate();
-        // cout << "len: " << mapSFML.size() << endl;
     } catch (Exception &e) {
         cout << e.what() << endl;
         return 84;
     }
+    game = std::make_shared<GameLoop>();
+    game->gameLoop(mapSFML);
     return 0;
 }

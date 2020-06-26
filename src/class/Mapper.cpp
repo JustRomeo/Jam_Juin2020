@@ -30,7 +30,7 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
     for (size_t i = 0; i < _map.size(); i ++)
         for (size_t j = 0; j < _map[j].length(); j ++)
             if (_map[i][j] == '#')
-                mapSFML.push_back(make_shared<Block>(Block(i * 314, j * 314, 314, 314)));
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157)));
     return mapSFML;
 }
 
