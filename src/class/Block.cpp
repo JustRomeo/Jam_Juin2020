@@ -1,6 +1,6 @@
 #include <ostream>
 #include <iostream>
-#include "Class/Block.hpp"
+#include "Block.hpp"
 
 using namespace std;
 
