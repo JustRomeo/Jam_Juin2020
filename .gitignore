@@ -1,0 +1,20 @@
+#Binary
+a.out
+
+#Temporary
+*~
+*#
+*.o
+
+#My Files
+output
+valgrind
+
+#Env
+*.vscode
+vgcore.*
+
+#Scripts
+*.sh
+
+#Ressources
