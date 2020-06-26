@@ -26,10 +26,11 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
     vector<shared_ptr<Block>> mapSFML;
 
     if (!isReady())
-        throw (Exception("Ascii Map not set: Impossible to generate a graphics Map: Abort"))
+        throw (Exception("Ascii Map not set: Impossible to generate a graphics Map: Abort"));
     for (size_t i = 0; i < _map.size(); i ++)
         for (size_t j = 0; j < _map[j].length(); j ++)
-            mapSFML.push_back(make_shared<Block>(Block()));
+            if (_map[i][j] == '#')
+                mapSFML.push_back(make_shared<Block>(Block(i * 314, j * 314, 314, 314)));
     return mapSFML;
 }
 

@@ -5,7 +5,7 @@
 
 class Block {
     public:
-        Block();
+        Block(int X = 0, int Y = 0, int heigh = 0, int width = 0);
         ~Block();
 
         sf::Texture *getTexture(void);
@@ -16,6 +16,7 @@ class Block {
 
     private:
         sf::Vector2f pos;
+        sf::Vector2f size;
         sf::Sprite _sprite;
         sf::Texture *_texture;
 };

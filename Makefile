@@ -37,12 +37,10 @@ $(NAME):	$(OBJ)
 
 tests_run:		$(OBJT)
 				$(CCO) $(CRITERION) $(OBJT) $(CPPFLAGS) $(CRIT)
-				export LD_LIBRARY_PATH=$PWD/lib
 				./$(CRITERION)
 
 clean_test:		$(SRCT)
 				$(CCO) $(CRITERION) $(SRCT) $(CPPFLAGS) $(CRIT)
-				export LD_LIBRARY_PATH=$$PWD/lib
 				./$(CRITERION)
 				gcovr
 				$(RM) *.o
@@ -51,10 +49,9 @@ clean_test:		$(SRCT)
 				$(RM) $(CRITERION)
 
 valgrind:	$(OBJCLI)
-			$(CCO) $(CLINAME) -g3 $(OBJCLI) $(CPPFLAGS) $(WALL)
+			$(CCO) $(NAME) -g3 $(OBJCLI) $(CPPFLAGS) $(WALL)
 			$(RM) $(OBJCLI)
-			export LD_LIBRARY_PATH=$$PWD/lib
-			valgrind ./$(CLINAME) 127.0.0.1 9000
+			valgrind ./$(NAME)
 
 clean:
 		$(RM) $(OBJ)

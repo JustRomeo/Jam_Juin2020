@@ -4,7 +4,10 @@
 
 using namespace std;
 
-Block::Block() {}
+Block::Block(int X, int Y, int heigh, int width) {
+    pos = sf::Vector2f(X, Y);
+    size = sf::Vector2f(heigh, width);
+}
 Block::~Block() {}
 
 void Block::setTexture(string path) {
