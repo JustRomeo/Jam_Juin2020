@@ -16,7 +16,7 @@ Window::Window()
         window->setFramerateLimit(40);
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         window->setView(*view);
-        background = std::make_shared<Sprite>("resources/space.png");
+        background = std::make_shared<Sprite>("resources/Images/space.png");
     }
     catch (std::bad_alloc &e) {
         throw (Exception("can't initiate window and view\n"));

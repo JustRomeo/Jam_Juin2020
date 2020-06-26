@@ -7,17 +7,14 @@
 
 #include "GameLoop.hpp"
 
-GameLoop::GameLoop()
-{
-    try
-    {
+GameLoop::GameLoop() {
+    try {
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "graphical interface");
         window->setFramerateLimit(40);
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         window->setView(*view);
-        background = std::make_shared<Sprite>("resources/space.png");
-    }
-    catch (std::bad_alloc &e) {
+        background = std::make_shared<Sprite>("resources/Images/space.png");
+    } catch (std::bad_alloc &e) {
         throw (Exception("can't initiate window and view\n"));
     }
 }
@@ -44,7 +41,7 @@ int GameLoop::checkOpen()
 
 int GameLoop::getEvent()
 {
-        sf::Event event;
+    sf::Event event;
 
     while (window->pollEvent(event)) {
         if (event.key.code == sf::Keyboard::Key::Z)
@@ -62,11 +59,13 @@ int GameLoop::getEvent()
         }
     }
     return (0);
-
 }
 
+#include "MainMenu.hpp"
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
 {
+    if (!MainMenu().Menu(*window))
+        return 0;
     while (window->isOpen()) {
         size_t i = 0;
 

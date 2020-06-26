@@ -2,7 +2,7 @@
 #define __BLOCK__
 
 #include <iostream>
-#include "../include/LibGraphics.hpp"
+#include "LibGraphics.hpp"
 
 using namespace std;
 class Block {
