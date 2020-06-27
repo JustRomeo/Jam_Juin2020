@@ -2,10 +2,11 @@
 
 Ennemi::Ennemi(int X, int Y) {
     left = true;
-    moving = false;
+    is_falling = false;
     move_clock.restart();
     _pos = sf::Vector2f(X, Y);
     _texture = new sf::Texture;
+    gravity = sf::Vector2f(0, 0);
     try {
         this->setTexture("resources/Images/robot.png");
     } catch(Exception &e) {
@@ -24,6 +25,22 @@ void Ennemi::setTexture(string filepath) {
     _sprite.setTexture(*_texture);
 }
 
+bool Ennemi::isFalllingStop(std::vector<std::shared_ptr<Block>> mapSFML) {
+    int y = 0;
+    sf::FloatRect ColisionArea;
+    sf::FloatRect entite = _sprite.getGlobalBounds();
+
+    for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
+        ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
+        if (entite.intersects(ColisionArea) == true && _sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y) {
+            y = mapSFML[i]->getSprite().getPosition().y - (32 * 3);
+            _sprite.setPosition(_sprite.getPosition().x, y);
+            return true;
+        }
+    }
+    return false;
+}
+
 void Ennemi::move(vector<shared_ptr<Block>> mapSFML) {
     if (!this->isColisionned(mapSFML) && this->left);
     else if (this->isColisionned(mapSFML) && this->left)
@@ -31,20 +48,46 @@ void Ennemi::move(vector<shared_ptr<Block>> mapSFML) {
     else if (!this->isColisionned(mapSFML) && !this->left);
     else if (this->isColisionned(mapSFML) && !this->left)
         this->left = true;
-    if (left)
+    if (this->checkFall(mapSFML)) {
+        if (isFalllingStop(mapSFML)) {
+            is_falling = false;
+            gravity.y = 0;
+        } else
+            this->movePosition(left ? -2 : 2, gravity.y += 2);
+    } else if (left)
         goLeft();
     else
         goRight();
 }
 
-bool Ennemi::isColisionned(vector<shared_ptr<Block>> mapSFML)
-{
-    sf::FloatRect g;
-    sf::FloatRect charact = _sprite.getGlobalBounds();
+bool Ennemi::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
+    sf::FloatRect ColisionArea;
+    sf::Vector2f entite = _sprite.getPosition();
+
+    entite.y += (_sprite.getTextureRect().height * 3) - 30;
+    if (_sprite.getScale().x > 0)
+        entite.x += (_sprite.getTextureRect().width * 3) / 2;
+    else
+        entite.x -= (_sprite.getTextureRect().width * 3) / 2;
+    for (size_t i = 0; i < mapSFML.size(); i ++) {
+        ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
+        if (ColisionArea.contains(entite))
+            return false;
+    } if (!is_falling) {
+        is_falling = true;
+        _sprite.setTextureRect(sf::IntRect(215, 78, 25, 28));
+        gravity = sf::Vector2f(0, 0);
+    }
+    return true;
+}
+
+bool Ennemi::isColisionned(vector<shared_ptr<Block>> mapSFML) {
+    sf::FloatRect ColisionArea;
+    sf::FloatRect entite = _sprite.getGlobalBounds();
 
     for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
-        g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (charact.intersects(g))
+        ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
+        if (entite.intersects(ColisionArea))
             return true;
     }
     return false;
@@ -72,9 +115,8 @@ void Ennemi::goLeft(void) {
         if (_anim > 5) {
             _anim = 0;
             _sprite.setTextureRect(sf::IntRect(315, 10, 45, 80));
-        } else {
+        } else
             _sprite.setTextureRect(sf::IntRect(315 + (_anim * 48), 10, 45, 80));
-        }
     }
     this->movePosition(-10, 0);
 }
@@ -88,9 +130,8 @@ void Ennemi::goRight(void) {
         if (_anim > 5) {
             _anim = 0;
             _sprite.setTextureRect(sf::IntRect(315, 10, 45, 80));
-        } else {
+        } else
             _sprite.setTextureRect(sf::IntRect(315 + (_anim * 48), 10, 45, 80));
-        }
     }
     this->movePosition(10, 0);
 }
