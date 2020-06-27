@@ -24,7 +24,7 @@ Door::Door(vector<string> map) {
         cout << e.what() << endl;
     }
     this->setPosition(map);
-    this->_sprite.setScale(sf::Vector2f(1, 1));
+    this->_sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
     _size = this->getSize();
 }
 Door::~Door() {}
@@ -40,7 +40,7 @@ void Door::setPosition(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'o')
-                this->setPosition(sf::Vector2f(i * 200, j * 50));
+                this->setPosition(sf::Vector2f(j * 157, i * 157));
 }
 
 void Door::doorOpen(void) {
@@ -51,8 +51,11 @@ void Door::doorOpen(void) {
         if (_anim > 6) {
             _anim = 0;
             _sprite.setTextureRect(sf::IntRect(0, 0, 267, 375));
-        } else
+            _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
+        } else {
             _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));
+            _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
+        }
     }
 }
 
@@ -69,9 +72,13 @@ int Door::getTimeDiff(float diff) {
     return (0);
 }
 
+void Door::setPosition(sf::Vector2f pos) {
+    this->pos = pos;
+    _sprite.setPosition(this->pos);
+}
+
 size_t Door::getSize(void) const {return _size;}
 void Door::setOpening(bool var) {_opening = var;}
 sf::Vector2f Door::getPosition(void) {return pos;}
 sf::Texture *Door::getTexture(void) {return _texture;}
 sf::Sprite Door::getSprite(void) const {return (_sprite);}
-void Door::setPosition(sf::Vector2f pos) {_sprite.setPosition(pos);}

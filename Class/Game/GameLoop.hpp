@@ -13,6 +13,7 @@
 
 #include "Block.hpp"
 #include "Window.hpp"
+#include "Ennemis.hpp"
 #include "Character.hpp"
 #include "Exception.hpp"
 #include "LibGraphics.hpp"
@@ -27,14 +28,14 @@ class GameLoop {
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         void display();
         int checkOpen();
-        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door);
+        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist);
 
     protected:
     private:
-        std::shared_ptr<sf::View> view;
-        std::shared_ptr<Sprite> background;
-        std::shared_ptr<Character> perso;
-        std::shared_ptr<sf::RenderWindow> window;
+        shared_ptr<sf::View> view;
+        shared_ptr<Sprite> background;
+        shared_ptr<Character> perso;
+        shared_ptr<sf::RenderWindow> window;
 };
 
 #endif /* !GAMELOOP_HPP_ */

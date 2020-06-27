@@ -6,21 +6,27 @@
 ##
 
 SRCP =	src/
-CLAP =	src/class/
-COMP =	src/class/SFMLComponents/
+DISP =	src/Display/
+GAMP =	src/Game/
+MAPP =	src/Map/
+PLAP =	src/Player/
+COMP =	src/SFMLComponents/
+SYSP =	src/System/
 
-SRC =	$(COMP)ImageSFML.cpp	\
-		$(CLAP)Block.cpp		\
-		$(CLAP)Door.cpp			\
-		$(CLAP)Exception.cpp	\
-		$(CLAP)GameLoop.cpp		\
-		$(CLAP)Character.cpp	\
-		$(CLAP)MainMenu.cpp		\
-		$(CLAP)Mapper.cpp		\
-		$(CLAP)Sprite.cpp		\
-		$(CLAP)System.cpp		\
-		$(CLAP)Window.cpp		\
-		$(SRCP)main.cpp			\
+SRC =	$(SRCP)main.cpp			\
+		\
+		$(COMP)ImageSFML.cpp	\
+		$(DISP)Sprite.cpp		\
+		$(DISP)Window.cpp		\
+		$(GAMP)Ennemis.cpp		\
+		$(GAMP)GameLoop.cpp		\
+		$(GAMP)MainMenu.cpp		\
+		$(MAPP)Block.cpp		\
+		$(MAPP)Door.cpp			\
+		$(SYSP)Exception.cpp	\
+		$(PLAP)Character.cpp	\
+		$(MAPP)Mapper.cpp		\
+		$(SYSP)System.cpp		\
 
 OBJ =	$(SRC:.cpp=.o)
 
