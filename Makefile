@@ -14,6 +14,7 @@ SRC =		$(CLAP)Block.cpp	\
 			$(CLAP)Exception.cpp	\
 			$(SRCP)main.cpp		\
 			$(CLAP)GameLoop.cpp	\
+			$(CLAP)Character.cpp	\
 
 OBJ =		$(SRC:.cpp=.o)
 

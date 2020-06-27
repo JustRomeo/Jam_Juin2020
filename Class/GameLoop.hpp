@@ -11,6 +11,7 @@
 #include "LibGraphics.hpp"
 #include "Exception.hpp"
 #include "Window.hpp"
+#include "Character.hpp"
 
 class GameLoop {
     public:
@@ -26,6 +27,7 @@ class GameLoop {
         std::shared_ptr<sf::RenderWindow> window;
         std::shared_ptr<sf::View> view;
         std::shared_ptr<Sprite> background;
+        std::shared_ptr<Character> perso;
 };
 
 #endif /* !GAMELOOP_HPP_ */

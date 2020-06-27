@@ -16,9 +16,11 @@ GameLoop::GameLoop()
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         window->setView(*view);
         background = std::make_shared<Sprite>("resources/space.png");
+        perso = std::make_shared<Character>();
     }
-    catch (std::bad_alloc &e) {
-        throw (Exception("can't initiate window and view\n"));
+    catch (std::bad_alloc &e)
+    {
+        throw(Exception("can't initiate window and view\n"));
     }
 }
 
@@ -33,7 +35,7 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    window->draw(background->getSprite());
+    //window->draw(background->getSprite());
     window->display();
 }
 
@@ -44,33 +46,52 @@ int GameLoop::checkOpen()
 
 int GameLoop::getEvent()
 {
-        sf::Event event;
+    sf::Event event;
 
     while (window->pollEvent(event)) {
-        if (event.key.code == sf::Keyboard::Key::Z)
-            view->move(sf::Vector2f(0.f, -10.f));
-        if (event.key.code == sf::Keyboard::Key::Q)
-            view->move(sf::Vector2f(-10.f, 0.f));
-        if (event.key.code == sf::Keyboard::Key::S)
-            view->move(sf::Vector2f(0.f, 10.f));
-        if (event.key.code == sf::Keyboard::Key::D)
-            view->move(sf::Vector2f(10.f, 0.f));
-        window->setView(*view);
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
         }
     }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
+        view->move(sf::Vector2f(0.f, -10.f));
+        return (1);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
+        //view->move(sf::Vector2f(-10.f, 0.f));
+        perso->moveLeft();
+        return (1);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
+        view->move(sf::Vector2f(0.f, 10.f));
+        return (1);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
+        //view->move(sf::Vector2f(10.f, 0.f));
+        perso->moveRigth();
+        return (1);
+    }
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        perso->shoot();
+        return (1);
+    }
+    window->setView(*view);
+    if (perso->isShooting() == false)
+        perso->restartPos();
     return (0);
-
 }
 
 int GameLoop::gameLoop()
 {
-    while (window->isOpen()) {
+    while (window->isOpen())
+    {
+        perso->display(window);
         display();
         clear();
         getEvent();
+        //perso->restartPos();
     }
     return (0);
 }
