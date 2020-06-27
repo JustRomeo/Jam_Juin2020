@@ -12,8 +12,8 @@ bool MainMenu::Menu(sf::RenderWindow &window) {
 
     play.setPosition(sf::Vector2f(800, 400));
     back.setPosition(sf::Vector2f(800, 525));
-
     back.setScale(sf::Vector2f(0.75, 1.20));
+
     window.setFramerateLimit(10);
     while (window.isOpen()) {
         window.clear();
@@ -27,5 +27,8 @@ bool MainMenu::Menu(sf::RenderWindow &window) {
             else if (back.isClicked(event))
                 return false;
     }
+    play.~ImageSFML();
+    back.~ImageSFML();
+    background.~ImageSFML();
     return false;
 }

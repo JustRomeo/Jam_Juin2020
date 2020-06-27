@@ -8,6 +8,7 @@ soundwaves
 *.o
 
 #My Files
+Notes/
 output
 valgrind
 

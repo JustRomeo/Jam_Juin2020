@@ -17,5 +17,6 @@ vector<string> System::openfile(string filepath) {
     while (getline(file, line))
         load.push_back(line);
     file.close();
+    line.clear();
     return (load);
 }

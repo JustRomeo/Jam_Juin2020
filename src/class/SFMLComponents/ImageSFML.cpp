@@ -16,6 +16,9 @@ ImageSFML::ImageSFML(string path)
     _width = _sprite.getTexture()->getSize().x;
     _heigh = _sprite.getTexture()->getSize().y;
 }
+ImageSFML::~ImageSFML() {
+    delete _texture;
+}
 
 bool ImageSFML::isClicked(sf::Event event) {
     sf::Vector2i mouse(sf::Mouse::getPosition());
