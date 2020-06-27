@@ -5,12 +5,18 @@
 
 using namespace std;
 
-Block::Block(int X, int Y, size_t size) {
+Block::Block(int X, int Y, size_t size, Block::Type type) {
+    _type = type;
     _size = size;
     _texture = new sf::Texture;
     pos = sf::Vector2f(X, Y);
     try {
-        this->setTexture("resources/Images/blockCobble.png");
+        switch(_type) {
+            case Block::Type::BLUE:   this->setTexture("resources/Images/brokable_blue.png"); break;
+            case Block::Type::PURPLE: this->setTexture("resources/Images/brokable_purple.png"); break;
+            case Block::Type::YELLOW: this->setTexture("resources/Images/brokable_yellow.png"); break;
+            default:                  this->setTexture("resources/Images/blockCobble.png"); break;
+        }
     } catch(Exception &e) {
         cout << e.what() << endl;
     }

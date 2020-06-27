@@ -7,7 +7,8 @@
 using namespace std;
 class Block {
     public:
-        Block(int X = 0, int Y = 0, size_t size = 0);
+        enum Type {UNBREAKABLE, YELLOW, BLUE, PURPLE};
+        Block(int X = 0, int Y = 0, size_t size = 0, Type type = Type::UNBREAKABLE);
         ~Block();
 
         size_t getSize(void) const;
@@ -18,6 +19,7 @@ class Block {
         void setPosition(sf::Vector2f pos);
 
     private:
+        Type _type;
         size_t _size;
         sf::Vector2f pos;
         sf::Sprite _sprite;

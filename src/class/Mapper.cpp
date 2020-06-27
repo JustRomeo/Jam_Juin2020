@@ -18,9 +18,7 @@ bool Mapper::isReady(void) {
 
 void Mapper::setMap(string filepath) {
     try {
-        cout << "Before Traceback" << endl;
         _map = System().openfile(filepath);
-        cout << "After Traceback" << endl;
     } catch (Exception &e) {
         throw e;
     }
@@ -35,6 +33,16 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
         for (size_t j = 0; j < _map[i].length(); j ++) {
             if (_map[i][j] == '#')
                 mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157)));
+            else if (_map[i][j] == ' ');
+            else if (_map[i][j] == 'P');
+            else if (_map[i][j] == 'Y')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW)));
+            else if (_map[i][j] == 'U')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE)));
+            else if (_map[i][j] == 'B')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE)));
+            else
+                throw (Exception("Unknown Symbol in File: Abort"));
         }
     }
     return mapSFML;
