@@ -28,13 +28,17 @@ static bool isEnvDisplay(char **env) {
     return false;
 }
 
+#include "Ennemis.hpp"
+
 int main(int ac, char **av, char **env) {
     Mapper mapper;
     std::shared_ptr<GameLoop> game;
     vector<shared_ptr<Block>> mapSFML;
-    vector<string> map = System().openfile("maps/.map1");
+    vector<shared_ptr<Ennemi>> Ennemilist;
+    vector<string> map = System().openfile("maps/.map2");
     Door door(map);
 
+    Ennemilist.push_back(make_shared<Ennemi>(Ennemi(0, 0)));
     if (!isEnvDisplay(env))
         return 84;
     try {
@@ -45,6 +49,6 @@ int main(int ac, char **av, char **env) {
         return 84;
     }
     game = std::make_shared<GameLoop>();
-    game->gameLoop(mapSFML, door);
+    game->gameLoop(mapSFML, door, Ennemilist);
     return 0;
 }

@@ -81,7 +81,7 @@ int GameLoop::getEvent()
     return (0);
 }
 
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door)
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist)
 {
     if (!MainMenu().Menu(*window))
        return 0;
@@ -91,6 +91,8 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door)
         getEvent();
         for (size_t i = 0; i < mapSFML.size(); i ++)
             window->draw(mapSFML[i]->getSprite());
+        for (size_t i = 0; i < Ennemilist.size(); i ++)
+            window->draw(Ennemilist[i]->getSprite());
         perso->display(window);
         window->draw(door.getSprite());
         display();

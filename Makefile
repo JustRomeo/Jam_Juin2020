@@ -18,6 +18,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(COMP)ImageSFML.cpp	\
 		$(DISP)Sprite.cpp		\
 		$(DISP)Window.cpp		\
+		$(GAMP)Ennemis.cpp		\
 		$(GAMP)GameLoop.cpp		\
 		$(GAMP)MainMenu.cpp		\
 		$(MAPP)Block.cpp		\
