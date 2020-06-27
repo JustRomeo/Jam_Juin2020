@@ -34,6 +34,9 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
+    for (int i = 0; i < projectile.size(); i++) {
+        projectile[i]->display(window);
+    }
     window->display();
 }
 
@@ -51,22 +54,34 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML)
             window->close();
             return (-1);
         }
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
+        if (event.type == sf::Event::MouseButtonReleased && 
+            perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
+            perso->shoot();
+            if (perso->getSprite().getScale().x > 0)
+                projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
+            else
+                projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
+            return (1);
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false && perso->isChanneling() == false) {
         perso->jump();
         return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false && perso->isChanneling() == false) {
         perso->moveLeft(window, mapSFML);
         return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false && perso->isChanneling() == false) {
         return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false && perso->isChanneling() == false) {
         perso->moveRigth(window, mapSFML);
         return (1);
-    } if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        perso->shoot();
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && perso->isShooting() == false 
+        && perso->isJumping() == false && perso->isFalling() == false ) {
+        perso->channeling();
         return (1);
     }
-    if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false) {
+    if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
         perso->restartPos();
         window->setView(window->getView());
     }
@@ -77,8 +92,8 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
 {
     size_t loop = 0;
 
-    if (!MainMenu().Menu(*window))
-       return 0;
+    // if (!MainMenu().Menu(*window))
+    //    return 0;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);

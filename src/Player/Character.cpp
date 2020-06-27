@@ -23,11 +23,13 @@ Character::Character()
     notMove_Y = 6;
     move_Xmax = 315;
     shootRectPos = 0;
+    channelRectPos = 0;
     is_shooting = false;
     is_moving = false;
     is_falling = false;
     is_jumping = false;
     move_clock.restart();
+    anim_clock.restart();
     shootRect.push_back(sf::IntRect(12, 8, 35, 35));
     shootRect.push_back(sf::IntRect(62, 8, 28, 30));
     shootRect.push_back(sf::IntRect(114, 8, 29, 29));
@@ -37,6 +39,23 @@ Character::Character()
     shootRect.push_back(sf::IntRect(113, 46, 35, 35));
     shootRect.push_back(sf::IntRect(159, 46, 40, 35));
     shootRect.push_back(sf::IntRect(12, 82, 34, 30));
+
+    channelingRect.push_back(sf::IntRect(7, 236, 28, 22));
+    channelingRect.push_back(sf::IntRect(56, 238, 29, 20));
+    channelingRect.push_back(sf::IntRect(115, 222, 34, 36));
+    channelingRect.push_back(sf::IntRect(165, 222, 27, 36));
+    channelingRect.push_back(sf::IntRect(215, 225, 19, 33));
+    channelingRect.push_back(sf::IntRect(59, 265, 39, 30));
+    channelingRect.push_back(sf::IntRect(101, 273, 34, 22));
+    channelingRect.push_back(sf::IntRect(152, 272, 32, 23));
+    channelingTime.push_back(0.2);
+    channelingTime.push_back(0.3);
+    channelingTime.push_back(0.2);
+    channelingTime.push_back(0.2);
+    channelingTime.push_back(0.1);
+    channelingTime.push_back(0.1);
+    channelingTime.push_back(0.3);
+    channelingTime.push_back(0.3);
 }
 
 Character::~Character()
@@ -70,6 +89,32 @@ void Character::shootAnimation()
         }
         else
             sprite.setTextureRect(shootRect[shootRectPos]);
+    }
+}
+
+void Character::channelingAnimation()
+{
+    if (getTimeDiff(channelingTime[channelRectPos]) == 1)
+    {
+        channelRectPos++;
+        if (channelRectPos > 7) {
+            is_channeling = false;
+            channelRectPos = 0;
+            sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
+            sprite.setPosition(oldPose);
+        }
+        else {
+            if (channelRectPos == 2)
+                sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 47);
+            if (channelRectPos == 4)
+                sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 7);
+            if (channelRectPos == 5)
+                sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 7);
+            if (channelRectPos == 6)
+                sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 25);
+            if (channelRectPos <= 7)
+                sprite.setTextureRect(channelingRect[channelRectPos]);
+        }
     }
 }
 
@@ -127,34 +172,27 @@ void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
         }
         move.y += 2;
         sprite.move(move);
+        view.move(move);
         if (collisionFall(mapSFML) == 0) {
             is_falling = false;
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
         }
-        view.move(move);
         window->setView(view);
     }
 }
 
 void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML)
 {
-    sf::Vector2f charact = sprite.getPosition();
-
-    charact.y += (sprite.getTextureRect().height * 3) + 30;
-    if (sprite.getScale().x > 0)
-        charact.x += (sprite.getTextureRect().width * 3) / 2;
-    else
-        charact.x -= (sprite.getTextureRect().width * 3) / 2;
-    sf::CircleShape Circle = sf::CircleShape(1);
-    Circle.setPosition(charact);
     if (is_shooting == true)
         shootAnimation();
     if (is_jumping == true)
         jumpAnimation(window, mapSFML);
     if (is_falling == true)
         fallingAnimation(window, mapSFML);
+    if (is_channeling == true) {
+        channelingAnimation();
+    }
     window->draw(sprite);
-    window->draw(Circle);
 }
 
 void Character::jump()
@@ -289,6 +327,28 @@ void Character::shoot()
     }
 }
 
+void Character::channeling()
+{
+    if (is_jumping == false && is_falling == false && is_shooting == false && is_channeling == false) {
+        is_channeling = true;
+        oldPose = sprite.getPosition();
+        sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 30);
+        sprite.setTextureRect(channelingRect[channelRectPos]);
+    }
+}
+
+sf::Vector2f Character::getSpriteMid()
+{
+    sf::Vector2f charact = sprite.getPosition();
+
+    charact.y += (sprite.getTextureRect().height * 3) + 30;
+    if (sprite.getScale().x > 0)
+        charact.x += (sprite.getTextureRect().width * 3) / 2;
+    else
+        charact.x -= (sprite.getTextureRect().width * 3) / 2;
+    return (charact);
+}
+
 int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
 {
     int i = 0;
@@ -310,10 +370,12 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
     int y = 0;
     sf::FloatRect charact = sprite.getGlobalBounds();
     sf::FloatRect g;
+    sf::Vector2f sp = getSpriteMid();
 
     while (i < mapSFML.size() - 1) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (charact.intersects(g) == true && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y) {
+        if (charact.intersects(g) == true && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y &&
+            sp.x > mapSFML[i]->getSprite().getPosition().x && sp.x < mapSFML[i]->getSprite().getPosition().x + (mapSFML[i]->getSprite().getTextureRect().width * 0.5)) {
             y = mapSFML[i]->getSprite().getPosition().y - (32.f * 3);
             sprite.setPosition(sprite.getPosition().x, y);
             return (0);
@@ -328,16 +390,25 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
     int i = 0;
     int y = 0;
     sf::Vector2f charact = sprite.getPosition();
+    sf::Vector2f charact_xm = sprite.getPosition();
+    sf::Vector2f charact_mx = sprite.getPosition();
     sf::FloatRect g;
 
     charact.y += (sprite.getTextureRect().height * 3) + 30;
-    if (sprite.getScale().x > 0)
+    charact_xm.y += (sprite.getTextureRect().height * 3) + 30;
+    charact_mx.y += (sprite.getTextureRect().height * 3) + 30;
+    if (sprite.getScale().x > 0) {
         charact.x += (sprite.getTextureRect().width * 3) / 2;
-    else
+        charact_mx.x += (sprite.getTextureRect().width * 3);
+    }
+    else {
         charact.x -= (sprite.getTextureRect().width * 3) / 2;
+        charact_mx.x -= (sprite.getTextureRect().width * 3);
+    }
     while (i < mapSFML.size()) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (g.contains(charact) == true) {
+        if (g.contains(charact) == true || g.contains(charact_xm) == true ||
+            g.contains(charact_mx) == true) {
             return (0);
         }
         i++;
@@ -374,6 +445,11 @@ bool Character::isFalling()
 bool Character::getMoving()
 {
     return (is_moving);
+}
+
+bool Character::isChanneling()
+{
+    return (is_channeling);
 }
 
 void Character::setMoving(bool status)

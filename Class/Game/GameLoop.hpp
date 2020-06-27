@@ -17,6 +17,7 @@
 #include "Character.hpp"
 #include "Exception.hpp"
 #include "LibGraphics.hpp"
+#include "Projectile.hpp"
 
 using namespace std;
 class GameLoop {
@@ -36,6 +37,7 @@ class GameLoop {
         shared_ptr<Sprite> background;
         shared_ptr<Character> perso;
         shared_ptr<sf::RenderWindow> window;
+        vector<std::shared_ptr<Projectile>> projectile;
 };
 
 #endif /* !GAMELOOP_HPP_ */
