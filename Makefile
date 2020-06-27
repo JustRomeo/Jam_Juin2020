@@ -11,6 +11,7 @@ COMP =	src/class/SFMLComponents/
 
 SRC =	$(COMP)ImageSFML.cpp	\
 		$(CLAP)Block.cpp		\
+		$(CLAP)Door.cpp			\
 		$(CLAP)Exception.cpp	\
 		$(CLAP)GameLoop.cpp		\
 		$(CLAP)Character.cpp	\
@@ -39,7 +40,6 @@ SFML = 	-lsfml-system	\
 
 CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
-			-I./Class/SFMLComponents	\
 			-I./Class/Display			\
 			-I./Class/Game				\
 			-I./Class/Map				\
@@ -54,7 +54,6 @@ all:	$(NAME)
 
 $(NAME):	$(OBJ)
 			$(CC) $(NAME) $(OBJ) $(CPPFLAGS) $(WALL) -g3
-			$(RM) $(OBJ)
 
 
 tests_run:		$(OBJT)

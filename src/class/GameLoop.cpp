@@ -5,6 +5,7 @@
 ** GameLoop
 */
 
+#include "Door.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 
@@ -17,9 +18,7 @@ GameLoop::GameLoop()
         window->setView(*view);
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
-    }
-    catch (std::bad_alloc &e)
-    {
+    } catch (std::bad_alloc &e) {
         throw(Exception("can't initiate window and view\n"));
     }
 }
@@ -37,7 +36,6 @@ void GameLoop::display()
 {
     perso->display(window);
     window->display();
-    //window->draw(background->getSprite());
 }
 
 int GameLoop::checkOpen()
@@ -54,29 +52,25 @@ int GameLoop::getEvent()
             window->close();
             return (-1);
         }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
         view->move(sf::Vector2f(0.f, -10.f));
         window->setView(*view);
         return (1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
-        //view->move(sf::Vector2f(-10.f, 0.f));
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
+        view->move(sf::Vector2f(-10.f, 0.f));
         perso->moveLeft();
+        window->setView(*view);
         return (1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
         view->move(sf::Vector2f(0.f, 10.f));
         window->setView(*view);
         return (1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
-        //view->move(sf::Vector2f(10.f, 0.f));
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
+        view->move(sf::Vector2f(10.f, 0.f));
         perso->moveRigth();
+        window->setView(*view);
         return (1);
-    }
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
+    } if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         perso->shoot();
         return (1);
     }
@@ -86,16 +80,16 @@ int GameLoop::getEvent()
     return (0);
 }
 
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door)
 {
     if (!MainMenu().Menu(*window))
         return 0;
     while (window->isOpen()) {
-        size_t i = 0;
-
+        door.doorOpen();
         getEvent();
-        for (; i < mapSFML.size(); i ++)
+        for (size_t i = 0; i < mapSFML.size(); i ++)
             window->draw(mapSFML[i]->getSprite());
+        window->draw(door.getSprite());
         display();
         clear();
     }

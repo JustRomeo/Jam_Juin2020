@@ -10,6 +10,7 @@
 #include <ostream>
 #include <iostream>
 
+#include "Door.hpp"
 #include "Block.hpp"
 #include "System.hpp"
 #include "Mapper.hpp"
@@ -32,6 +33,7 @@ int main(int ac, char **av, char **env) {
     std::shared_ptr<GameLoop> game;
     vector<shared_ptr<Block>> mapSFML;
     vector<string> map = System().openfile("maps/.map1");
+    Door door(map);
 
     if (!isEnvDisplay(env))
         return 84;
@@ -43,6 +45,6 @@ int main(int ac, char **av, char **env) {
         return 84;
     }
     game = std::make_shared<GameLoop>();
-    game->gameLoop(mapSFML);
+    game->gameLoop(mapSFML, door);
     return 0;
 }

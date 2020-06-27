@@ -35,6 +35,7 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
                 mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157)));
             else if (_map[i][j] == ' ');
             else if (_map[i][j] == 'P');
+            else if (_map[i][j] == 'o');
             else if (_map[i][j] == 'Y')
                 mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW)));
             else if (_map[i][j] == 'U')

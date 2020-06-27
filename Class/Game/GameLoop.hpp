@@ -27,7 +27,7 @@ class GameLoop {
         int getEvent();
         void display();
         int checkOpen();
-        int gameLoop(vector<shared_ptr<Block>> mapSFML);
+        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door);
 
     protected:
     private:
