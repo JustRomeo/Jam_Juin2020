@@ -34,6 +34,9 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
+    for (int i = 0; i < projectile.size(); i++) {
+        projectile[i]->display(window);
+    }
     window->display();
 }
 
@@ -47,23 +50,54 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
     while (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            return -1;
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
+        if (event.type == sf::Event::Closed) {
+            window->close();
+            return (-1);
+        }
+        if (event.type == sf::Event::MouseButtonReleased && 
+            perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
+            perso->shoot();
+            if (perso->getSprite().getScale().x > 0) {
+                if (perso->getWeapon() == 1)
+                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 2)
+                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 3)
+                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
+            }
+            else {
+                if (perso->getWeapon() == 1)
+                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 2)
+                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 3)
+                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
+            }
+            return (1);
+        }
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
+            perso->incWeapon();
+            return (1);
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false && perso->isChanneling() == false) {
         perso->jump();
-        return 0;
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
+        return (1);
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false && perso->isChanneling() == false) {
         perso->moveLeft(window, mapSFML);
-        return 0;
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
-        return 0;
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
+        return (1);
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false && perso->isChanneling() == false) {
+        return (1);
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false && perso->isChanneling() == false) {
         perso->moveRigth(window, mapSFML);
-        return 0;
-    } if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        perso->shoot();
-        return 0;
-    } if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false) {
+        return (1);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && perso->isShooting() == false 
+        && perso->isJumping() == false && perso->isFalling() == false ) {
+        perso->channeling();
+        return (1);
+    }
+    if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -83,6 +117,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     size_t loop = 0;
+
     if (!MainMenu().Menu(*window))
        return QUIT;
     window->setFramerateLimit(40);

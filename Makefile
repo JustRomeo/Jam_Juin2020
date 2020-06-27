@@ -20,6 +20,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(DISP)Sprite.cpp		\
 		$(DISP)Window.cpp		\
 		$(GAMP)Ennemis.cpp		\
+		$(GAMP)Projectile.cpp	\
 		$(GAMP)GameLoop.cpp		\
 		$(MAPP)Block.cpp		\
 		$(MAPP)Door.cpp			\
