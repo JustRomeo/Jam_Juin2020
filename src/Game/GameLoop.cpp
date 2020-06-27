@@ -42,11 +42,11 @@ void GameLoop::display()
 
 int GameLoop::checkOpen()
 {
-    return (window->isOpen());
+    return window->isOpen();
 }
 
-int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+#include "Echap.hpp"
+int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
     while (window->pollEvent(event)) {
@@ -57,10 +57,26 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML)
         if (event.type == sf::Event::MouseButtonReleased && 
             perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
             perso->shoot();
-            if (perso->getSprite().getScale().x > 0)
-                projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
-            else
-                projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
+            if (perso->getSprite().getScale().x > 0) {
+                if (perso->getWeapon() == 1)
+                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 2)
+                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 3)
+                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
+            }
+            else {
+                if (perso->getWeapon() == 1)
+                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 2)
+                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition()));
+                if (perso->getWeapon() == 3)
+                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
+            }
+            return (1);
+        }
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
+            perso->incWeapon();
             return (1);
         }
     }
@@ -84,37 +100,46 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML)
     if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
         perso->restartPos();
         window->setView(window->getView());
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        switch (EchapMenu().Menu(*window)) {
+            case -1: return -1; // Quit
+            case 0:  return 0;  // resume
+            case 1:  return 1;  // replay
+            case 2:  return 2;  // back
+            default: throw (Exception("Error: Menu Failed: Abort"));  // nothing
+        }
+        return 1;
     }
-    return (0);
+    return 0;
 }
 
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist)
-{
-    size_t loop = 0;
-
+enum CHOICE {QUIT = 0, REPLAY = 1};
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     // if (!MainMenu().Menu(*window))
-    //    return 0;
+    //    return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     while (window->isOpen()) {
-        //door.doorOpen();
         for (size_t i = 0; i < mapSFML.size(); i ++)
             window->draw(mapSFML[i]->getSprite());
-        for (size_t i = 0; i < Ennemilist.size(); i ++)
+        for (size_t i = 0; i < Ennemilist.size(); i ++) {
             window->draw(Ennemilist[i]->getSprite());
-        if (loop < 300)
-            Ennemilist[0]->goLeft();
-        else
-            Ennemilist[0]->goRight();
-        if (loop > 600)
-            loop = 0;
+            Ennemilist[i]->move(mapSFML);
+        }
         perso->display(window, mapSFML);
         window->draw(door.getSprite());
         display();
         clear();
-        getEvent(mapSFML);
-        loop ++;
+        try {
+            switch(getEvent(mapSFML)) {
+                case -1: window->close(); break;
+                case 0:  continue;        break;
+                case 2:  return REPLAY;   break;
+            }
+        } catch (Exception &e) {
+            throw e;
+        }
     }
-    return (0);
+    return QUIT;
 }

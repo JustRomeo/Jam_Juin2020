@@ -28,6 +28,8 @@ class Character {
         void channeling();
         void restartPos();
         int isShooting();
+        int getWeapon();
+        void incWeapon();
         bool isChanneling();
         bool isJumping();
         bool getMoving();
@@ -62,6 +64,7 @@ class Character {
         bool is_jumping;
         bool is_falling;
         bool is_channeling;
+        int weapon_type;
         int move_Y;
         int notMove_Y;
         int move_Xmax;

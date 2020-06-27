@@ -14,6 +14,7 @@
 #include "Block.hpp"
 #include "System.hpp"
 #include "Mapper.hpp"
+#include "Ennemis.hpp"
 #include "GameLoop.hpp"
 #include "Exception.hpp"
 
@@ -28,9 +29,9 @@ static bool isEnvDisplay(char **env) {
     return false;
 }
 
-#include "Ennemis.hpp"
 
 int main(int ac, char **av, char **env) {
+    int replay = 1;
     Mapper mapper;
     std::shared_ptr<GameLoop> game;
     vector<shared_ptr<Block>> mapSFML;
@@ -38,17 +39,25 @@ int main(int ac, char **av, char **env) {
     vector<string> map = System().openfile("maps/.map2");
     Door door(map);
 
-    Ennemilist.push_back(make_shared<Ennemi>(Ennemi(500, 500)));
-    if (!isEnvDisplay(env))
-        return 84;
-    try {
-        mapper.setMap(map);
-        mapSFML = mapper.generate();
-    } catch (Exception &e) {
-        cout << e.what() << endl;
-        return 84;
+    while (replay == 1) {
+        mapSFML.clear();
+        Ennemilist.clear();
+        Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
+        if (!isEnvDisplay(env))
+            return 84;
+        try {
+            mapper.setMap(map);
+            mapSFML = mapper.generate();
+        } catch (Exception &e) {
+            cout << e.what() << endl;
+            return 84;
+        } try {
+            game = std::make_shared<GameLoop>();
+            replay = game->gameLoop(mapSFML, door, Ennemilist);
+        } catch (Exception &e) {
+            cout << e.what() << endl;
+            return 84;
+        }
     }
-    game = std::make_shared<GameLoop>();
-    game->gameLoop(mapSFML, door, Ennemilist);
     return 0;
 }

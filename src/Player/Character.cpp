@@ -24,6 +24,7 @@ Character::Character()
     move_Xmax = 315;
     shootRectPos = 0;
     channelRectPos = 0;
+    weapon_type = 1;
     is_shooting = false;
     is_moving = false;
     is_falling = false;
@@ -420,6 +421,20 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
 sf::Sprite Character::getSprite()
 {
     return (sprite);
+}
+
+int Character::getWeapon()
+{
+    return (weapon_type);
+}
+
+void Character::incWeapon()
+{
+    if (is_jumping == false && is_falling == false && is_channeling == false && is_shooting == false) {
+        weapon_type++;
+        if (weapon_type > 3)
+            weapon_type = 1;
+    }
 }
 
 void Character::restartPos()
