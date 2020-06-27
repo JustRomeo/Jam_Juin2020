@@ -23,8 +23,15 @@ class Character {
         void shoot();
         void restartPos();
         int isShooting();
+        bool isJumping();
         bool getMoving();
+        bool isFalling();
         void setMoving(bool status);
+        void jump();
+        void fall();
+        void jumpAnimation(std::shared_ptr<sf::RenderWindow> window);
+        void shootAnimation();
+        void fallingAnimation(std::shared_ptr<sf::RenderWindow> window);
 
     protected:
     private:
@@ -36,6 +43,8 @@ class Character {
         std::vector<sf::IntRect> shootRect;
         bool is_shooting;
         bool is_moving;
+        bool is_jumping;
+        bool is_falling;
         int move_Y;
         int notMove_Y;
         int move_Xmax;

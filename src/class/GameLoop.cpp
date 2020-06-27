@@ -35,7 +35,6 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    perso->display(window);
     window->display();
     //window->draw(background->getSprite());
 }
@@ -58,6 +57,7 @@ int GameLoop::getEvent()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
         view->move(sf::Vector2f(0.f, -10.f));
         window->setView(*view);
+        perso->jump();
         return (1);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
@@ -80,24 +80,27 @@ int GameLoop::getEvent()
         perso->shoot();
         return (1);
     }
-    window->setView(*view);
-    if (perso->isShooting() == false)
+    if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false) {
         perso->restartPos();
+        window->setView(*view);
+    }
     return (0);
 }
 
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
 {
-    if (!MainMenu().Menu(*window))
-        return 0;
-    while (window->isOpen()) {
-        size_t i = 0;
+    size_t i = 0;
 
-        getEvent();
-        for (; i < mapSFML.size(); i ++)
-            window->draw(mapSFML[i]->getSprite());
+    if (!MainMenu().Menu(*window))
+       return 0;
+    window->setFramerateLimit(40);
+    while (window->isOpen()) {
+        perso->display(window);
+        for (i = 0; i < mapSFML.size(); i ++)
+           window->draw(mapSFML[i]->getSprite());
         display();
         clear();
+        getEvent();
     }
     return (0);
 }
