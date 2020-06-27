@@ -12,13 +12,17 @@ class ImageSFML {
         ImageSFML(string filepath);
         ~ImageSFML() {}
 
-        bool isClicked(sf::Event event);
         void destroyTexture();
+        sf::Sprite getSprite() const;
+        bool isClicked(sf::Event event);
         void setTexture(string filepath);
-        sf::Sprite getSprite() const {return (_sprite);}
-        void setPosition(sf::Vector2f pos) {_sprite.setPosition(pos);}
+        void setScale(sf::Vector2f size);
+        void setPosition(sf::Vector2f pos);
 
     private:
+        size_t _width;
+        size_t _heigh;
+        sf::Vector2f _pos;
         sf::Sprite _sprite;
         sf::Texture *_texture;
 };

@@ -6,8 +6,10 @@
 */
 
 #include "GameLoop.hpp"
+#include "MainMenu.hpp"
 
-GameLoop::GameLoop() {
+GameLoop::GameLoop()
+{
     try {
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "graphical interface");
         window->setFramerateLimit(40);
@@ -61,7 +63,6 @@ int GameLoop::getEvent()
     return (0);
 }
 
-#include "MainMenu.hpp"
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
 {
     if (!MainMenu().Menu(*window))
