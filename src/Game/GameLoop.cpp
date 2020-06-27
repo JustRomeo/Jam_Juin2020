@@ -75,31 +75,23 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML)
 
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist)
 {
-    size_t loop = 0;
-
     if (!MainMenu().Menu(*window))
        return 0;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     while (window->isOpen()) {
-        //door.doorOpen();
         for (size_t i = 0; i < mapSFML.size(); i ++)
             window->draw(mapSFML[i]->getSprite());
-        for (size_t i = 0; i < Ennemilist.size(); i ++)
+        for (size_t i = 0; i < Ennemilist.size(); i ++) {
             window->draw(Ennemilist[i]->getSprite());
-        if (loop < 300)
-            Ennemilist[0]->goLeft();
-        else
-            Ennemilist[0]->goRight();
-        if (loop > 600)
-            loop = 0;
+            Ennemilist[i]->move(mapSFML);
+        }
         perso->display(window, mapSFML);
         window->draw(door.getSprite());
         display();
         clear();
         getEvent(mapSFML);
-        loop ++;
     }
     return (0);
 }
