@@ -6,7 +6,7 @@ Ennemi::Ennemi(int X, int Y) {
     _pos = sf::Vector2f(X, Y);
     _texture = new sf::Texture;
     try {
-        this->setTexture("resources/Images/robot.jpg");
+        this->setTexture("resources/Images/robot.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
     }
