@@ -72,21 +72,24 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             case 0:  return 0;  // resume
             case 1:  return 1;  // replay
             case 2:  return 2;  // back
-            default: throw (Exception("Error: Menu Failed: Abort"));  // nothing
+            default: throw (Exception("Error: Menu Failed: Abort"));  // Error
         }
         return 1;
     }
     return 0;
 }
 
+#include "Death.hpp"
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
+    size_t loop = 0;
     if (!MainMenu().Menu(*window))
        return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     while (window->isOpen()) {
+        loop += 1;
         for (size_t i = 0; i < mapSFML.size(); i ++)
             window->draw(mapSFML[i]->getSprite());
         for (size_t i = 0; i < Ennemilist.size(); i ++) {
@@ -97,11 +100,21 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         window->draw(door.getSprite());
         display();
         clear();
-        try {
+        if (loop % 15 == 0)
+            perso->_lifes -= 1;
+        if (perso->_lifes < 0) {
+            switch(DeathMenu().Menu(*window)) {
+                case -1: window->close(); break;
+                case 2: return REPLAY;
+            }
+        } try {
             switch(getEvent(mapSFML)) {
                 case -1: window->close(); break;
-                case 0:  continue;        break;
-                case 2:  return REPLAY;   break;
+                case 0:
+                    view->setCenter(perso->getSprite().getPosition());
+                    window->setView(*view);
+                    break;
+                case 2: return REPLAY;
             }
         } catch (Exception &e) {
             throw e;

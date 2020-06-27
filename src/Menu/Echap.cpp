@@ -3,19 +3,20 @@
 EchapMenu::EchapMenu() {}
 EchapMenu::~EchapMenu() {}
 
+enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
 int EchapMenu::Menu(sf::RenderWindow &window) {
     sf::Event event;
     ImageSFML play("resources/Buttons/play.png");
     ImageSFML replay("resources/Buttons/replay.jpg");
     ImageSFML back("resources/Buttons/back.jpg");
     ImageSFML quit("resources/Buttons/quit.png");
-    ImageSFML background("resources/Images/wallpaper.jpg");
+    ImageSFML background("resources/Images/Menu_options.jpg");
 
     window.setView(window.getDefaultView());
-    play.setPosition(sf::Vector2f(800, 400));
-    replay.setPosition(sf::Vector2f(800, 525));
-    back.setPosition(sf::Vector2f(800, 650));
-    quit.setPosition(sf::Vector2f(800, 775));
+    play.setPosition(sf::Vector2f(800, 325));
+    replay.setPosition(sf::Vector2f(800, 450));
+    back.setPosition(sf::Vector2f(800, 575));
+    quit.setPosition(sf::Vector2f(800, 700));
 
     replay.setScale(sf::Vector2f(0.75, 1.20));
     back.setScale(sf::Vector2f(0.75, 1.20));
@@ -33,13 +34,13 @@ int EchapMenu::Menu(sf::RenderWindow &window) {
         window.display();
         while (window.pollEvent(event)) {
             if (quit.isClicked(event))
-                return -1;
+                return QUIT;
             else if (play.isClicked(event))
-                return 0;
+                return PLAY;
             else if (replay.isClicked(event))
-                return 1;
+                return REPLAY;
             else if (back.isClicked(event))
-                return 2;
+                return BACK;
         }
     }
     play.~ImageSFML();

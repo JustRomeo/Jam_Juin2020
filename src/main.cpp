@@ -42,6 +42,7 @@ int main(int ac, char **av, char **env) {
     while (replay == 1) {
         mapSFML.clear();
         Ennemilist.clear();
+        // game = make_shared<GameLoop>();
         Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
         if (!isEnvDisplay(env))
             return 84;

@@ -9,6 +9,7 @@
 
 Character::Character()
 {
+    _lifes = 3;
     textureFight = std::make_shared<sf::Texture>();
     texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/character/adventurer-Sheet.png") == false)
