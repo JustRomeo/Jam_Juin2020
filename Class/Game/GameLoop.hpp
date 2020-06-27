@@ -24,7 +24,7 @@ class GameLoop {
         ~GameLoop();
 
         void clear();
-        int getEvent();
+        int getEvent(vector<shared_ptr<Block>> mapSFML);
         void display();
         int checkOpen();
         int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door);

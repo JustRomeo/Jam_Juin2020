@@ -10,15 +10,18 @@
 
 #include "../include/LibGraphics.hpp"
 #include "Exception.hpp"
+#include "Block.hpp"
 #include "time.h"
 
 class Character {
     public:
         Character();
         ~Character();
-        void display(std::shared_ptr<sf::RenderWindow> window);
-        void moveLeft();
-        void moveRigth();
+        sf::Sprite getSprite();
+        void display(std::shared_ptr<sf::RenderWindow> window,
+            std::vector<std::shared_ptr<Block>> mapSFML);
+        void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
+        void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         int getTimeDiff(float diff);
         void shoot();
         void restartPos();
@@ -29,9 +32,14 @@ class Character {
         void setMoving(bool status);
         void jump();
         void fall();
-        void jumpAnimation(std::shared_ptr<sf::RenderWindow> window);
+        void jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
+            std::vector<std::shared_ptr<Block>> mapSFML);
         void shootAnimation();
-        void fallingAnimation(std::shared_ptr<sf::RenderWindow> window);
+        void fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
+            std::vector<std::shared_ptr<Block>> mapSFML);
+        int not_colision(std::vector<std::shared_ptr<Block>> mapSFML);
+        int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
+        int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
 
     protected:
     private:
