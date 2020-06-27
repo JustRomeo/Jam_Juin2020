@@ -95,7 +95,7 @@ void Character::moveLeft()
             sprite.setTextureRect(rect);
         }
     }
-    sprite.move(sf::Vector2f(-10.f, 0.f));
+    sprite.move(sf::Vector2f(-15.f, 0.f));
 }
 
 void Character::moveRigth()
@@ -120,7 +120,7 @@ void Character::moveRigth()
             sprite.setTextureRect(rect);
         }
     }
-    sprite.move(sf::Vector2f(10.f, 0.f));
+    sprite.move(sf::Vector2f(15.f, 0.f));
 }
 
 void Character::shoot()

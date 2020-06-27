@@ -6,16 +6,16 @@
 */
 
 #include "GameLoop.hpp"
+#include "MainMenu.hpp"
 
 GameLoop::GameLoop()
 {
-    try
-    {
+    try {
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "graphical interface");
-        window->setFramerateLimit(40);
+        window->setFramerateLimit(60);
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         window->setView(*view);
-        background = std::make_shared<Sprite>("resources/space.png");
+        background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
     }
     catch (std::bad_alloc &e)
@@ -35,8 +35,9 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    //window->draw(background->getSprite());
+    perso->display(window);
     window->display();
+    //window->draw(background->getSprite());
 }
 
 int GameLoop::checkOpen()
@@ -56,6 +57,7 @@ int GameLoop::getEvent()
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false) {
         view->move(sf::Vector2f(0.f, -10.f));
+        window->setView(*view);
         return (1);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false) {
@@ -65,6 +67,7 @@ int GameLoop::getEvent()
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false) {
         view->move(sf::Vector2f(0.f, 10.f));
+        window->setView(*view);
         return (1);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false) {
@@ -83,15 +86,18 @@ int GameLoop::getEvent()
     return (0);
 }
 
-int GameLoop::gameLoop()
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML)
 {
-    while (window->isOpen())
-    {
-        perso->display(window);
+    if (!MainMenu().Menu(*window))
+        return 0;
+    while (window->isOpen()) {
+        size_t i = 0;
+
+        getEvent();
+        for (; i < mapSFML.size(); i ++)
+            window->draw(mapSFML[i]->getSprite());
         display();
         clear();
-        getEvent();
-        //perso->restartPos();
     }
     return (0);
 }

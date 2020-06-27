@@ -5,34 +5,48 @@
 ## Makefile
 ##
 
-SRCP =		src/
-CLAP =		src/class/
+SRCP =	src/
+CLAP =	src/class/
+COMP =	src/class/SFMLComponents/
 
-SRC =		$(CLAP)Block.cpp	\
-			$(CLAP)Sprite.cpp	\
-			$(CLAP)Window.cpp	\
-			$(CLAP)Exception.cpp	\
-			$(SRCP)main.cpp		\
-			$(CLAP)GameLoop.cpp	\
-			$(CLAP)Character.cpp	\
+SRC =	$(COMP)ImageSFML.cpp	\
+		$(CLAP)Block.cpp		\
+		$(CLAP)Exception.cpp	\
+		$(CLAP)GameLoop.cpp		\
+		$(CLAP)Character.cpp	\
+		$(CLAP)MainMenu.cpp		\
+		$(CLAP)Mapper.cpp		\
+		$(CLAP)Sprite.cpp		\
+		$(CLAP)System.cpp		\
+		$(CLAP)Window.cpp		\
+		$(SRCP)main.cpp			\
 
-OBJ =		$(SRC:.cpp=.o)
+OBJ =	$(SRC:.cpp=.o)
 
-CC =		g++ -o
+CC =	g++ -o
 
-CRIT =		--coverage -lcriterion
-WALL =		-Wall -Wextra -Werror
+CRIT =	--coverage -lcriterion
+WALL =	-Wall -Wextra -Werror
 CRITERION =	unit_tests
 
 NAME = soundwaves
 
-SFML 		=	-lsfml-system	\
-				-lsfml-window	\
-				-lsfml-graphics	\
-				-lsfml-audio	\
+SFML = 	-lsfml-system	\
+		-lsfml-window	\
+		-lsfml-graphics	\
+		-lsfml-audio	\
 
 
-CPPFLAGS =	-I./include/ -I./Class/ $(SFML)
+CPPFLAGS =	-I./include/				\
+			-I./Class/ 					\
+			-I./Class/SFMLComponents	\
+			-I./Class/Display			\
+			-I./Class/Game				\
+			-I./Class/Map				\
+			-I./Class/Player			\
+			-I./Class/SFMLComponents	\
+			-I./Class/System			\
+			$(SFML)
 
 RM =	rm -rvf
 
@@ -45,12 +59,10 @@ $(NAME):	$(OBJ)
 
 tests_run:		$(OBJT)
 				$(CCO) $(CRITERION) $(OBJT) $(CPPFLAGS) $(CRIT)
-				export LD_LIBRARY_PATH=$PWD/lib
 				./$(CRITERION)
 
 clean_test:		$(SRCT)
 				$(CCO) $(CRITERION) $(SRCT) $(CPPFLAGS) $(CRIT)
-				export LD_LIBRARY_PATH=$$PWD/lib
 				./$(CRITERION)
 				gcovr
 				$(RM) *.o
@@ -58,11 +70,10 @@ clean_test:		$(SRCT)
 				$(RM) *.gcda
 				$(RM) $(CRITERION)
 
-valgrind:	$(OBJCLI)
-			$(CCO) $(CLINAME) -g3 $(OBJCLI) $(CPPFLAGS) $(WALL)
-			$(RM) $(OBJCLI)
-			export LD_LIBRARY_PATH=$$PWD/lib
-			valgrind ./$(CLINAME) 127.0.0.1 9000
+valgrind:	$(OBJ)
+			$(CCO) $(NAME) -g3 $(OBJ) $(CPPFLAGS) $(WALL)
+			$(RM) $(OBJ)
+			valgrind ./$(NAME)
 
 clean:
 		$(RM) $(OBJ)

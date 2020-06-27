@@ -10,7 +10,7 @@
 
 Sfml::Sfml()
 {
-    _background.setTexture("resources/space.png");
+    _background.setTexture("resources/Images/space.png");
     _window = new sf::RenderWindow(sf::VideoMode(1920, 1080), "graphical interface");
     _window->setFramerateLimit(40);
     view = new sf::View(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
