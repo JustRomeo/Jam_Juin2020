@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "Exception.hpp"
+#include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
 
 using namespace std;
@@ -30,6 +31,7 @@ class Door {
         size_t _size;
         bool _opening;
         sf::Vector2f pos;
+        MusicSFML *openUp;
         sf::Sprite _sprite;
         sf::Clock move_clock;
         sf::Texture *_texture;

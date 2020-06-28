@@ -388,7 +388,7 @@ void GameLoop::setPlayerPosition(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'P')
-                perso->setSpritePosition(j * 157, i * 157);
+                perso->setSpritePosition(j * 157, i * 157 + 60);
 }
 
 enum CHOICE {QUIT = 0, REPLAY = 1};
@@ -398,18 +398,22 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
     Door door_s = door;
     vector<shared_ptr<Block>> mapSFML_s = mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
+    ImageSFML font("resources/Images/sprite_font.png");
 
     _music->play();
     window->setMouseCursorVisible(false);
     if (!MainMenu().Menu(*window))
        return QUIT;
-    if (fondue() == false)
+    if (!fondue())
         return QUIT;
     _music->stop();
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
+    font.setScale(sf::Vector2f(3, 3.5));
     while (window->isOpen()) {
+        font.setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
+        window->draw(font.getSprite());
         BlockUpdate(*window, mapSFML);
         EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;

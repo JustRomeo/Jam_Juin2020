@@ -42,7 +42,7 @@ int main(int ac, char **av, char **env) {
     std::shared_ptr<GameLoop> game;
     vector<shared_ptr<Block>> mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist;
-    vector<string> map = System().openfile("maps/.Tuto");
+    vector<string> map = System().openfile("maps/.map1");
     Door door(map);
 
     while (replay == 1) {
