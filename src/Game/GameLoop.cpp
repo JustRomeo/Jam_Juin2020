@@ -18,10 +18,12 @@ GameLoop::GameLoop()
         music_1 = new MusicSFML();
         music_2 = new MusicSFML();
         music_3 = new MusicSFML();
+        death_perso = new MusicSFML();
         death_ennemi = new MusicSFML();
         music_1->load("resources/Sounds/music_1.ogg");
         music_2->load("resources/Sounds/music_2.ogg");
         music_3->load("resources/Sounds/music_3.ogg");
+        death_perso->load("resources/Sounds/Dead_sound.ogg");
         death_ennemi->load("resources/Sounds/death.ogg");
         music_1->setLoop(true);
         music_2->setLoop(true);
@@ -59,6 +61,7 @@ GameLoop::~GameLoop()
     music_1->~MusicSFML();
     music_2->~MusicSFML();
     music_3->~MusicSFML();
+    death_perso->~MusicSFML();
     death_ennemi->~MusicSFML();
 }
 
@@ -253,7 +256,7 @@ int GameLoop::fondue()
     fade.setFillColor(sf::Color::Black);
     sf::Text text("Aventurier!\n", font);
     sf::Text text2("Apres avoir trouve dans une temple une ancienne relique aux pouvoir mysterieux.\n                          Emettant des sons d'une puissance inouie.\nVous decidez de rentrez avec, afin d'en exploiter l'immmense potentiel.\n", font);
-    sf::Text text3("               Malheureusement de grande puissance convoite aussi cet artefact.\nEt on deploye tous les moyens en leur possession pour vous goumer et recuperer la relique.\n", font);
+    sf::Text text3("               Malheureusement de grande puissance convoite aussi cet artefact.\nEt on deploye tous les moyens en leur possession pour vous tuer et recuperer la relique.\n", font);
     sf::Text text4("Vous devrez donc vous echapper du temple et survivre au different danger qui se dresseront sur votre chemin.\n                                  Grace a vos competences d'aventurier et au pouvoir de la relique.\n", font);
     text.setCharacterSize(30);
     text.setStyle(sf::Text::Bold);
@@ -392,7 +395,8 @@ void GameLoop::setPlayerPosition(vector<string> map) {
 }
 
 enum CHOICE {QUIT = 0, REPLAY = 1};
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
+    vector<shared_ptr<Ennemi>> Ennemilist, vector<shared_ptr<MunPlus>> PlusList) {
     size_t loop = 0;
     int is_end = 0;
     Door door_s = door;
@@ -427,12 +431,16 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
                 break;
             }
         }
+        for (int i = 0; i < PlusList.size(); i++)
+            PlusList[i]->display(window);
         drawHearts(*window, perso);
         display();
         clear();
         checkDestruction(mapSFML);
         checkDeathEnemy(Ennemilist);
-        if (perso->_lifes < 0) {
+        perso->checkCollMunPlus(PlusList);
+        if (perso->_lifes < 1) {
+            death_perso->start();
             window->setMouseCursorVisible(true);
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;

@@ -17,6 +17,7 @@
 #include "Exception.hpp"
 #include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
+#include "MunPlus.hpp"
 
 class Character {
     public:
@@ -51,6 +52,7 @@ class Character {
         int getMun();
         int channelBat();
         sf::Vector2f getSpriteMid();
+        void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
         void jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             std::vector<std::shared_ptr<Block>> mapSFML);
         void shootAnimation();
