@@ -16,9 +16,9 @@ GameLoop::GameLoop()
     try {
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
-        auto image = sf::Image{};
-        if (!image.loadFromFile("resources/Images/icon.jpg"))
-            cout << "Loading Ressource Failed" << endl;
+        auto image = sf::Image {};
+        if (!image.loadFromFile("resources/Images/oui.jpg"))
+            throw Exception("Loading Ressource Failed");
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         background = std::make_shared<Sprite>("resources/Images/space.png");
