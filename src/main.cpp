@@ -16,6 +16,7 @@
 #include "Mapper.hpp"
 #include "Ennemis.hpp"
 #include "GameLoop.hpp"
+#include "MainMenu.hpp"
 #include "Exception.hpp"
 
 using namespace std;
@@ -29,14 +30,13 @@ static bool isEnvDisplay(char **env) {
     return false;
 }
 
-#include "MainMenu.hpp"
 int main(int ac, char **av, char **env) {
     int replay = 1;
     Mapper mapper;
     std::shared_ptr<GameLoop> game;
     vector<shared_ptr<Block>> mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist;
-    vector<string> map = System().openfile("maps/.map2");
+    vector<string> map = System().openfile("maps/.Tuto");
     Door door(map);
 
     while (replay == 1) {

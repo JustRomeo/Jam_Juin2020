@@ -163,8 +163,10 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
             window->draw(Ennemilist[i]->getSprite());
             Ennemilist[i]->move(mapSFML);
         }
-        perso->display(window, mapSFML);
         window->draw(door.getSprite());
+        perso->display(window, mapSFML);
+        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door.getSprite().getGlobalBounds())))
+            door.doorOpen();
         display();
         clear();
         checkDestruction(mapSFML);

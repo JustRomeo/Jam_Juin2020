@@ -4,7 +4,7 @@
 
 MainMenu::MainMenu() {
     _music = new sf::Music;
-    if (_music->openFromFile("resources/Sounds/Main.ogg") == false)
+    if (!_music->openFromFile("resources/Sounds/Main.ogg"))
         throw Exception("resources load failed");
     _music->setLoop(true);
 }

@@ -83,6 +83,7 @@ class Character {
         sf::Clock anim_clock;
         MusicSFML *jump_sound;
         MusicSFML *coli_sound;
+        MusicSFML *shot_sound;
         std::vector<float> channelingTime;
         std::vector<sf::IntRect> shootRect;
         std::shared_ptr<sf::Texture> texture;
