@@ -144,6 +144,22 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     return 0;
 }
 
+static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &Ennemilist, vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> &perso) {
+    for (size_t i = 0; i < Ennemilist.size(); i ++) {
+            window.draw(Ennemilist[i]->getSprite());
+            Ennemilist[i]->move(mapSFML);
+            if (perso->invulnerability < 1 && sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Ennemilist[i]->getSprite().getGlobalBounds()))) {
+                perso->_lifes --;
+                perso->invulnerability += 60;
+            }
+        }
+}
+
+static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapSFML) {
+    for (size_t i = 0; i < mapSFML.size(); i++)
+            window.draw(mapSFML[i]->getSprite());
+}
+
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     size_t loop = 0;
@@ -157,21 +173,18 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     while (window->isOpen()) {
-        for (size_t i = 0; i < mapSFML.size(); i++)
-            window->draw(mapSFML[i]->getSprite());
-        for (size_t i = 0; i < Ennemilist.size(); i ++) {
-            window->draw(Ennemilist[i]->getSprite());
-            Ennemilist[i]->move(mapSFML);
-        }
+        BlockUpdate(*window, mapSFML);
+        EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
+        perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         window->draw(door.getSprite());
         perso->display(window, mapSFML);
-        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door.getSprite().getGlobalBounds())))
+        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door.getSprite().getGlobalBounds()))) {
+            door.setOpening(true);
             door.doorOpen();
+        }
         display();
         clear();
         checkDestruction(mapSFML);
-        // if (loop % 15 == 0)
-        //     perso->_lifes -= 1;
         if (perso->_lifes < 0) {
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;

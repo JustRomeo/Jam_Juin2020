@@ -61,6 +61,7 @@ class Character {
         int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
 
         int _lifes;
+        int invulnerability;
     protected:
     private:
         bool is_switching;
