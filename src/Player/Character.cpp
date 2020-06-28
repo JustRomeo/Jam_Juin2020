@@ -401,14 +401,12 @@ void Character::shoot()
 void Character::channeling()
 {
     if (is_jumping == false && is_falling == false && is_shooting == false && is_channeling == false) {
+        shot_sound->load("resources/Sounds/channelingShot.ogg");
+        shot_sound->start();
         is_channeling = true;
         oldPose = sprite.getPosition();
         sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 30);
         sprite.setTextureRect(channelingRect[channelRectPos]);
-        //battery[weapon_type - 1]->channeling();
-        // while (battery[weapon_type - 1]->decMun() == 1) {
-        //     printf("here\n");
-        // }
     }
 }
 
