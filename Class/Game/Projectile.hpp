@@ -11,6 +11,7 @@
 #include "LibGraphics.hpp"
 #include "Exception.hpp"
 #include "Block.hpp"
+#include "Ennemis.hpp"
 
 class Projectile {
     public:
@@ -21,6 +22,7 @@ class Projectile {
         void movement();
         int getCurrentCapacity();
         void display(std::shared_ptr<sf::RenderWindow> window);
+        int checkKill(std::shared_ptr<Ennemi> ennemi);
         int checkDestruction(std::shared_ptr<Block> block);
         int getTimeMov(float diff);
         int getTimeAnim(float diff);

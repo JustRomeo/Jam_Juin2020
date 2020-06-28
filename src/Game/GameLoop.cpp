@@ -71,6 +71,24 @@ void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     }
 }
 
+void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
+{
+    int res = -1;
+
+    for (int i = 0; i < projectile.size(); i++) {
+        res = -1;
+        for (int j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
+            res = projectile[i]->checkKill(Ennemilist[j]);
+            if (projectile[i]->getCurrentCapacity() <= 0)
+                projectile.erase(projectile.begin() + i);
+            if (res == 1) {
+                printf("here\n");
+                Ennemilist.erase(Ennemilist.begin() + j);
+            }
+        }
+    }
+}
+
 int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
@@ -161,13 +179,6 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
             window->draw(mapSFML[i]->getSprite());
         for (size_t i = 0; i < Ennemilist.size(); i ++) {
             Ennemilist[i]->move(mapSFML);
-            sf::CircleShape circle;
-            circle.setRadius(1);
-            circle.setOutlineColor(sf::Color::White);
-            circle.setOutlineThickness(1);
-            circle.setPosition(Ennemilist[i]->getSprite().getPosition().x + Ennemilist[i]->getSprite().getTextureRect().width,
-                            Ennemilist[i]->getSprite().getPosition().y + (Ennemilist[i]->getSprite().getTextureRect().height * 2) + 30);
-            window->draw(circle);
             window->draw(Ennemilist[i]->getSprite());
         }
         window->draw(door.getSprite());
@@ -177,6 +188,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         display();
         clear();
         checkDestruction(mapSFML);
+        checkDeathEnemy(Ennemilist);
         // if (loop % 15 == 0)
         //     perso->_lifes -= 1;
         if (perso->_lifes < 0) {

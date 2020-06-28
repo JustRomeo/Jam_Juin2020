@@ -256,3 +256,15 @@ int Projectile::checkDestruction(std::shared_ptr<Block> block)
     }
     return (-1);
 }
+
+int Projectile::checkKill(std::shared_ptr<Ennemi> ennemi)
+{
+    sf::FloatRect bullet = sprite.getGlobalBounds();
+    sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
+
+    if (bullet.intersects(g) == true) {
+        destructionCapacity--;
+        return (1);
+    }
+    return (-1);
+}
