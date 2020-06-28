@@ -24,7 +24,7 @@ Battery::Battery(int _type)
             munShape[i].setFillColor(sf::Color::Magenta);
         munShape[i].setOutlineThickness(2);
         munShape[i].setPosition(x, y);
-        x+= 20;
+        x += 20;
     }
 }
 
