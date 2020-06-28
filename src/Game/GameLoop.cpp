@@ -15,6 +15,13 @@
 GameLoop::GameLoop()
 {
     try {
+        heart1 = new ImageSFML("resources/Images/heart.png");
+        heart2 = new ImageSFML("resources/Images/heart.png");
+        heart3 = new ImageSFML("resources/Images/heart.png");
+        heart3->setScale(sf::Vector2f(0.25, 0.25));
+        heart2->setScale(sf::Vector2f(0.25, 0.25));
+        heart1->setScale(sf::Vector2f(0.25, 0.25));
+
         death_ennemi = new MusicSFML();
         death_ennemi->load("resources/Sounds/death.ogg");
         death_ennemi->setVolume(50);
@@ -35,6 +42,9 @@ GameLoop::GameLoop()
 
 GameLoop::~GameLoop()
 {
+    // heart1->~ImageSFML();
+    // heart2->~ImageSFML();
+    // heart3->~ImageSFML();
     death_ennemi->~MusicSFML();
 }
 
@@ -170,23 +180,14 @@ static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &E
         }
 }
 
-static void drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso) {
-    ImageSFML heart3("resources/Images/heart.png");
-    ImageSFML heart2("resources/Images/heart.png");
-    ImageSFML heart1("resources/Images/heart.png");
-
-    // window.getView().getCenter().x - 935, view.getCenter().y + 370
-
-    heart3.setScale(sf::Vector2f(0.25, 0.25));
-    heart2.setScale(sf::Vector2f(0.25, 0.25));
-    heart1.setScale(sf::Vector2f(0.25, 0.25));
-    heart3.setPosition(sf::Vector2f(window.getView().getCenter().x - 800, window.getView().getCenter().y + 370));
-    heart2.setPosition(sf::Vector2f(window.getView().getCenter().x - 850, window.getView().getCenter().y + 370));
-    heart1.setPosition(sf::Vector2f(window.getView().getCenter().x - 900, window.getView().getCenter().y + 370));
+void GameLoop::drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso) {
+    heart3->setPosition(sf::Vector2f(window.getView().getCenter().x - 800, window.getView().getCenter().y + 370));
+    heart2->setPosition(sf::Vector2f(window.getView().getCenter().x - 850, window.getView().getCenter().y + 370));
+    heart1->setPosition(sf::Vector2f(window.getView().getCenter().x - 900, window.getView().getCenter().y + 370));
     switch (perso->_lifes) {
-        case 3: window.draw(heart3.getSprite());
-        case 2: window.draw(heart2.getSprite());
-        case 1: window.draw(heart1.getSprite());
+        case 3: window.draw(heart3->getSprite());
+        case 2: window.draw(heart2->getSprite());
+        case 1: window.draw(heart1->getSprite());
     }
 }
 

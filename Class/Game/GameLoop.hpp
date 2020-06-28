@@ -15,6 +15,7 @@
 #include "Window.hpp"
 #include "Ennemis.hpp"
 #include "Character.hpp"
+#include "ImageSFML.hpp"
 #include "Exception.hpp"
 #include "LibGraphics.hpp"
 #include "Projectile.hpp"
@@ -28,15 +29,19 @@ class GameLoop {
         void clear(void);
         void display(void);
         int checkOpen(void);
-        void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
-        void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
+        void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
+        void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
+        void drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso);
         int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist);
 
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
+        ImageSFML *heart1;
+        ImageSFML *heart2;
+        ImageSFML *heart3;
         MusicSFML *death_ennemi;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
