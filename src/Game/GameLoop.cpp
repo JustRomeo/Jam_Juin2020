@@ -6,6 +6,8 @@
 */
 
 #include "Door.hpp"
+#include "Echap.hpp"
+#include "Death.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "Echap.hpp"
@@ -13,8 +15,12 @@
 GameLoop::GameLoop()
 {
     try {
-        window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "graphical interface");
+        window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
+        auto image = sf::Image {};
+        if (!image.loadFromFile("resources/Images/icon.jpg"))
+            throw Exception("Loading Ressource Failed");
+        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
@@ -28,6 +34,10 @@ GameLoop::~GameLoop()
 {
 }
 
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
+    return this->window;
+}
+
 void GameLoop::clear()
 {
     window->clear(sf::Color::White);
@@ -35,9 +45,8 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    for (int i = 0; i < projectile.size(); i++) {
+    for (int i = 0; i < projectile.size(); i ++)
         projectile[i]->display(window);
-    }
     window->display();
 }
 
@@ -93,23 +102,22 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         }
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
             perso->incWeapon();
-            return (1);
+            return (3);
         }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->jump();
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->moveLeft(window, mapSFML);
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false && perso->isChanneling() == false) {
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->moveRigth(window, mapSFML);
-        return (1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && perso->isShooting() == false 
-        && perso->isJumping() == false && perso->isFalling() == false ) {
+    } if (!perso->isShooting() && !perso->isChanneling()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            perso->jump();
+            return (3);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+            perso->moveLeft(window, mapSFML);
+            return (3);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            return (3);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            perso->moveRigth(window, mapSFML);
+            return (3);
+        }
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && !perso->isShooting() && !perso->isJumping() && !perso->isFalling()) {
         perso->channeling();
         return (1);
     }
@@ -122,7 +130,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             case 0:  return 0;  // resume
             case 1:  return 1;  // replay
             case 2:  return 2;  // back
-            default: throw (Exception("Error: Menu Failed: Abort"));  // nothing
+            default: throw (Exception("Error: Menu Failed: Abort"));  // Error
         }
         return 1;
     }
@@ -131,8 +139,13 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
 
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
-    // if (!MainMenu().Menu(*window))
-    //    return QUIT;
+    size_t loop = 0;
+    Door door_s = door;
+    vector<shared_ptr<Block>> mapSFML_s = mapSFML;
+    vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
+
+    if (!MainMenu().Menu(*window))
+       return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
@@ -148,12 +161,22 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         display();
         clear();
         checkDestruction(mapSFML);
-        try {
+        // if (loop % 15 == 0)
+        //     perso->_lifes -= 1;
+        if (perso->_lifes < 0) {
+            switch(DeathMenu().Menu(*window)) {
+                case -1: window->close(); break;
+                case 2: return REPLAY;
+            }
+        } try {
             switch(getEvent(mapSFML)) {
                 case -1: window->close(); break;
-                case 0:  continue;        break;
-                case 1:  continue;        break;
-                case 2:  return REPLAY;   break;
+                case 0:
+                    view->setCenter(perso->getSprite().getPosition());
+                    window->setView(*view);
+                    break;
+                case 2: return REPLAY;
+                case 3: continue; break;
             }
         } catch (Exception &e) {
             throw e;

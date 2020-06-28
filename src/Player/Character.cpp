@@ -9,6 +9,13 @@
 
 Character::Character()
 {
+
+    jump_sound = new MusicSFML();
+    coli_sound = new MusicSFML();
+
+    jump_sound->load("resources/Sounds/Jump.ogg");
+    coli_sound->load("resources/Sounds/Colision.ogg");
+    _lifes = 3;
     textureFight = std::make_shared<sf::Texture>();
     texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/character/adventurer-Sheet.png") == false)
@@ -189,8 +196,7 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
         else if (not_colision(mapSFML) == 1) {
             sprite.move(move);
             view.move(move);
-        }
-        else {
+        } else {
             move.y = 0;
             view.setCenter(sprite.getPosition());
             is_jumping = false;
@@ -215,8 +221,7 @@ void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
                 rect.left = 15;
             }
             sprite.setTextureRect(rect);
-        }
-        if (rect.top == 112) {
+        } if (rect.top == 112) {
             if (rect.left < 115)
                 rect.left += 50;
             sprite.setTextureRect(rect);
@@ -235,11 +240,11 @@ void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
 
 void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML)
 {
-    if (is_shooting == true)
+    if (is_shooting)
         shootAnimation();
-    if (is_jumping == true)
+    if (is_jumping)
         jumpAnimation(window, mapSFML);
-    if (is_falling == true)
+    if (is_falling)
         fallingAnimation(window, mapSFML);
     if (is_channeling == true)
         channelingAnimation();
@@ -254,6 +259,7 @@ void Character::jump()
 {
     if (is_jumping == false && is_falling == false) {
         is_jumping = true;
+        jump_sound->start();
         sprite.setTextureRect(sf::IntRect(65, 79, 21, 31));
         move = sf::Vector2f(0.f, -20.f);
     }
@@ -283,8 +289,7 @@ void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
             pos.x += 55.f;
             sprite.setPosition(pos);
             sprite.setScale(-3, 3);
-        }
-        if (rect.top != move_Y)
+        } if (rect.top != move_Y)
             sprite.setTextureRect(sf::IntRect(65, 45, 22, 28));
         else {
             if (getTimeDiff(0.03) == 1) {
@@ -294,21 +299,18 @@ void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
                     rect.left += 50;
                 sprite.setTextureRect(rect);
             }
-        }
-        if (not_colision(mapSFML) == 1) {
+        } if (not_colision(mapSFML) == 1) {
             sprite.move(sf::Vector2f(-10.f, 0.f));
             view.move(sf::Vector2f(-10.f, 0.f));
             window->setView(view);
         }
-    }
-    else {
+    } else {
         if (sprite.getScale().x > 0) {
             sf::Vector2f pos = sprite.getPosition();
             pos.x += 55.f;
             sprite.setPosition(pos);
             sprite.setScale(-3, 3);
-        }
-        if (not_colision(mapSFML) == 1) {
+        } if (not_colision(mapSFML) == 1) {
             sprite.move(sf::Vector2f(-5.f, 0.f));
             view.move(sf::Vector2f(-5.f, 0.f));
             window->setView(view);
@@ -331,8 +333,7 @@ void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
             pos.x -= 55.f;
             sprite.setPosition(pos);
             sprite.setScale(3, 3);
-        }
-        if (rect.top != move_Y)
+        } if (rect.top != move_Y)
             sprite.setTextureRect(sf::IntRect(65, 45, 22, 28));
         else {
             if (getTimeDiff(0.03) == 1) {
@@ -342,21 +343,18 @@ void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
                     rect.left += 50;
                 sprite.setTextureRect(rect);
             }
-        }
-        if (not_colision(mapSFML) == 1) {
+        } if (not_colision(mapSFML) == 1) {
             sprite.move(sf::Vector2f(10.f, 0.f));
             view.move(sf::Vector2f(10.f, 0.f));
             window->setView(view);
         }
-    }
-    else {
+    } else {
         if (sprite.getScale().x < 0) {
             sf::Vector2f pos = sprite.getPosition();
             pos.x -= 55.f;
             sprite.setPosition(pos);
             sprite.setScale(3, 3);
-        }
-        if (not_colision(mapSFML) == 1) {
+        } if (not_colision(mapSFML) == 1) {
             sprite.move(sf::Vector2f(5.f, 0.f));
             view.move(sf::Vector2f(5.f, 0.f));
             window->setView(view);
@@ -412,8 +410,10 @@ int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
 
     while (i < mapSFML.size() - 1) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (charact.intersects(g) == true)
+        if (charact.intersects(g)) {
+            coli_sound->start();
             return (0);
+        }
         i++;
     }
     return (1);
@@ -469,8 +469,7 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
     if (sprite.getScale().x > 0) {
         charact.x += (sprite.getTextureRect().width * 3) / 2;
         charact_mx.x += (sprite.getTextureRect().width * 3);
-    }
-    else {
+    } else {
         charact.x -= (sprite.getTextureRect().width * 3) / 2;
         charact_mx.x -= (sprite.getTextureRect().width * 3);
     }

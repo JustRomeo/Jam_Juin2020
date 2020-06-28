@@ -9,6 +9,7 @@ SRCP =	src/
 DISP =	src/Display/
 GAMP =	src/Game/
 MAPP =	src/Map/
+MENP = 	src/Menu/
 PLAP =	src/Player/
 COMP =	src/SFMLComponents/
 SYSP =	src/System/
@@ -16,15 +17,17 @@ SYSP =	src/System/
 SRC =	$(SRCP)main.cpp			\
 		\
 		$(COMP)ImageSFML.cpp	\
+		$(COMP)MusicSFML.cpp	\
 		$(DISP)Sprite.cpp		\
 		$(DISP)Window.cpp		\
-		$(GAMP)Echap.cpp		\
 		$(GAMP)Ennemis.cpp		\
 		$(GAMP)Projectile.cpp	\
 		$(GAMP)GameLoop.cpp		\
-		$(GAMP)MainMenu.cpp		\
 		$(MAPP)Block.cpp		\
 		$(MAPP)Door.cpp			\
+		$(MENP)Death.cpp		\
+		$(MENP)Echap.cpp		\
+		$(MENP)MainMenu.cpp		\
 		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
 		$(PLAP)Battery.cpp	\
@@ -52,6 +55,7 @@ CPPFLAGS =	-I./include/				\
 			-I./Class/Display			\
 			-I./Class/Game				\
 			-I./Class/Map				\
+			-I./Class/Menu				\
 			-I./Class/Player			\
 			-I./Class/SFMLComponents	\
 			-I./Class/System			\

@@ -13,11 +13,16 @@
 #include "Block.hpp"
 #include "Battery.hpp"
 #include "time.h"
+#include "Block.hpp"
+#include "Exception.hpp"
+#include "MusicSFML.hpp"
+#include "LibGraphics.hpp"
 
 class Character {
     public:
         Character();
         ~Character();
+
         sf::Sprite getSprite();
         void display(std::shared_ptr<sf::RenderWindow> window,
             std::vector<std::shared_ptr<Block>> mapSFML);
@@ -53,32 +58,35 @@ class Character {
         int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
         int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
 
+        int _lifes;
     protected:
     private:
-        std::shared_ptr<sf::Texture> texture;
-        std::shared_ptr<sf::Texture> textureFight;
-        sf::Sprite sprite;
-        sf::Vector2f move;
-        sf::Vector2f oldPose;
-        sf::Clock move_clock;
-        sf::Clock anim_clock;
-        sf::Clock switch_clock;
-        std::vector<sf::IntRect> shootRect;
-        std::vector<sf::IntRect> channelingRect;
-        std::vector<float> channelingTime;
-        std::vector<std::shared_ptr<Battery>> battery;
-        bool is_shooting;
-        bool is_moving;
-        bool is_jumping;
-        bool is_falling;
-        bool is_channeling;
         bool is_switching;
-        int weapon_type;
         int move_Y;
         int notMove_Y;
         int move_Xmax;
+        bool is_moving;
+        bool is_jumping;
+        int weapon_type;
+        bool is_falling;
         int shootRectPos;
+        bool is_shooting;
+        sf::Vector2f move;
+        sf::Sprite sprite;
         int channelRectPos;
+        bool is_channeling;
+        sf::Clock move_clock;
+        sf::Clock switch_clock;
+        sf::Vector2f oldPose;
+        sf::Clock anim_clock;
+        MusicSFML *jump_sound;
+        MusicSFML *coli_sound;
+        std::vector<float> channelingTime;
+        std::vector<sf::IntRect> shootRect;
+        std::shared_ptr<sf::Texture> texture;
+        std::vector<sf::IntRect> channelingRect;
+        std::shared_ptr<sf::Texture> textureFight;
+        std::vector<std::shared_ptr<Battery>> battery;
 };
 
 #endif /* !CHARACTER_HPP_ */
