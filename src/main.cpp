@@ -23,10 +23,9 @@ using namespace std;
 static bool isEnvDisplay(char **env) {
     if (!env || !env[0])
         return false;
-    for (size_t i = 0; env[i]; i ++) {
+    for (size_t i = 0; env[i]; i ++)
         if (string(env[i]).find("DISPLAY=:") != string::npos)
             return true;
-    }
     return false;
 }
 
@@ -35,7 +34,6 @@ static void EnnemiGeneration(vector<string> map, vector<shared_ptr<Ennemi>> &Enn
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E')
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
-                // this->setPosition(sf::Vector2f(j * 157, i * 157));
 }
 
 int main(int ac, char **av, char **env) {
@@ -51,7 +49,6 @@ int main(int ac, char **av, char **env) {
         mapSFML.clear();
         Ennemilist.clear();
         EnnemiGeneration(map, Ennemilist);
-        // Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
         if (!isEnvDisplay(env))
             return 84;
         try {

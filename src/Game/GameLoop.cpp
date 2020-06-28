@@ -15,6 +15,18 @@
 GameLoop::GameLoop()
 {
     try {
+        music_1 = new MusicSFML();
+        music_2 = new MusicSFML();
+        music_3 = new MusicSFML();
+        death_ennemi = new MusicSFML();
+        music_1->load("resources/Sounds/music_1.ogg");
+        music_2->load("resources/Sounds/music_2.ogg");
+        music_3->load("resources/Sounds/music_3.ogg");
+        death_ennemi->load("resources/Sounds/death.ogg");
+        music_1->setLoop(true);
+        music_2->setLoop(true);
+        music_3->setLoop(true);
+
         heart1 = new ImageSFML("resources/Images/heart.png");
         heart2 = new ImageSFML("resources/Images/heart.png");
         heart3 = new ImageSFML("resources/Images/heart.png");
@@ -22,13 +34,10 @@ GameLoop::GameLoop()
         heart2->setScale(sf::Vector2f(0.25, 0.25));
         heart1->setScale(sf::Vector2f(0.25, 0.25));
 
-        death_ennemi = new MusicSFML();
-        death_ennemi->load("resources/Sounds/death.ogg");
-        death_ennemi->setVolume(50);
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
         auto image = sf::Image {};
-        if (!image.loadFromFile("resources/Images/icon.jpg"))
+        if (!image.loadFromFile("resources/Images/icon.png"))
             throw Exception("Loading Ressource Failed");
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
@@ -42,9 +51,12 @@ GameLoop::GameLoop()
 
 GameLoop::~GameLoop()
 {
-    // heart1->~ImageSFML();
-    // heart2->~ImageSFML();
-    // heart3->~ImageSFML();
+    heart1->~ImageSFML();
+    heart2->~ImageSFML();
+    heart3->~ImageSFML();
+    music_1->~MusicSFML();
+    music_2->~MusicSFML();
+    music_3->~MusicSFML();
     death_ennemi->~MusicSFML();
 }
 
@@ -129,7 +141,17 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             }
             return (3);
         } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
+            switch(perso->getWeapon()) {
+                case 1: music_1->pause(); break;
+                case 2: music_2->pause(); break;
+                case 3: music_3->pause(); break;
+            }
             perso->incWeapon();
+            switch(perso->getWeapon()) {
+                case 1: music_1->start(); break;
+                case 2: music_2->start(); break;
+                case 3: music_3->start(); break;
+            }
             return (3);
         } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && !perso->isShooting() && !perso->isJumping() && !perso->isFalling() && !perso->isSwitching()) {
             perso->channeling();

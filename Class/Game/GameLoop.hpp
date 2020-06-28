@@ -42,6 +42,10 @@ class GameLoop {
         ImageSFML *heart1;
         ImageSFML *heart2;
         ImageSFML *heart3;
+
+        MusicSFML *music_1;
+        MusicSFML *music_2;
+        MusicSFML *music_3;
         MusicSFML *death_ennemi;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
