@@ -10,6 +10,7 @@ class MainMenu {
 
         bool Menu(sf::RenderWindow &window);
     private:
+        sf::Music *_music;
 };
 
 #endif

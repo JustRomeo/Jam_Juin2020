@@ -17,7 +17,7 @@ GameLoop::GameLoop()
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
         auto image = sf::Image {};
-        if (!image.loadFromFile("resources/Images/oui.jpg"))
+        if (!image.loadFromFile("resources/Images/icon.jpg"))
             throw Exception("Loading Ressource Failed");
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
@@ -123,8 +123,8 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
     vector<shared_ptr<Block>> mapSFML_s = mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
 
-    // if (!MainMenu().Menu(*window))
-    //    return QUIT;
+    if (!MainMenu().Menu(*window))
+       return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);

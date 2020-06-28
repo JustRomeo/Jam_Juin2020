@@ -1,8 +1,17 @@
 #include "MainMenu.hpp"
 #include "ImageSFML.hpp"
+#include "Exception.hpp"
 
-MainMenu::MainMenu() {}
-MainMenu::~MainMenu() {}
+MainMenu::MainMenu() {
+    _music = new sf::Music;
+    if (_music->openFromFile("resources/Sounds/Main.ogg") == false)
+        throw Exception("resources load failed");
+    _music->setLoop(true);
+}
+MainMenu::~MainMenu() {
+    _music->stop();
+    delete(_music);
+}
 
 bool MainMenu::Menu(sf::RenderWindow &window) {
     sf::Event event;
@@ -10,6 +19,7 @@ bool MainMenu::Menu(sf::RenderWindow &window) {
     ImageSFML quit("resources/Buttons/quit.png");
     ImageSFML background("resources/Images/wallpaper.jpg");
 
+    _music->play();
     play.setPosition(sf::Vector2f(800, 400));
     quit.setPosition(sf::Vector2f(800, 525));
     window.setFramerateLimit(20);

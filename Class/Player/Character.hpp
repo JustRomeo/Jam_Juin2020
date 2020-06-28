@@ -8,10 +8,11 @@
 #ifndef CHARACTER_HPP_
 #define CHARACTER_HPP_
 
-#include "../include/LibGraphics.hpp"
-#include "Exception.hpp"
-#include "Block.hpp"
 #include "time.h"
+#include "Block.hpp"
+#include "Exception.hpp"
+#include "MusicSFML.hpp"
+#include "LibGraphics.hpp"
 
 class Character {
     public:
@@ -67,6 +68,8 @@ class Character {
         sf::Clock move_clock;
         sf::Vector2f oldPose;
         sf::Clock anim_clock;
+        MusicSFML *jump_sound;
+        MusicSFML *coli_sound;
         std::vector<float> channelingTime;
         std::vector<sf::IntRect> shootRect;
         std::shared_ptr<sf::Texture> texture;

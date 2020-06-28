@@ -17,6 +17,7 @@ SYSP =	src/System/
 SRC =	$(SRCP)main.cpp			\
 		\
 		$(COMP)ImageSFML.cpp	\
+		$(COMP)MusicSFML.cpp	\
 		$(DISP)Sprite.cpp		\
 		$(DISP)Window.cpp		\
 		$(GAMP)Ennemis.cpp		\
