@@ -384,7 +384,8 @@ int GameLoop::endScreen()
 }
 
 enum CHOICE {QUIT = 0, REPLAY = 1};
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
+int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
+    vector<shared_ptr<Ennemi>> Ennemilist, vector<shared_ptr<MunPlus>> PlusList) {
     size_t loop = 0;
     int is_end = 0;
     Door door_s = door;
@@ -414,11 +415,14 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
                 break;
             }
         }
+        for (int i = 0; i < PlusList.size(); i++)
+            PlusList[i]->display(window);
         drawHearts(*window, perso);
         display();
         clear();
         checkDestruction(mapSFML);
         checkDeathEnemy(Ennemilist);
+        perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 0) {
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;

@@ -19,6 +19,7 @@
 #include "Exception.hpp"
 #include "LibGraphics.hpp"
 #include "Projectile.hpp"
+#include "MunPlus.hpp"
 
 using namespace std;
 class GameLoop {
@@ -35,7 +36,8 @@ class GameLoop {
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
         void drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso);
-        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist);
+        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
+            vector<shared_ptr<Ennemi>> Ennemilist, vector<shared_ptr<MunPlus>> PlusList);
         int endScreen();
 
         shared_ptr<sf::RenderWindow> window;

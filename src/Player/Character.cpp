@@ -70,7 +70,7 @@ Character::Character()
     channelingTime.push_back(0.3);
     channelingTime.push_back(0.3);
     for (int i = 1; i < 4; i++) {
-        battery.push_back(std::make_shared<Battery>(i));
+        battery.push_back(std::make_shared<Battery>(i, 3));
     }
 }
 
@@ -432,6 +432,18 @@ int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
 
     while (i < mapSFML.size() - 1) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
+        // if (sprite.getScale().x > 0) {
+        //     if (charact.intersects(g) == true
+        //         && (charact.left + (charact.width * 3)) > g.left
+        //         && (charact.left + (charact.width * 3)) < g.left + 15)
+        //         sprite.move(sf::Vector2f(15.f, 0));
+        //     if (charact.intersects(g) == true
+        //         && (charact.left < g.left + (g.width * mapSFML[i]->getSprite().getScale().x))
+        //         && (charact.left > g.left + (g.width * mapSFML[i]->getSprite().getScale().x - 15))) {
+        //         sprite.move(sf::Vector2f(15.f, 0));
+        //         printf("here\n");
+        //     }
+        // }
         if (charact.intersects(g)) {
             coli_sound->start();
             return (0);
@@ -454,11 +466,11 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
     charact_xm.y += (sprite.getTextureRect().height * 3) + 30;
     charact_mx.y += (sprite.getTextureRect().height * 3) + 30;
     if (sprite.getScale().x > 0) {
-        charact_mx.x += (sprite.getTextureRect().width * 3) - 15;
+        charact_mx.x += (sprite.getTextureRect().width * 3);
         charact_xm.x += 15;
     }
     else {
-        charact_mx.x -= (sprite.getTextureRect().width * 3) - 15;
+        charact_mx.x -= (sprite.getTextureRect().width * 3);
         charact_xm.x -= 15;
     }
     while (i < mapSFML.size() - 1) {
@@ -536,6 +548,24 @@ void Character::incWeapon()
             sprite.setScale(sf::Vector2f(-3.f, 3.f));
         switch_clock.restart();
         sprite.setTextureRect(sf::IntRect(10, 8, 40, 29));
+    }
+}
+
+void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList)
+{
+    sf::FloatRect rect;
+
+    for (int i = 0; i < PlusList.size(); i++) {
+        rect = PlusList[i]->getMunShape();
+        if (rect.intersects(sprite.getGlobalBounds()) == true) {
+            if (PlusList[i]->getType() == 1)
+                battery[0]->incMaxMun();
+            if (PlusList[i]->getType() == 2)
+                battery[1]->incMaxMun();
+            if (PlusList[i]->getType() == 3)
+                battery[2]->incMaxMun();
+            PlusList.erase(PlusList.begin() + i);
+        }
     }
 }
 

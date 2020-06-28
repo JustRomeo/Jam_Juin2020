@@ -31,6 +31,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
 		$(PLAP)Battery.cpp	\
+		$(PLAP)MunPlus.cpp	\
 		$(MAPP)Mapper.cpp		\
 		$(SYSP)System.cpp		\
 

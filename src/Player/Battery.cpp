@@ -7,12 +7,13 @@
 
 #include "Battery.hpp"
 
-Battery::Battery(int _type)
+Battery::Battery(int _type, int _max_mun)
 {
     int x = 150;
     int y = 980;
     type = _type;
-    mun = 5;
+    mun = _max_mun;
+    max_mun = _max_mun;
     for (int i = 0; i < 5; i++) {
         munShape.push_back(sf::RectangleShape(sf::Vector2f(20, 40)));
         munShape[i].setOutlineColor(sf::Color::Black);
@@ -64,8 +65,8 @@ void Battery::display(std::shared_ptr<sf::RenderWindow> window)
         window->draw(munShape[i]);
         x+= 20;
     }
-    if (mun < 5) {
-        for (int i = mun; i < 5; i++) {
+    if (mun < max_mun) {
+        for (int i = mun; i < max_mun; i++) {
             emptyMun.setPosition(view.getCenter().x - 900 + x, view.getCenter().y + 450);
             window->draw(emptyMun);
             x+= 20;
@@ -79,7 +80,7 @@ int Battery::getMun()
 }
 int Battery::incMun()
 {
-    if (mun < 5) {
+    if (mun < max_mun) {
         mun++;
         return (1);
     }
@@ -111,4 +112,14 @@ int Battery::reloadBattery()
 void Battery::channeling()
 {
     mun = 0;
+}
+
+int Battery::getMaxMun()
+{
+    return (max_mun);
+}
+
+void Battery::incMaxMun()
+{
+    max_mun++;
 }

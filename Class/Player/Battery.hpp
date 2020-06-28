@@ -13,7 +13,7 @@
 
 class Battery {
     public:
-        Battery(int type);
+        Battery(int type, int max_mun);
         ~Battery();
         void display(std::shared_ptr<sf::RenderWindow> window);
         int getMun();
@@ -22,6 +22,8 @@ class Battery {
         int getType();
         int getTimeDiff(float diff);
         int reloadBattery();
+        int getMaxMun();
+        void incMaxMun();
         void channeling();
     protected:
     private:
@@ -31,6 +33,7 @@ class Battery {
         sf::Clock reload;
         int mun;
         int type;
+        int max_mun;
 };
 
 #endif /* !BATTERY_HPP_ */
