@@ -14,6 +14,7 @@ class ImageSFML {
 
         void destroyTexture();
         sf::Sprite getSprite() const;
+        sf::Texture *getTexture(void);
         bool isClicked(sf::Event event);
         void setTexture(string filepath);
         void setScale(sf::Vector2f size);

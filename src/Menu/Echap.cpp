@@ -7,18 +7,15 @@ enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
 int EchapMenu::Menu(sf::RenderWindow &window) {
     sf::Event event;
     ImageSFML play("resources/Buttons/play.png");
-    ImageSFML replay("resources/Buttons/replay.jpg");
     ImageSFML back("resources/Buttons/back.jpg");
     ImageSFML quit("resources/Buttons/quit.png");
     ImageSFML background("resources/Images/Menu_options.jpg");
 
     window.setView(window.getDefaultView());
     play.setPosition(sf::Vector2f(800, 325));
-    replay.setPosition(sf::Vector2f(800, 450));
     back.setPosition(sf::Vector2f(800, 575));
     quit.setPosition(sf::Vector2f(800, 700));
 
-    replay.setScale(sf::Vector2f(0.75, 1.20));
     back.setScale(sf::Vector2f(0.75, 1.20));
 
     window.setFramerateLimit(20);
@@ -27,7 +24,6 @@ int EchapMenu::Menu(sf::RenderWindow &window) {
         window.draw(background.getSprite());
 
         window.draw(play.getSprite());
-        window.draw(replay.getSprite());
         window.draw(back.getSprite());
         window.draw(quit.getSprite());
 
@@ -37,8 +33,6 @@ int EchapMenu::Menu(sf::RenderWindow &window) {
                 return QUIT;
             else if (play.isClicked(event))
                 return PLAY;
-            else if (replay.isClicked(event))
-                return REPLAY;
             else if (back.isClicked(event))
                 return BACK;
         }

@@ -20,6 +20,9 @@ ImageSFML::~ImageSFML() {
     delete _texture;
 }
 
+sf::Texture *ImageSFML::getTexture(void) {
+    return this->_texture;
+}
 bool ImageSFML::isClicked(sf::Event event) {
     sf::Vector2i mouse(sf::Mouse::getPosition());
 

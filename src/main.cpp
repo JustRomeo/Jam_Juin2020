@@ -29,7 +29,7 @@ static bool isEnvDisplay(char **env) {
     return false;
 }
 
-
+#include "MainMenu.hpp"
 int main(int ac, char **av, char **env) {
     int replay = 1;
     Mapper mapper;
@@ -42,17 +42,12 @@ int main(int ac, char **av, char **env) {
     while (replay == 1) {
         mapSFML.clear();
         Ennemilist.clear();
-        // game = make_shared<GameLoop>();
         Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
         if (!isEnvDisplay(env))
             return 84;
         try {
             mapper.setMap(map);
             mapSFML = mapper.generate();
-        } catch (Exception &e) {
-            cout << e.what() << endl;
-            return 84;
-        } try {
             game = std::make_shared<GameLoop>();
             replay = game->gameLoop(mapSFML, door, Ennemilist);
         } catch (Exception &e) {

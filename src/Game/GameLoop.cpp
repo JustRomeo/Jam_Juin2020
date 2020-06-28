@@ -6,14 +6,20 @@
 */
 
 #include "Door.hpp"
+#include "Echap.hpp"
+#include "Death.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 
 GameLoop::GameLoop()
 {
     try {
-        window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "graphical interface");
+        window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
+        auto image = sf::Image{};
+        if (!image.loadFromFile("resources/Images/icon.jpg"))
+            cout << "Loading Ressource Failed" << endl;
+        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
@@ -27,6 +33,10 @@ GameLoop::~GameLoop()
 {
 }
 
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
+    return this->window;
+}
+
 void GameLoop::clear()
 {
     window->clear(sf::Color::White);
@@ -34,9 +44,8 @@ void GameLoop::clear()
 
 void GameLoop::display()
 {
-    for (int i = 0; i < projectile.size(); i++) {
+    for (int i = 0; i < projectile.size(); i ++)
         projectile[i]->display(window);
-    }
     window->display();
 }
 
@@ -45,7 +54,6 @@ int GameLoop::checkOpen()
     return window->isOpen();
 }
 
-#include "Echap.hpp"
 int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
@@ -53,51 +61,46 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        }
-        if (event.type == sf::Event::MouseButtonReleased && 
+        } if (event.type == sf::Event::MouseButtonReleased &&
             perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
             perso->shoot();
             if (perso->getSprite().getScale().x > 0) {
-                if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition()));
-                if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition()));
-                if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
+                switch(perso->getWeapon()) {
+                    case 1: projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition())); break;
+                    case 2: projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition())); break;
+                    case 3: projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition())); break;
+                    default: continue;
+                }
+            } else {
+                switch(perso->getWeapon()) {
+                    case 1: projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition())); break;
+                    case 2: projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition())); break;
+                    case 3: projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition())); break;
+                    default: continue;
+                }
             }
-            else {
-                if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition()));
-                if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition()));
-                if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
-            }
-            return (1);
-        }
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
+            return (3);
+        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
             perso->incWeapon();
-            return (1);
+            return (3);
         }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->jump();
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->moveLeft(window, mapSFML);
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && perso->isShooting() == false && perso->isChanneling() == false) {
-        return (1);
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)&& perso->isShooting() == false && perso->isChanneling() == false) {
-        perso->moveRigth(window, mapSFML);
-        return (1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && perso->isShooting() == false 
-        && perso->isJumping() == false && perso->isFalling() == false ) {
+    } if (!perso->isShooting() && !perso->isChanneling()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            perso->jump();
+            return (3);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+            perso->moveLeft(window, mapSFML);
+            return (3);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            return (3);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            perso->moveRigth(window, mapSFML);
+            return (3);
+        }
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && !perso->isShooting() && !perso->isJumping() && !perso->isFalling()) {
         perso->channeling();
-        return (1);
-    }
-    if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
+        return (3);
+    } if (!perso->isShooting() && !perso->isJumping() && !perso->isFalling() && !perso->isChanneling()) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -113,13 +116,15 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     return 0;
 }
 
-#include "Death.hpp"
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     size_t loop = 0;
+    Door door_s = door;
+    vector<shared_ptr<Block>> mapSFML_s = mapSFML;
+    vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
 
-    if (!MainMenu().Menu(*window))
-       return QUIT;
+    // if (!MainMenu().Menu(*window))
+    //    return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
@@ -135,8 +140,8 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         window->draw(door.getSprite());
         display();
         clear();
-        if (loop % 15 == 0)
-            perso->_lifes -= 1;
+        // if (loop % 15 == 0)
+        //     perso->_lifes -= 1;
         if (perso->_lifes < 0) {
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;
@@ -150,6 +155,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
                     window->setView(*view);
                     break;
                 case 2: return REPLAY;
+                case 3: continue; break;
             }
         } catch (Exception &e) {
             throw e;
