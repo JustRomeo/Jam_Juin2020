@@ -181,6 +181,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        window->setMouseCursorVisible(true);
         switch (EchapMenu().Menu(*window)) {
             case -1: return -1; // Quit
             case 0:  return 0;  // resume
@@ -395,6 +396,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
     _music->play();
     if (!MainMenu().Menu(*window))
        return QUIT;
+    window->setMouseCursorVisible(false);
     if (fondue() == false)
         return QUIT;
     _music->stop();
@@ -424,6 +426,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
         checkDeathEnemy(Ennemilist);
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 0) {
+            window->setMouseCursorVisible(true);
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;
                 case 2: return REPLAY;
@@ -438,6 +441,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
                 case 2: return REPLAY;
                 case 3: continue; break;
             }
+            window->setMouseCursorVisible(false);
         } catch (Exception &e) {
             throw e;
         }
