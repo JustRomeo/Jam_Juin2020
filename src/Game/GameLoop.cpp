@@ -20,11 +20,14 @@ GameLoop::GameLoop()
         music_3 = new MusicSFML();
         death_perso = new MusicSFML();
         death_ennemi = new MusicSFML();
+        end_music = new MusicSFML();
         music_1->load("resources/Sounds/music_1.ogg");
         music_2->load("resources/Sounds/music_2.ogg");
         music_3->load("resources/Sounds/music_3.ogg");
+        end_music->load("resources/Sounds/music_3.ogg");
         death_perso->load("resources/Sounds/Dead_sound.ogg");
         death_ennemi->load("resources/Sounds/death.ogg");
+        end_music->load("resources/Sounds/end_music.ogg");
         music_1->setLoop(true);
         music_2->setLoop(true);
         music_3->setLoop(true);
@@ -324,6 +327,10 @@ int GameLoop::endScreen()
     sf::Color c3(255, 255, 255, 0);
     sf::Color c4(255, 255, 255, 0);
 
+    music_1->stop();
+    music_2->stop();
+    music_3->stop();
+    end_music->start();
     window->setView(window->getDefaultView());
     clock.restart();
     if (font.loadFromFile("./resources/character/arial.ttf") == false)
@@ -375,15 +382,16 @@ int GameLoop::endScreen()
         }
         if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
-       display();
-       clear();
-       while (window->pollEvent(event)) {
-           if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
-            perso->incWeapon();
-            return (true);
-        }
+        display();
+        clear();
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
+                end_music->stop();
+                return (true);
+            }
        }
     }
+    end_music->stop();
     return (true);
 }
 
