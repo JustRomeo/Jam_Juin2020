@@ -12,6 +12,7 @@ Character::Character()
 
     jump_sound = new MusicSFML();
     coli_sound = new MusicSFML();
+    shot_sound = new MusicSFML();
 
     jump_sound->load("resources/Sounds/Jump.ogg");
     coli_sound->load("resources/Sounds/Colision.ogg");
@@ -127,8 +128,7 @@ void Character::shootAnimation()
             shootRectPos = 0;
             sprite.setTexture(*texture);
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
-        }
-        else
+        } else
             sprite.setTextureRect(shootRect[shootRectPos]);
     }
 }
@@ -160,8 +160,7 @@ void Character::channelingAnimation()
             channelRectPos = 0;
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
             sprite.setPosition(oldPose);
-        }
-        else {
+        } else {
             if (channelRectPos == 2)
                 sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 47);
             if (channelRectPos == 4)
@@ -367,7 +366,24 @@ void Character::shoot()
     sf::IntRect rect = sprite.getTextureRect();
     int toTurn = 0;
 
-    if (is_shooting != true && is_jumping == false && is_falling == false) {
+    switch (getWeapon()) {
+        case 1:
+            shot_sound->load("resources/Sounds/shot1.ogg");
+            shot_sound->start();
+            break;
+        case 2:
+            shot_sound->load("resources/Sounds/shot2.ogg");
+            shot_sound->start();
+            break;
+        case 3:
+            shot_sound->load("resources/Sounds/shot3.ogg");
+            shot_sound->start();
+            break;
+        case 4:
+            shot_sound->load("resources/Sounds/channelingShot.ogg");
+            shot_sound->start();
+            break;
+    } if (is_shooting != true && is_jumping == false && is_falling == false) {
         is_shooting = true;
         if (sprite.getScale().x < 0)
             toTurn = 1;
