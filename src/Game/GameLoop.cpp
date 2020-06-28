@@ -25,6 +25,8 @@ GameLoop::GameLoop()
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
         window->setView(*view);
+        _music = std::make_shared<sf::Music>();
+        if (!_music->openFromFile("./resources/Sounds/Main.ogg"));
     } catch (std::bad_alloc &e) {
         throw(Exception("can't initiate window and view\n"));
     }
@@ -170,15 +172,183 @@ static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapS
             window.draw(mapSFML[i]->getSprite());
 }
 
+static int getTimeDiff(float diff, sf::Clock &clock)
+{
+    sf::Time time;
+    float seconds = 0;
+
+    time = clock.getElapsedTime();
+    seconds = time.asMicroseconds() / 1000000.0;
+    if (seconds > diff) {
+        clock.restart();
+        return (1);
+    }
+    return (0);
+}
+
+int GameLoop::fondue()
+{
+    sf::RectangleShape fade = sf::RectangleShape(sf::Vector2f(1920, 1080));
+    sf::Event event;
+    int quit = 0;
+    sf::Clock clock = sf::Clock();
+    sf::Font font;
+    sf::Color c1(255, 255, 255, 255);
+    sf::Color c2(255, 255, 255, 0);
+    sf::Color c3(255, 255, 255, 0);
+    sf::Color c4(255, 255, 255, 0);
+
+    clock.restart();
+    if (font.loadFromFile("./resources/character/arial.ttf") == false)
+        return (false);
+    fade.setFillColor(sf::Color::Black);
+    sf::Text text("Aventurier!\n", font);
+    sf::Text text2("Apres avoir trouve dans une temple une ancienne relique aux pouvoir mysterieux.\n                          Emettant des sons d'une puissance inouie.\nVous decidez de rentrez avec, afin d'en exploiter l'immmense potentiel.\n", font);
+    sf::Text text3("               Malheureusement de grande puissance convoite aussi cet artefact.\nEt on deploye tous les moyens en leur possession pour vous goumer et recuperer la relique.\n", font);
+    sf::Text text4("Vous devrez donc vous echapper du temple et survivre au different danger qui se dresseront sur votre chemin.\n                                  Grace a vos competences d'aventurier et au pouvoir de la relique.\n", font);
+    text.setCharacterSize(30);
+    text.setStyle(sf::Text::Bold);
+    text.setFillColor(c1);
+    text.setPosition(sf::Vector2f(845, 50));
+
+    text2.setCharacterSize(30);
+    text2.setStyle(sf::Text::Bold);
+    text2.setFillColor(c2);
+    text2.setPosition(sf::Vector2f(400, 150));
+
+    text3.setCharacterSize(30);
+    text3.setStyle(sf::Text::Bold);
+    text3.setFillColor(c3);
+    text3.setPosition(sf::Vector2f(375, 350));
+
+    text4.setCharacterSize(30);
+    text4.setStyle(sf::Text::Bold);
+    text4.setFillColor(c4);
+    text4.setPosition(sf::Vector2f(200, 500));
+    while (window->isOpen() == true && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
+        window->draw(fade);
+        window->draw(text);
+        window->draw(text2);
+        window->draw(text3);
+        window->draw(text4);
+        if (c1.a == 255 && c2.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c2.a++;
+            text2.setFillColor(c2);
+        }
+        if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c3.a++;
+            text3.setFillColor(c3);
+        }
+        else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c4.a++;
+            text4.setFillColor(c4);
+        }
+        if (c2.a == 255 && c3.a == 255 && c4.a == 255)
+            break;
+       display();
+       clear();
+       while (window->pollEvent(event)) {
+           if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
+            perso->incWeapon();
+            return (true);
+        }
+       }
+    }
+    return (true);
+}
+
+int GameLoop::endScreen()
+{
+    sf::RectangleShape fade = sf::RectangleShape(sf::Vector2f(1920, 1080));
+    sf::Event event;
+    int quit = 0;
+    sf::Clock clock = sf::Clock();
+    sf::Font font;
+    sf::Color c1(255, 255, 255, 255);
+    sf::Color c2(255, 255, 255, 0);
+    sf::Color c3(255, 255, 255, 0);
+    sf::Color c4(255, 255, 255, 0);
+
+    window->setView(window->getDefaultView());
+    clock.restart();
+    if (font.loadFromFile("./resources/character/arial.ttf") == false)
+        return (false);
+    fade.setFillColor(sf::Color::Black);
+    sf::Text text("Bravo Aventurier!\n", font);
+    sf::Text text2("Apres avoir traverse de nombreuse epreuve vous etes finalement sortis tu temple.\n                                            En vie et avec la relique.\n", font);
+    sf::Text text3("Vous rentrez chez vous avec et grace a son pouvoir vous devenez une personne riche et influente.\n", font);
+    sf::Text text4("FIN\n", font);
+    text.setCharacterSize(30);
+    text.setStyle(sf::Text::Bold);
+    text.setFillColor(c1);
+    text.setPosition(sf::Vector2f(845, 50));
+
+    text2.setCharacterSize(30);
+    text2.setStyle(sf::Text::Bold);
+    text2.setFillColor(c2);
+    text2.setPosition(sf::Vector2f(400, 150));
+
+    text3.setCharacterSize(30);
+    text3.setStyle(sf::Text::Bold);
+    text3.setFillColor(c3);
+    text3.setPosition(sf::Vector2f(305, 350));
+
+    text4.setCharacterSize(30);
+    text4.setStyle(sf::Text::Bold);
+    text4.setFillColor(c4);
+    text4.setPosition(sf::Vector2f(930, 500));
+    while (window->isOpen() == true && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
+        window->draw(fade);
+        window->draw(text);
+        window->draw(text2);
+        window->draw(text3);
+        window->draw(text4);
+        if (c1.a == 255 && c2.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c2.a++;
+            text2.setFillColor(c2);
+        }
+        if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c3.a++;
+            text3.setFillColor(c3);
+        }
+        else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
+            if (getTimeDiff(0.01, clock) == 1)
+                c4.a++;
+            text4.setFillColor(c4);
+        }
+        if (c2.a == 255 && c3.a == 255 && c4.a == 255)
+            break;
+       display();
+       clear();
+       while (window->pollEvent(event)) {
+           if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
+            perso->incWeapon();
+            return (true);
+        }
+       }
+    }
+    return (true);
+}
+
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     size_t loop = 0;
+    int is_end = 0;
     Door door_s = door;
     vector<shared_ptr<Block>> mapSFML_s = mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
 
-    // if (!MainMenu().Menu(*window))
-    //    return QUIT;
+    _music->play();
+    if (!MainMenu().Menu(*window))
+       return QUIT;
+    if (fondue() == false)
+        return QUIT;
+    _music->stop();
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
@@ -186,11 +356,15 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         BlockUpdate(*window, mapSFML);
         EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
-        window->draw(door.getSprite());
+        window->draw(door_s.getSprite());
         perso->display(window, mapSFML);
-        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door.getSprite().getGlobalBounds()))) {
-            door.setOpening(true);
-            door.doorOpen();
+        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door_s.getSprite().getGlobalBounds()))) {
+            door_s.setOpening(true);
+            door_s.doorOpen();
+            if (door_s.getAnim() >= 5) {
+                is_end = 1;
+                break;
+            }
         }
         display();
         clear();
@@ -215,5 +389,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
             throw e;
         }
     }
+    if (is_end == 1)
+        endScreen();
     return QUIT;
 }

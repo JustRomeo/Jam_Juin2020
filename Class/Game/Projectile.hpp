@@ -49,6 +49,7 @@ class Projectile {
         std::vector<sf::Vector2f> shoot4Move;
         int posRect;
         int destructionCapacity;
+        int orient;
 };
 
 #endif /* !PROJECTILE_HPP_ */

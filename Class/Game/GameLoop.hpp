@@ -28,15 +28,18 @@ class GameLoop {
         void clear(void);
         void display(void);
         int checkOpen(void);
+        int fondue();
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist);
+        int endScreen();
 
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
+        std::shared_ptr<sf::Music> _music;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
         shared_ptr<Sprite> background;

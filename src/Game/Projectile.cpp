@@ -7,7 +7,7 @@
 
 #include "Projectile.hpp"
 
-Projectile::Projectile(int _type, int orient, sf::Vector2f pos, int desCap)
+Projectile::Projectile(int _type, int _orient, sf::Vector2f pos, int desCap)
 {
     texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/Images/sonor_shockwaves.png") == false)
@@ -40,6 +40,7 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos, int desCap)
     shootRect4.push_back(sf::IntRect(1008, 604, 93, 66));
 
     posRect = 0;
+    orient = _orient;
     destructionCapacity = desCap;
     sprite.setTexture(*texture);
     if (_type == 1)
@@ -197,16 +198,21 @@ void Projectile::animation()
             if (posRect < shootRect4.size() - 1) {
                 posRect++;
                 if (posRect == 2) {
-                    pos.x += 60;
+                    if (orient > 0)
+                        pos.x += 60;
+                    if (orient < 0)
+                        pos.x -= 60;
                     pos.y += 60;
                     sprite.setPosition(pos);
                 }
                 if (posRect == 3) {
-                    pos.x += 60;
+                    if (orient > 0)
+                        pos.x += 60;
+                    if (orient < 0)
+                        pos.x -= 60;
                     pos.y -= 30;
                     sprite.setPosition(pos);
                 }
-                //sprite.setPosition(sprite.getPosition().x + 4, sprite.getPosition().y);
                 sprite.setTextureRect(shootRect4[posRect]);
             }
         }

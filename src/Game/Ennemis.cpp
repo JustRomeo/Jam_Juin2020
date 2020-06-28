@@ -16,7 +16,7 @@ Ennemi::Ennemi(int X, int Y) {
     this->_sprite.setScale(sf::Vector2f(2, 2));
     _sprite.setTextureRect(sf::IntRect(71, 16, 44, 62));
     _size = this->getSize();
-
+    _anim = 0;
 }
 Ennemi::~Ennemi() {}
 

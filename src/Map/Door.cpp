@@ -20,6 +20,7 @@ Door::Door(vector<string> map) {
     alreadyopen = false;
     _texture = new sf::Texture;
     pos = sf::Vector2f(0, 0);
+    _anim = 0;
     try {
         this->setTexture("resources/Images/Door.png");
     } catch(Exception &e) {
@@ -48,16 +49,10 @@ void Door::setPosition(vector<string> map) {
 void Door::doorOpen(void) {
     if (!_opening)
         return;
-    if (getTimeDiff(0.06) == 1) {
+    if (getTimeDiff(0.3) == 1 && _anim < 5) {
         _anim ++;
-        if (_anim > 6) {
-            _anim = 0;
-            _sprite.setTextureRect(sf::IntRect(0, 0, 267, 375));
-            _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
-        } else {
-            _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));
-            _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
-        }
+        _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));
+        _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
     }
 }
 
@@ -79,6 +74,7 @@ void Door::setPosition(sf::Vector2f pos) {
     _sprite.setPosition(this->pos);
 }
 
+int Door::getAnim() {return _anim;}
 size_t Door::getSize(void) const {return _size;}
 void Door::setOpening(bool var) {_opening = var;}
 sf::Vector2f Door::getPosition(void) {return pos;}

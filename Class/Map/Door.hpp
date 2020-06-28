@@ -14,6 +14,7 @@ class Door {
 
         void doorOpen(void);
         void setOpening(bool);
+        int getAnim();
         size_t getSize(void) const;
         int getTimeDiff(float diff);
         sf::Texture *getTexture(void);

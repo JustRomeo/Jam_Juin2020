@@ -33,10 +33,12 @@ Character::Character()
     shootRectPos = 0;
     channelRectPos = 0;
     weapon_type = 1;
+    invulnerability = 0;
     is_shooting = false;
     is_moving = false;
     is_falling = false;
     is_jumping = false;
+    is_switching = false;
     is_channeling = false;
     move_clock.restart();
     anim_clock.restart();
