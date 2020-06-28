@@ -10,11 +10,14 @@
 #include "Death.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
-#include "Echap.hpp"
+#include "MusicSFML.hpp"
 
 GameLoop::GameLoop()
 {
     try {
+        death_ennemi = new MusicSFML();
+        death_ennemi->load("resources/Sounds/death.ogg");
+        death_ennemi->setVolume(50);
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
         auto image = sf::Image {};
@@ -32,6 +35,7 @@ GameLoop::GameLoop()
 
 GameLoop::~GameLoop()
 {
+    death_ennemi->~MusicSFML();
 }
 
 shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
@@ -75,13 +79,14 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
 {
     int res = -1;
 
-    for (int i = 0; i < projectile.size(); i++) {
+    for (size_t i = 0; i < projectile.size(); i++) {
         res = -1;
-        for (int j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
+        for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
             res = projectile[i]->checkKill(Ennemilist[j]);
-            if (projectile[i]->getCurrentCapacity() <= 0)
+            if (projectile[i]->getCurrentCapacity() <= 0) {
+                death_ennemi->start();
                 projectile.erase(projectile.begin() + i);
-            if (res == 1)
+            } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
         }
     }
@@ -165,6 +170,26 @@ static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &E
         }
 }
 
+static void drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso) {
+    ImageSFML heart3("resources/Images/heart.png");
+    ImageSFML heart2("resources/Images/heart.png");
+    ImageSFML heart1("resources/Images/heart.png");
+
+    // window.getView().getCenter().x - 935, view.getCenter().y + 370
+
+    heart3.setScale(sf::Vector2f(0.25, 0.25));
+    heart2.setScale(sf::Vector2f(0.25, 0.25));
+    heart1.setScale(sf::Vector2f(0.25, 0.25));
+    heart3.setPosition(sf::Vector2f(window.getView().getCenter().x - 800, window.getView().getCenter().y + 370));
+    heart2.setPosition(sf::Vector2f(window.getView().getCenter().x - 850, window.getView().getCenter().y + 370));
+    heart1.setPosition(sf::Vector2f(window.getView().getCenter().x - 900, window.getView().getCenter().y + 370));
+    switch (perso->_lifes) {
+        case 3: window.draw(heart3.getSprite());
+        case 2: window.draw(heart2.getSprite());
+        case 1: window.draw(heart1.getSprite());
+    }
+}
+
 static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapSFML) {
     for (size_t i = 0; i < mapSFML.size(); i++)
             window.draw(mapSFML[i]->getSprite());
@@ -188,6 +213,7 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         window->draw(door.getSprite());
         perso->display(window, mapSFML);
+        drawHearts(*window, perso);
         if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door.getSprite().getGlobalBounds()))) {
             door.setOpening(true);
             door.doorOpen();

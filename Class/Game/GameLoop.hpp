@@ -37,6 +37,7 @@ class GameLoop {
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
+        MusicSFML *death_ennemi;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
         shared_ptr<Sprite> background;
