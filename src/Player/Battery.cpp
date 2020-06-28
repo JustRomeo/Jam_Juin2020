@@ -107,3 +107,8 @@ int Battery::reloadBattery()
     }
     return (0);
 }
+
+void Battery::channeling()
+{
+    mun = 0;
+}

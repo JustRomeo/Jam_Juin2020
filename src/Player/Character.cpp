@@ -387,6 +387,10 @@ void Character::channeling()
         oldPose = sprite.getPosition();
         sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 30);
         sprite.setTextureRect(channelingRect[channelRectPos]);
+        //battery[weapon_type - 1]->channeling();
+        // while (battery[weapon_type - 1]->decMun() == 1) {
+        //     printf("here\n");
+        // }
     }
 }
 
@@ -560,4 +564,15 @@ void Character::setMoving(bool status)
 int Character::getMunBattery()
 {
     return (battery[weapon_type - 1]->decMun());
+}
+
+int Character::getMun()
+{
+    return (battery[weapon_type -1 ]->getMun());
+}
+
+int Character::channelBat()
+{
+    battery[weapon_type -1]->channeling();
+    return (0);
 }

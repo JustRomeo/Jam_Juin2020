@@ -22,7 +22,7 @@ class Battery {
         int getType();
         int getTimeDiff(float diff);
         int reloadBattery();
-
+        void channeling();
     protected:
     private:
         std::shared_ptr<sf::Texture> texture;

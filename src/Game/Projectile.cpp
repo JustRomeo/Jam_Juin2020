@@ -7,7 +7,7 @@
 
 #include "Projectile.hpp"
 
-Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
+Projectile::Projectile(int _type, int orient, sf::Vector2f pos, int desCap)
 {
     texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/Images/sonor_shockwaves.png") == false)
@@ -18,6 +18,8 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
         type = Type::BLUE;
     if (_type == 3)
         type = Type::PURPLE;
+    if (_type == 4)
+        type = Type::CHARGED;
     move_clock.restart();
     anim_clock.restart();
     shootRect1.push_back(sf::IntRect(166, 212, 42, 42));
@@ -31,8 +33,14 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
     shootRect3.push_back(sf::IntRect(164, 310, 44, 49));
     shootRect3.push_back(sf::IntRect(362, 310, 117, 65));
     shootRect3.push_back(sf::IntRect(760, 310, 95, 42));
+
+    shootRect4.push_back(sf::IntRect(0, 0, 0, 0));
+    shootRect4.push_back(sf::IntRect(64, 623, 26, 28));
+    shootRect4.push_back(sf::IntRect(858, 613, 92, 44));
+    shootRect4.push_back(sf::IntRect(1008, 604, 93, 66));
+
     posRect = 0;
-    destructionCapacity = 1;
+    destructionCapacity = desCap;
     sprite.setTexture(*texture);
     if (_type == 1)
         sprite.setTextureRect(shootRect1[posRect]);
@@ -40,6 +48,8 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
         sprite.setTextureRect(shootRect2[posRect]);
     if (_type == 3)
         sprite.setTextureRect(shootRect3[posRect]);
+    if (_type == 4)
+        sprite.setTextureRect(shootRect4[posRect]);
     shoot1Time.push_back(0.4);
     shoot1Time.push_back(0.5);
 
@@ -52,6 +62,11 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
     shoot3Time.push_back(0.2);
     shoot3Time.push_back(0.2);
 
+    shoot4Time.push_back(0.3);
+    shoot4Time.push_back(0.6);
+    shoot4Time.push_back(0.3);
+    shoot4Time.push_back(0.2);
+
     shoot1Move.push_back(sf::Vector2f(0.f, 0.f));
 
     shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
@@ -59,10 +74,17 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
     shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
     shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
     shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
+
+    shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
+    shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
+    shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
+
     if (orient > 0) {
-        shoot1Move.push_back(sf::Vector2f(20.f, 0.f));
-        shoot2Move.push_back(sf::Vector2f(20.f, 0.f));
-        shoot3Move.push_back(sf::Vector2f(20.f, 0.f));
+        shoot1Move.push_back(sf::Vector2f(30.f, 0.f));
+        shoot2Move.push_back(sf::Vector2f(30.f, 0.f));
+        shoot3Move.push_back(sf::Vector2f(30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
         sprite.setScale(sf::Vector2f(1.5, 1.5));
         if (type == 1) {
             pos.x += 40;
@@ -76,23 +98,33 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
             pos.x += 20;
             pos.y -= 6;
         }
+        if (type == 4) {
+            pos.x += 20;
+            pos.y -= 80;
+        }
     }
     else {
-        shoot1Move.push_back(sf::Vector2f(-20.f, 0.f));
-        shoot2Move.push_back(sf::Vector2f(-20.f, 0.f));
-        shoot3Move.push_back(sf::Vector2f(-20.f, 0.f));
+        shoot1Move.push_back(sf::Vector2f(-30.f, 0.f));
+        shoot2Move.push_back(sf::Vector2f(-30.f, 0.f));
+        shoot3Move.push_back(sf::Vector2f(-30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
         sprite.setScale(sf::Vector2f(-1.5, 1.5));
         if (type == 1) {
             pos.x -= 40;
-            //pos.y += 12;
+            pos.y += 7;
         }
         if (type == 2) {
             pos.x -= 20;
             pos.y -= 10;
         }
         if (type == 3) {
-            pos.x -= 20;
+            pos.x += 20;
             pos.y -= 6;
+        }
+        if (type == 4) {
+            pos.x -= 20;
+            pos.y -= 80;
         }
     }
     sprite.setPosition(pos);
@@ -132,6 +164,8 @@ int Projectile::getTimeMov(float diff)
 
 void Projectile::animation()
 {
+    sf::Vector2f pos = sprite.getPosition();
+
     if (type == BLUE && posRect < shoot2Time.size()) {
         if (getTimeAnim(shoot2Time[posRect]) == 1) {
             if (posRect < shootRect2.size() - 1) {
@@ -158,6 +192,25 @@ void Projectile::animation()
             }
         }
     }
+    if (type == CHARGED && posRect < shoot4Time.size()) {
+        if (getTimeAnim(shoot4Time[posRect]) == 1) {
+            if (posRect < shootRect4.size() - 1) {
+                posRect++;
+                if (posRect == 2) {
+                    pos.x += 60;
+                    pos.y += 60;
+                    sprite.setPosition(pos);
+                }
+                if (posRect == 3) {
+                    pos.x += 60;
+                    pos.y -= 30;
+                    sprite.setPosition(pos);
+                }
+                //sprite.setPosition(sprite.getPosition().x + 4, sprite.getPosition().y);
+                sprite.setTextureRect(shootRect4[posRect]);
+            }
+        }
+    }
 }
 
 void Projectile::movement()
@@ -169,6 +222,8 @@ void Projectile::movement()
             sprite.move(shoot2Move[posRect]);
         if (type == PURPLE)
             sprite.move(shoot3Move[posRect]);
+        if (type == CHARGED)
+            sprite.move(shoot4Move[posRect]);
     }
 }
 
@@ -192,7 +247,8 @@ int Projectile::checkDestruction(std::shared_ptr<Block> block)
     if (bullet.intersects(g) == true) {
         if ((type == Type::YELLOW && block->getType() == Block::Type::YELLOW)
         || (type == Type::BLUE && block->getType() == Block::Type::BLUE)
-        || (type == Type::PURPLE && block->getType() == Block::Type::PURPLE)) {
+        || (type == Type::PURPLE && block->getType() == Block::Type::PURPLE)
+        || (type == Type::CHARGED && block->getType() != Block::Type::UNBREAKABLE)) {
             destructionCapacity--;
             return (1);
         }

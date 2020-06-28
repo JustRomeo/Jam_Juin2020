@@ -48,6 +48,8 @@ class Character {
         void jump();
         void fall();
         int getMunBattery();
+        int getMun();
+        int channelBat();
         sf::Vector2f getSpriteMid();
         void jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             std::vector<std::shared_ptr<Block>> mapSFML);

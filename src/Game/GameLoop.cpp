@@ -80,23 +80,23 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             return (-1);
         }
         if (event.type == sf::Event::MouseButtonReleased &&
-            perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false) {
+            perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false && perso->isSwitching() == false) {
             perso->shoot();
             if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1) {
                 if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition(), 1));
                 if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition(), 1));
                 if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition(), 1));
             }
             else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1) {
                 if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition(), 1));
                 if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition(), 1));
                 if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition()));
+                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition(), 1));
             }
             return (1);
         }
@@ -104,7 +104,17 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->incWeapon();
             return (3);
         }
-    } if (!perso->isShooting() && !perso->isChanneling()) {
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && !perso->isShooting() && !perso->isJumping() && !perso->isFalling() && !perso->isSwitching()) {
+            perso->channeling();
+            if (perso->getSprite().getScale().x > 0)
+                projectile.push_back(std::make_shared<Projectile>(4, 1, perso->getSprite().getPosition(), perso->getMun()));
+            if (perso->getSprite().getScale().x < 0)
+                projectile.push_back(std::make_shared<Projectile>(4, -1, perso->getSprite().getPosition(), perso->getMun()));
+            perso->channelBat();
+            return (1);
+        }
+    }
+    if (!perso->isShooting() && !perso->isChanneling()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
             perso->jump();
             return (3);
@@ -117,9 +127,6 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->moveRigth(window, mapSFML);
             return (3);
         }
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && !perso->isShooting() && !perso->isJumping() && !perso->isFalling()) {
-        perso->channeling();
-        return (1);
     }
     if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false && perso->isSwitching() == false) {
         perso->restartPos();
@@ -144,8 +151,8 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
     vector<shared_ptr<Block>> mapSFML_s = mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
 
-    if (!MainMenu().Menu(*window))
-       return QUIT;
+    // if (!MainMenu().Menu(*window))
+    //    return QUIT;
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);

@@ -14,8 +14,8 @@
 
 class Projectile {
     public:
-        enum Type {UNBREAKABLE, YELLOW, BLUE, PURPLE};
-        Projectile(int type, int orient, sf::Vector2f pos);
+        enum Type {UNBREAKABLE, YELLOW, BLUE, PURPLE, CHARGED};
+        Projectile(int type, int orient, sf::Vector2f pos, int decCap);
         ~Projectile();
         void animation();
         void movement();
@@ -42,6 +42,9 @@ class Projectile {
         std::vector<sf::IntRect> shootRect3;
         std::vector<float> shoot3Time;
         std::vector<sf::Vector2f> shoot3Move;
+        std::vector<sf::IntRect> shootRect4;
+        std::vector<float> shoot4Time;
+        std::vector<sf::Vector2f> shoot4Move;
         int posRect;
         int destructionCapacity;
 };
