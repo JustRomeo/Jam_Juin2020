@@ -23,6 +23,7 @@ class Door {
         void setPosition(sf::Vector2f pos);
         void setPosition(vector<string> map);
 
+        bool alreadyopen;
     private:
         size_t _anim;
         size_t _size;

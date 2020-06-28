@@ -1,6 +1,7 @@
 #include "Door.hpp"
 
 Door::Door(int X, int Y) {
+    alreadyopen = false;
     _anim = 0;
     _opening = false;
     move_clock.restart();
@@ -16,6 +17,7 @@ Door::Door(int X, int Y) {
     _size = this->getSize();
 }
 Door::Door(vector<string> map) {
+    alreadyopen = false;
     _texture = new sf::Texture;
     pos = sf::Vector2f(0, 0);
     try {
