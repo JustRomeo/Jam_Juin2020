@@ -160,8 +160,15 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
         for (size_t i = 0; i < mapSFML.size(); i++)
             window->draw(mapSFML[i]->getSprite());
         for (size_t i = 0; i < Ennemilist.size(); i ++) {
-            window->draw(Ennemilist[i]->getSprite());
             Ennemilist[i]->move(mapSFML);
+            sf::CircleShape circle;
+            circle.setRadius(1);
+            circle.setOutlineColor(sf::Color::White);
+            circle.setOutlineThickness(1);
+            circle.setPosition(Ennemilist[i]->getSprite().getPosition().x + Ennemilist[i]->getSprite().getTextureRect().width,
+                            Ennemilist[i]->getSprite().getPosition().y + (Ennemilist[i]->getSprite().getTextureRect().height * 2) + 30);
+            window->draw(circle);
+            window->draw(Ennemilist[i]->getSprite());
         }
         window->draw(door.getSprite());
         perso->display(window, mapSFML);
