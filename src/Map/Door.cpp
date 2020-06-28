@@ -1,13 +1,15 @@
 #include "Door.hpp"
 
 Door::Door(int X, int Y) {
-    alreadyopen = false;
     _anim = 0;
     _opening = false;
+    alreadyopen = false;
     move_clock.restart();
+    openUp = new MusicSFML();
     _texture = new sf::Texture;
     pos = sf::Vector2f(X, Y);
     try {
+        this->openUp->load("resources/Sounds/door.ogg");
         this->setTexture("resources/Images/Door.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
@@ -20,8 +22,10 @@ Door::Door(vector<string> map) {
     alreadyopen = false;
     _texture = new sf::Texture;
     pos = sf::Vector2f(0, 0);
+    openUp = new MusicSFML();
     _anim = 0;
     try {
+        this->openUp->load("resources/Sounds/door.ogg");
         this->setTexture("resources/Images/Door.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
@@ -49,6 +53,8 @@ void Door::setPosition(vector<string> map) {
 void Door::doorOpen(void) {
     if (!_opening)
         return;
+    if (_anim == 0)
+        openUp->start();
     if (getTimeDiff(0.3) == 1 && _anim < 5) {
         _anim ++;
         _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));

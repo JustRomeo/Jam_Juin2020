@@ -58,7 +58,7 @@ int main(int ac, char **av, char **env) {
     vector<shared_ptr<Block>> mapSFML;
     vector<shared_ptr<Ennemi>> Ennemilist;
     vector<shared_ptr<MunPlus>> PlusList;
-    vector<string> map = System().openfile("maps/.Tuto");
+    vector<string> map = System().openfile("maps/.map1");
     Door door(map);
 
     while (replay == 1) {
@@ -72,6 +72,7 @@ int main(int ac, char **av, char **env) {
             mapper.setMap(map);
             mapSFML = mapper.generate();
             game = std::make_shared<GameLoop>();
+            game->setPlayerPosition(map);
             replay = game->gameLoop(mapSFML, door, Ennemilist, PlusList);
         } catch (Exception &e) {
             cout << e.what() << endl;

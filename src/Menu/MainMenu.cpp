@@ -3,14 +3,10 @@
 #include "Exception.hpp"
 
 MainMenu::MainMenu() {
-    // _music = new sf::Music;
-    // if (!_music->openFromFile("resources/Sounds/Main.ogg"))
-    //     throw Exception("resources load failed");
-    // _music->setLoop(true);
+
 }
 MainMenu::~MainMenu() {
-    //_music->stop();
-    //delete(_music);
+
 }
 
 bool MainMenu::Menu(sf::RenderWindow &window) {
@@ -18,16 +14,20 @@ bool MainMenu::Menu(sf::RenderWindow &window) {
     ImageSFML play("resources/Buttons/play.png");
     ImageSFML quit("resources/Buttons/quit.png");
     ImageSFML background("resources/Images/wallpaper.jpg");
+    ImageSFML cursor("resources/Images/cursor.png");
 
-    //_music->play();
+    // window.setMouseCursorVisible(false);
     play.setPosition(sf::Vector2f(800, 400));
     quit.setPosition(sf::Vector2f(800, 525));
     window.setFramerateLimit(20);
+    cursor.setScale(sf::Vector2f(2.4, 2.4));
     while (window.isOpen()) {
+        cursor.setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         window.clear();
         window.draw(background.getSprite());
         window.draw(play.getSprite());
         window.draw(quit.getSprite());
+        window.draw(cursor.getSprite());
         window.display();
         while (window.pollEvent(event)) {
             if (play.isClicked(event))

@@ -61,7 +61,7 @@ class Character {
         int not_colision(std::vector<std::shared_ptr<Block>> mapSFML);
         int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
         int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
-
+        void setSpritePosition(int, int);
         int _lifes;
         int invulnerability;
     protected:

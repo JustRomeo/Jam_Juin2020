@@ -78,6 +78,7 @@ Character::~Character()
 {
 }
 
+
 int Character::getTimeDiff(float diff)
 {
     sf::Time time;
@@ -622,3 +623,5 @@ int Character::channelBat()
     battery[weapon_type -1]->channeling();
     return (0);
 }
+
+void Character::setSpritePosition(int x, int y) {sprite.setPosition(x, y);}
