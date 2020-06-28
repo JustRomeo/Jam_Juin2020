@@ -55,6 +55,7 @@ int main(int ac, char **av, char **env) {
             mapper.setMap(map);
             mapSFML = mapper.generate();
             game = std::make_shared<GameLoop>();
+            game->setPlayerPosition(map);
             replay = game->gameLoop(mapSFML, door, Ennemilist);
         } catch (Exception &e) {
             cout << e.what() << endl;

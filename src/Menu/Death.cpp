@@ -14,7 +14,10 @@ int DeathMenu::Menu(sf::RenderWindow &window) {
     ImageSFML back("resources/Buttons/back.jpg");
     ImageSFML quit("resources/Buttons/quit.png");
     ImageSFML background("resources/Images/DeathWallpaper.jpg");
+    ImageSFML cursor("resources/Images/cursor.png");
 
+    window.setMouseCursorVisible(false);
+    cursor.setScale(sf::Vector2f(2.4, 2.4));
     _music->load("resources/Sounds/End.ogg");
     _music->setLoop(true);
     _music->start();
@@ -27,11 +30,13 @@ int DeathMenu::Menu(sf::RenderWindow &window) {
 
     window.setFramerateLimit(20);
     while (window.isOpen()) {
+        cursor.setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 130));
         window.clear();
         window.draw(background.getSprite());
 
         window.draw(back.getSprite());
         window.draw(quit.getSprite());
+        window.draw(cursor.getSprite());
 
         window.display();
         while (window.pollEvent(event)) {

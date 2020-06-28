@@ -26,10 +26,11 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
+        int fondue(void);
         void clear(void);
         void display(void);
         int checkOpen(void);
-        int fondue();
+        void setPlayerPosition(vector<string> map);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);

@@ -40,7 +40,7 @@ GameLoop::GameLoop()
         if (!image.loadFromFile("resources/Images/icon.png"))
             throw Exception("Loading Ressource Failed");
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
-        view = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 1920.f, 1080.f));
+        view = std::make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
         window->setView(*view);
@@ -323,7 +323,7 @@ int GameLoop::endScreen()
 
     window->setView(window->getDefaultView());
     clock.restart();
-    if (font.loadFromFile("./resources/character/arial.ttf") == false)
+    if (!font.loadFromFile("./resources/character/arial.ttf"))
         return (false);
     fade.setFillColor(sf::Color::Black);
     sf::Text text("Bravo Aventurier!\n", font);
@@ -384,6 +384,13 @@ int GameLoop::endScreen()
     return (true);
 }
 
+void GameLoop::setPlayerPosition(vector<string> map) {
+    for (size_t i = 0; i < map.size(); i ++)
+        for (size_t j = 0; j < map[i].length(); j ++)
+            if (map[i][j] == 'P')
+                perso->setSpritePosition(j * 157, i * 157);
+}
+
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist) {
     size_t loop = 0;
@@ -393,9 +400,9 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shar
     vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
 
     _music->play();
+    window->setMouseCursorVisible(false);
     if (!MainMenu().Menu(*window))
        return QUIT;
-    window->setMouseCursorVisible(false);
     if (fondue() == false)
         return QUIT;
     _music->stop();
