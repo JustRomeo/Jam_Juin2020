@@ -29,6 +29,7 @@ class GameLoop {
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         void display();
         int checkOpen();
+        void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door, vector<shared_ptr<Ennemi>> Ennemilist);
 
     protected:

@@ -10,6 +10,7 @@
 
 #include "LibGraphics.hpp"
 #include "Exception.hpp"
+#include "Block.hpp"
 
 class Projectile {
     public:
@@ -18,7 +19,9 @@ class Projectile {
         ~Projectile();
         void animation();
         void movement();
+        int getCurrentCapacity();
         void display(std::shared_ptr<sf::RenderWindow> window);
+        int checkDestruction(std::shared_ptr<Block> block);
         int getTimeMov(float diff);
         int getTimeAnim(float diff);
 
@@ -40,6 +43,7 @@ class Projectile {
         std::vector<float> shoot3Time;
         std::vector<sf::Vector2f> shoot3Move;
         int posRect;
+        int destructionCapacity;
 };
 
 #endif /* !PROJECTILE_HPP_ */

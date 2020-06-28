@@ -29,8 +29,10 @@ Character::Character()
     is_moving = false;
     is_falling = false;
     is_jumping = false;
+    is_channeling = false;
     move_clock.restart();
     anim_clock.restart();
+    switch_clock.restart();
     shootRect.push_back(sf::IntRect(12, 8, 35, 35));
     shootRect.push_back(sf::IntRect(62, 8, 28, 30));
     shootRect.push_back(sf::IntRect(114, 8, 29, 29));
@@ -57,6 +59,9 @@ Character::Character()
     channelingTime.push_back(0.1);
     channelingTime.push_back(0.3);
     channelingTime.push_back(0.3);
+    for (int i = 1; i < 4; i++) {
+        battery.push_back(std::make_shared<Battery>(i));
+    }
 }
 
 Character::~Character()
@@ -77,6 +82,34 @@ int Character::getTimeDiff(float diff)
     return (0);
 }
 
+int Character::getTimeMove(float diff)
+{
+    sf::Time time;
+    float seconds = 0;
+
+    time = move_clock.getElapsedTime();
+    seconds = time.asMicroseconds() / 1000000.0;
+    if (seconds > diff) {
+        move_clock.restart();
+        return (1);
+    }
+    return (0);
+}
+
+int Character::getTimeSwitch(float diff)
+{
+    sf::Time time;
+    float seconds = 0;
+
+    time = switch_clock.getElapsedTime();
+    seconds = time.asMicroseconds() / 1000000.0;
+    if (seconds > diff) {
+        switch_clock.restart();
+        return (1);
+    }
+    return (0);
+}
+
 void Character::shootAnimation()
 {
     if (getTimeDiff(0.06) == 1)
@@ -90,6 +123,23 @@ void Character::shootAnimation()
         }
         else
             sprite.setTextureRect(shootRect[shootRectPos]);
+    }
+}
+
+void Character::switchAnimation()
+{
+    sf::IntRect rect;
+
+    if (getTimeSwitch(0.2) == 1) {
+        rect = sprite.getTextureRect();
+        rect.left += 50;
+        if (rect.left > 110) {
+            is_switching = false;
+            sprite.setTexture(*texture);
+            sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
+        }
+        else
+            sprite.setTextureRect(rect);
     }
 }
 
@@ -136,14 +186,14 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             sprite.setTextureRect(sf::IntRect(215, 77, 25, 36));
             is_falling = true;
         }
-        if (not_colision(mapSFML) == 1) {
+        else if (not_colision(mapSFML) == 1) {
             sprite.move(move);
             view.move(move);
         }
         else {
             move.y = 0;
+            view.setCenter(sprite.getPosition());
             is_jumping = false;
-            sprite.setTextureRect(sf::IntRect(215, 77, 25, 36));
             is_falling = true;
         }
         window->setView(view);
@@ -176,6 +226,7 @@ void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
         view.move(move);
         if (collisionFall(mapSFML) == 0) {
             is_falling = false;
+            view.setCenter(sprite.getPosition());
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
         }
         window->setView(view);
@@ -190,9 +241,12 @@ void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<st
         jumpAnimation(window, mapSFML);
     if (is_falling == true)
         fallingAnimation(window, mapSFML);
-    if (is_channeling == true) {
+    if (is_channeling == true)
         channelingAnimation();
-    }
+    if (is_switching == true)
+        switchAnimation();
+    battery[weapon_type - 1]->reloadBattery();
+    battery[weapon_type - 1]->display(window);
     window->draw(sprite);
 }
 
@@ -372,11 +426,25 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
     sf::FloatRect charact = sprite.getGlobalBounds();
     sf::FloatRect g;
     sf::Vector2f sp = getSpriteMid();
+    sf::Vector2f charact_xm = sprite.getPosition();
+    sf::Vector2f charact_mx = sprite.getPosition();
 
+    charact_xm.y += (sprite.getTextureRect().height * 3) + 30;
+    charact_mx.y += (sprite.getTextureRect().height * 3) + 30;
+    if (sprite.getScale().x > 0) {
+        charact_mx.x += (sprite.getTextureRect().width * 3) - 15;
+        charact_xm.x += 15;
+    }
+    else {
+        charact_mx.x -= (sprite.getTextureRect().width * 3) - 15;
+        charact_xm.x -= 15;
+    }
     while (i < mapSFML.size() - 1) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (charact.intersects(g) == true && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y &&
-            sp.x > mapSFML[i]->getSprite().getPosition().x && sp.x < mapSFML[i]->getSprite().getPosition().x + (mapSFML[i]->getSprite().getTextureRect().width * 0.5)) {
+        if ((charact.intersects(g) == true && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y &&
+            sp.x > mapSFML[i]->getSprite().getPosition().x &&
+            sp.x < mapSFML[i]->getSprite().getPosition().x + (mapSFML[i]->getSprite().getTextureRect().width * 0.5)) ||
+            g.contains(charact_mx) == true  || g.contains(charact_xm) == true) {
             y = mapSFML[i]->getSprite().getPosition().y - (32.f * 3);
             sprite.setPosition(sprite.getPosition().x, y);
             return (0);
@@ -430,10 +498,23 @@ int Character::getWeapon()
 
 void Character::incWeapon()
 {
-    if (is_jumping == false && is_falling == false && is_channeling == false && is_shooting == false) {
+    int toTurn = 0;
+
+    if (is_switching == false && is_jumping == false && is_falling == false
+        && is_channeling == false && is_shooting == false) {
+        is_switching = true;
         weapon_type++;
         if (weapon_type > 3)
             weapon_type = 1;
+        if (sprite.getScale().x < 0)
+            toTurn = 1;
+        sprite.setTexture(*textureFight);
+        if (toTurn == 0)
+            sprite.setScale(sf::Vector2f(3.f, 3.f));
+        else
+            sprite.setScale(sf::Vector2f(-3.f, 3.f));
+        switch_clock.restart();
+        sprite.setTextureRect(sf::IntRect(10, 8, 40, 29));
     }
 }
 
@@ -467,7 +548,17 @@ bool Character::isChanneling()
     return (is_channeling);
 }
 
+bool Character::isSwitching()
+{
+    return (is_switching);
+}
+
 void Character::setMoving(bool status)
 {
     is_moving = status;
+}
+
+int Character::getMunBattery()
+{
+    return (battery[weapon_type - 1]->decMun());
 }

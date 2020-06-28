@@ -32,6 +32,7 @@ Projectile::Projectile(int _type, int orient, sf::Vector2f pos)
     shootRect3.push_back(sf::IntRect(362, 310, 117, 65));
     shootRect3.push_back(sf::IntRect(760, 310, 95, 42));
     posRect = 0;
+    destructionCapacity = 1;
     sprite.setTexture(*texture);
     if (_type == 1)
         sprite.setTextureRect(shootRect1[posRect]);
@@ -176,4 +177,26 @@ void Projectile::display(std::shared_ptr<sf::RenderWindow> window)
     animation();
     movement();
     window->draw(sprite);
+}
+
+int Projectile::getCurrentCapacity()
+{
+    return (destructionCapacity);
+}
+
+int Projectile::checkDestruction(std::shared_ptr<Block> block)
+{
+    sf::FloatRect bullet = sprite.getGlobalBounds();
+    sf::FloatRect g = block->getSprite().getGlobalBounds();
+
+    if (bullet.intersects(g) == true) {
+        if ((type == Type::YELLOW && block->getType() == Block::Type::YELLOW)
+        || (type == Type::BLUE && block->getType() == Block::Type::BLUE)
+        || (type == Type::PURPLE && block->getType() == Block::Type::PURPLE)) {
+            destructionCapacity--;
+            return (1);
+        }
+        return (0);
+    }
+    return (-1);
 }

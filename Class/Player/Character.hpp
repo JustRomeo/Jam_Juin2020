@@ -11,6 +11,7 @@
 #include "../include/LibGraphics.hpp"
 #include "Exception.hpp"
 #include "Block.hpp"
+#include "Battery.hpp"
 #include "time.h"
 
 class Character {
@@ -23,8 +24,11 @@ class Character {
         void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         int getTimeDiff(float diff);
+        int getTimeSwitch(float diff);
+        int getTimeMove(float diff);
         void shoot();
         void channelingAnimation();
+        void switchAnimation();
         void channeling();
         void restartPos();
         int isShooting();
@@ -34,9 +38,11 @@ class Character {
         bool isJumping();
         bool getMoving();
         bool isFalling();
+        bool isSwitching();
         void setMoving(bool status);
         void jump();
         void fall();
+        int getMunBattery();
         sf::Vector2f getSpriteMid();
         void jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             std::vector<std::shared_ptr<Block>> mapSFML);
@@ -56,14 +62,17 @@ class Character {
         sf::Vector2f oldPose;
         sf::Clock move_clock;
         sf::Clock anim_clock;
+        sf::Clock switch_clock;
         std::vector<sf::IntRect> shootRect;
         std::vector<sf::IntRect> channelingRect;
         std::vector<float> channelingTime;
+        std::vector<std::shared_ptr<Battery>> battery;
         bool is_shooting;
         bool is_moving;
         bool is_jumping;
         bool is_falling;
         bool is_channeling;
+        bool is_switching;
         int weapon_type;
         int move_Y;
         int notMove_Y;

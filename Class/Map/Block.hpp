@@ -12,18 +12,19 @@ class Block {
         ~Block();
 
         size_t getSize(void) const;
-        sf::Texture *getTexture(void);
+        //std::shared_ptr<sf::Texture> getTexture(void);
         sf::Vector2f getPosition(void);
         void setTexture(string filepath);
         sf::Sprite getSprite(void) const;
         void setPosition(sf::Vector2f pos);
+        Type getType() const;
 
     private:
         Type _type;
         size_t _size;
         sf::Vector2f pos;
         sf::Sprite _sprite;
-        sf::Texture *_texture;
+        std::shared_ptr<sf::Texture> _texture;
 };
 
 #endif

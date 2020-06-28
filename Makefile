@@ -27,6 +27,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(MAPP)Door.cpp			\
 		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
+		$(PLAP)Battery.cpp	\
 		$(MAPP)Mapper.cpp		\
 		$(SYSP)System.cpp		\
 
