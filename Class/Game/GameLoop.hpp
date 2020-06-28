@@ -25,9 +25,9 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
-        void clear();
-        void display();
-        int checkOpen();
+        void clear(void);
+        void display(void);
+        int checkOpen(void);
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
@@ -37,8 +37,8 @@ class GameLoop {
     protected:
     private:
         shared_ptr<sf::View> view;
-        shared_ptr<Sprite> background;
         shared_ptr<Character> perso;
+        shared_ptr<Sprite> background;
         vector<std::shared_ptr<Projectile>> projectile;
 };
 

@@ -30,6 +30,14 @@ static bool isEnvDisplay(char **env) {
     return false;
 }
 
+static void EnnemiGeneration(vector<string> map, vector<shared_ptr<Ennemi>> &Ennemilist) {
+    for (size_t i = 0; i < map.size(); i ++)
+        for (size_t j = 0; j < map[i].length(); j ++)
+            if (map[i][j] == 'E')
+                Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
+                // this->setPosition(sf::Vector2f(j * 157, i * 157));
+}
+
 int main(int ac, char **av, char **env) {
     int replay = 1;
     Mapper mapper;
@@ -42,7 +50,8 @@ int main(int ac, char **av, char **env) {
     while (replay == 1) {
         mapSFML.clear();
         Ennemilist.clear();
-        Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
+        EnnemiGeneration(map, Ennemilist);
+        // Ennemilist.push_back(make_shared<Ennemi>(Ennemi(650, 500)));
         if (!isEnvDisplay(env))
             return 84;
         try {
