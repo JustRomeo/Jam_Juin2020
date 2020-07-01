@@ -10,7 +10,9 @@ using namespace std;
 class ImageSFML {
     public:
         ImageSFML(string filepath);
+        ImageSFML();
         ~ImageSFML();
+        ImageSFML &operator=(const ImageSFML &to_cmp);
 
         void destroyTexture();
         sf::Sprite getSprite() const;

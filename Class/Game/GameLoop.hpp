@@ -20,6 +20,7 @@
 #include "LibGraphics.hpp"
 #include "Projectile.hpp"
 #include "MunPlus.hpp"
+#include "GameMusic.hpp"
 
 using namespace std;
 class GameLoop {
@@ -27,38 +28,33 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
+        void MapGeneration(vector<string> map);
+        void EnnemiGeneration(vector<string> map);
+        void PlusGeneration(vector<string> map);
         int fondue(void);
         void clear(void);
-        void display(void);
+        void display(Door door_s);
         int checkOpen(void);
         void setPlayerPosition(vector<string> map);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
-        void drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso);
-        int gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
-            vector<shared_ptr<Ennemi>> Ennemilist, vector<shared_ptr<MunPlus>> PlusList);
+        int gameLoop(Door door);
         int endScreen();
 
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
-        std::shared_ptr<sf::Music> _music;
-        ImageSFML *heart1;
-        ImageSFML *heart2;
-        ImageSFML *heart3;
-
-        MusicSFML *music_1;
-        MusicSFML *music_2;
-        MusicSFML *music_3;
-        MusicSFML *death_ennemi;
-        MusicSFML *death_perso;
-        MusicSFML *end_music;
+        ImageSFML font;
+        std::shared_ptr<GameMusic> gameMusic;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
         shared_ptr<Sprite> background;
         vector<std::shared_ptr<Projectile>> projectile;
+        vector<shared_ptr<Block>> mapSFML;
+        vector<shared_ptr<Ennemi>> Ennemilist;
+        vector<shared_ptr<MunPlus>> PlusList;
 };
 
 #endif /* !GAMELOOP_HPP_ */

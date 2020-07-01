@@ -15,30 +15,7 @@
 GameLoop::GameLoop()
 {
     try {
-        music_1 = new MusicSFML();
-        music_2 = new MusicSFML();
-        music_3 = new MusicSFML();
-        death_perso = new MusicSFML();
-        death_ennemi = new MusicSFML();
-        end_music = new MusicSFML();
-        music_1->load("resources/Sounds/music_1.ogg");
-        music_2->load("resources/Sounds/music_2.ogg");
-        music_3->load("resources/Sounds/music_3.ogg");
-        end_music->load("resources/Sounds/music_3.ogg");
-        death_perso->load("resources/Sounds/Dead_sound.ogg");
-        death_ennemi->load("resources/Sounds/death.ogg");
-        end_music->load("resources/Sounds/end_music.ogg");
-        music_1->setLoop(true);
-        music_2->setLoop(true);
-        music_3->setLoop(true);
-
-        heart1 = new ImageSFML("resources/Images/heart.png");
-        heart2 = new ImageSFML("resources/Images/heart.png");
-        heart3 = new ImageSFML("resources/Images/heart.png");
-        heart3->setScale(sf::Vector2f(0.25, 0.25));
-        heart2->setScale(sf::Vector2f(0.25, 0.25));
-        heart1->setScale(sf::Vector2f(0.25, 0.25));
-
+        gameMusic = std::make_shared<GameMusic>();
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
         auto image = sf::Image {};
@@ -48,9 +25,8 @@ GameLoop::GameLoop()
         view = std::make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
+        font = ImageSFML("resources/Images/sprite_font.png");
         window->setView(*view);
-        _music = std::make_shared<sf::Music>();
-        if (!_music->openFromFile("./resources/Sounds/Main.ogg"));
     } catch (std::bad_alloc &e) {
         throw(Exception("can't initiate window and view\n"));
     }
@@ -58,30 +34,65 @@ GameLoop::GameLoop()
 
 GameLoop::~GameLoop()
 {
-    heart1->~ImageSFML();
-    heart2->~ImageSFML();
-    heart3->~ImageSFML();
-    music_1->~MusicSFML();
-    music_2->~MusicSFML();
-    music_3->~MusicSFML();
-    death_perso->~MusicSFML();
-    death_ennemi->~MusicSFML();
 }
 
-shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
+
+void GameLoop::EnnemiGeneration(vector<string> map)
+{
+    for (size_t i = 0; i < map.size(); i ++)
+        for (size_t j = 0; j < map[i].length(); j ++)
+            if (map[i][j] == 'E')
+                Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
+}
+
+void GameLoop::PlusGeneration(vector<string> map)
+{
+    for (size_t i = 0; i < map.size(); i ++) {
+        for (size_t j = 0; j < map[i].length(); j ++) {
+            if (map[i][j] == '1')
+                PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60));
+            if (map[i][j] == '2')
+                PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60));
+            if (map[i][j] == '3')
+                PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60));
+        }
+    }
+}
+
+void GameLoop::MapGeneration(vector<string> _map)
+{
+    for (size_t i = 0; i < _map.size(); i ++) {
+        for (size_t j = 0; j < _map[i].length(); j ++) {
+            if (_map[i][j] == '#')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157)));
+            else if (_map[i][j] == ' ');
+            else if (_map[i][j] == 'E');
+            else if (_map[i][j] == 'o');
+            else if (_map[i][j] == '1');
+            else if (_map[i][j] == '2');
+            else if (_map[i][j] == '3');
+            else if (_map[i][j] == 'P');
+            else if (_map[i][j] == 'Y')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW)));
+            else if (_map[i][j] == 'U')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE)));
+            else if (_map[i][j] == 'B')
+                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE)));
+            else
+                throw (Exception("Unknown Symbol in File: Abort"));
+        }
+    }
+}
+
+
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) 
+{
     return this->window;
 }
 
 void GameLoop::clear()
 {
     window->clear(sf::Color::White);
-}
-
-void GameLoop::display()
-{
-    for (int i = 0; i < projectile.size(); i ++)
-        projectile[i]->display(window);
-    window->display();
 }
 
 int GameLoop::checkOpen()
@@ -114,7 +125,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
         for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
             res = projectile[i]->checkKill(Ennemilist[j]);
             if (projectile[i]->getCurrentCapacity() <= 0) {
-                death_ennemi->start();
+                gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
             } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
@@ -129,39 +140,20 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        } if (event.type == sf::Event::MouseButtonReleased &&
-            perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false && perso->isSwitching() == false) {
+        } if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible()) {
             perso->shoot();
-            if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1) {
-                if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, 1, perso->getSprite().getPosition(), 1));
-                if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, 1, perso->getSprite().getPosition(), 1));
-                if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, 1, perso->getSprite().getPosition(), 1));
-            } else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1) {
-                if (perso->getWeapon() == 1)
-                    projectile.push_back(std::make_shared<Projectile>(1, -1, perso->getSprite().getPosition(), 1));
-                if (perso->getWeapon() == 2)
-                    projectile.push_back(std::make_shared<Projectile>(2, -1, perso->getSprite().getPosition(), 1));
-                if (perso->getWeapon() == 3)
-                    projectile.push_back(std::make_shared<Projectile>(3, -1, perso->getSprite().getPosition(), 1));
-            }
+            if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1)
+                projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
+            else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1)
+                projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), -1, perso->getSprite().getPosition(), 1));
             return (3);
-        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
-            switch(perso->getWeapon()) {
-                case 1: music_1->pause(); break;
-                case 2: music_2->pause(); break;
-                case 3: music_3->pause(); break;
-            }
+        }
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
+            gameMusic->pause_music(perso->getWeapon());
             perso->incWeapon();
-            switch(perso->getWeapon()) {
-                case 1: music_1->start(); break;
-                case 2: music_2->start(); break;
-                case 3: music_3->start(); break;
-            }
+            gameMusic->switch_music(perso->getWeapon());
             return (3);
-        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && !perso->isShooting() && !perso->isJumping() && !perso->isFalling() && !perso->isSwitching()) {
+        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() &&  perso->getMun() > 0) {
             perso->channeling();
             if (perso->getSprite().getScale().x > 0)
                 projectile.push_back(std::make_shared<Projectile>(4, 1, perso->getSprite().getPosition(), perso->getMun()));
@@ -170,7 +162,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->channelBat();
             return (3);
         }
-    } if (!perso->isShooting() && !perso->isChanneling()) {
+    } if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
             perso->jump();
             return (3);
@@ -183,7 +175,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->moveRigth(window, mapSFML);
             return (3);
         }
-    } if (perso->isShooting() == false && perso->isJumping() == false && perso->isFalling() == false && perso->isChanneling() == false && perso->isSwitching() == false) {
+    } if (perso->isActionPossible()) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -209,17 +201,6 @@ static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &E
                 perso->invulnerability += 60;
             }
         }
-}
-
-void GameLoop::drawHearts(sf::RenderWindow &window, shared_ptr<Character> &perso) {
-    heart3->setPosition(sf::Vector2f(window.getView().getCenter().x - 800, window.getView().getCenter().y + 370));
-    heart2->setPosition(sf::Vector2f(window.getView().getCenter().x - 850, window.getView().getCenter().y + 370));
-    heart1->setPosition(sf::Vector2f(window.getView().getCenter().x - 900, window.getView().getCenter().y + 370));
-    switch (perso->_lifes) {
-        case 3: window.draw(heart3->getSprite());
-        case 2: window.draw(heart2->getSprite());
-        case 1: window.draw(heart1->getSprite());
-    }
 }
 
 static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapSFML) {
@@ -303,7 +284,7 @@ int GameLoop::fondue()
         }
         if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
-       display();
+       //display();
        clear();
        while (window->pollEvent(event)) {
            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
@@ -327,10 +308,8 @@ int GameLoop::endScreen()
     sf::Color c3(255, 255, 255, 0);
     sf::Color c4(255, 255, 255, 0);
 
-    music_1->stop();
-    music_2->stop();
-    music_3->stop();
-    end_music->start();
+    gameMusic->endAllMusic();
+    gameMusic->startEndMusic();
     window->setView(window->getDefaultView());
     clock.restart();
     if (!font.loadFromFile("./resources/character/arial.ttf"))
@@ -382,16 +361,15 @@ int GameLoop::endScreen()
         }
         if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
-        display();
+        //display();
         clear();
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
-                end_music->stop();
+                gameMusic->endEndMusic();
                 return (true);
             }
        }
     }
-    end_music->stop();
     return (true);
 }
 
@@ -402,23 +380,31 @@ void GameLoop::setPlayerPosition(vector<string> map) {
                 perso->setSpritePosition(j * 157, i * 157 + 60);
 }
 
+void GameLoop::display(Door door_s)
+{
+    BlockUpdate(*window, mapSFML);
+    EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
+    window->draw(door_s.getSprite());
+    perso->display(window, mapSFML);
+    for (int i = 0; i < projectile.size(); i ++)
+        projectile[i]->display(window);
+    window->display();
+}
+
 enum CHOICE {QUIT = 0, REPLAY = 1};
-int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
-    vector<shared_ptr<Ennemi>> Ennemilist, vector<shared_ptr<MunPlus>> PlusList) {
+int GameLoop::gameLoop(Door door) {
     size_t loop = 0;
     int is_end = 0;
     Door door_s = door;
-    vector<shared_ptr<Block>> mapSFML_s = mapSFML;
-    vector<shared_ptr<Ennemi>> Ennemilist_s = Ennemilist;
     ImageSFML font("resources/Images/sprite_font.png");
 
-    _music->play();
     window->setMouseCursorVisible(false);
-    if (!MainMenu().Menu(*window))
-       return QUIT;
-    if (!fondue())
-        return QUIT;
-    _music->stop();
+    gameMusic->playMainMusic();
+    // if (!MainMenu().Menu(*window))
+    //    return QUIT;
+    // if (!fondue())
+    //     return QUIT;
+    gameMusic->stopMainMusic();
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
@@ -426,29 +412,17 @@ int GameLoop::gameLoop(vector<shared_ptr<Block>> mapSFML, Door door,
     while (window->isOpen()) {
         font.setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
         window->draw(font.getSprite());
-        BlockUpdate(*window, mapSFML);
-        EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
-        perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
-        window->draw(door_s.getSprite());
-        perso->display(window, mapSFML);
-        if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(door_s.getSprite().getGlobalBounds()))) {
-            door_s.setOpening(true);
-            door_s.doorOpen();
-            if (door_s.getAnim() >= 5) {
-                is_end = 1;
-                break;
-            }
-        }
+        door_s.doorOpen(perso->getSprite());
         for (int i = 0; i < PlusList.size(); i++)
-            PlusList[i]->display(window);
-        drawHearts(*window, perso);
-        display();
+         PlusList[i]->display(window);
+        perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
+        display(door);
         clear();
         checkDestruction(mapSFML);
         checkDeathEnemy(Ennemilist);
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 1) {
-            death_perso->start();
+            gameMusic->startDeathMusic();
             window->setMouseCursorVisible(true);
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;

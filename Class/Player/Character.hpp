@@ -11,19 +11,19 @@
 #include "../include/LibGraphics.hpp"
 #include "Exception.hpp"
 #include "Block.hpp"
-#include "Battery.hpp"
 #include "time.h"
 #include "Block.hpp"
 #include "Exception.hpp"
 #include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
 #include "MunPlus.hpp"
+#include "HUD.hpp"
 
 class Character {
     public:
         Character();
         ~Character();
-
+        void createAnimRec();
         sf::Sprite getSprite();
         void display(std::shared_ptr<sf::RenderWindow> window,
             std::vector<std::shared_ptr<Block>> mapSFML);
@@ -37,14 +37,15 @@ class Character {
         void switchAnimation();
         void channeling();
         void restartPos();
-        int isShooting();
         int getWeapon();
         void incWeapon();
         bool isChanneling();
         bool isJumping();
         bool getMoving();
         bool isFalling();
+        bool isShooting();
         bool isSwitching();
+        bool isActionPossible();
         void setMoving(bool status);
         void jump();
         void fall();
@@ -92,7 +93,7 @@ class Character {
         std::shared_ptr<sf::Texture> texture;
         std::vector<sf::IntRect> channelingRect;
         std::shared_ptr<sf::Texture> textureFight;
-        std::vector<std::shared_ptr<Battery>> battery;
+        std::shared_ptr<HUD> hud;
 };
 
 #endif /* !CHARACTER_HPP_ */

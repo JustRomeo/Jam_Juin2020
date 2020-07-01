@@ -18,6 +18,10 @@ class Projectile {
         enum Type {UNBREAKABLE, YELLOW, BLUE, PURPLE, CHARGED};
         Projectile(int type, int orient, sf::Vector2f pos, int decCap);
         ~Projectile();
+        void createProject1(int orient, int type, sf::Vector2f pos);
+        void createProject2(int orient, int type, sf::Vector2f pos);
+        void createProject3(int orient, int type, sf::Vector2f pos);
+        void createProject4(int orient, int type, sf::Vector2f pos);
         void animation();
         void movement();
         int getCurrentCapacity();

@@ -23,6 +23,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(GAMP)Ennemis.cpp		\
 		$(GAMP)Projectile.cpp	\
 		$(GAMP)GameLoop.cpp		\
+		$(GAMP)GameMusic.cpp	\
 		$(MAPP)Block.cpp		\
 		$(MAPP)Door.cpp			\
 		$(MENP)Death.cpp		\
@@ -30,8 +31,9 @@ SRC =	$(SRCP)main.cpp			\
 		$(MENP)MainMenu.cpp		\
 		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
-		$(PLAP)Battery.cpp	\
-		$(PLAP)MunPlus.cpp	\
+		$(PLAP)Battery.cpp		\
+		$(PLAP)HUD.cpp			\
+		$(PLAP)MunPlus.cpp		\
 		$(MAPP)Mapper.cpp		\
 		$(SYSP)System.cpp		\
 

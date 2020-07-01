@@ -22,117 +22,154 @@ Projectile::Projectile(int _type, int _orient, sf::Vector2f pos, int desCap)
         type = Type::CHARGED;
     move_clock.restart();
     anim_clock.restart();
-    shootRect1.push_back(sf::IntRect(166, 212, 42, 42));
-    shootRect1.push_back(sf::IntRect(960, 212, 22, 42));
-
-    shootRect2.push_back(sf::IntRect(110, 462, 49, 44));
-    shootRect2.push_back(sf::IntRect(286, 456, 112, 61));
-    shootRect2.push_back(sf::IntRect(286, 453, 22, 42));
-    shootRect2.push_back(sf::IntRect(694, 450, 89, 64));
-
-    shootRect3.push_back(sf::IntRect(164, 310, 44, 49));
-    shootRect3.push_back(sf::IntRect(362, 310, 117, 65));
-    shootRect3.push_back(sf::IntRect(760, 310, 95, 42));
-
-    shootRect4.push_back(sf::IntRect(0, 0, 0, 0));
-    shootRect4.push_back(sf::IntRect(64, 623, 26, 28));
-    shootRect4.push_back(sf::IntRect(858, 613, 92, 44));
-    shootRect4.push_back(sf::IntRect(1008, 604, 93, 66));
-
     posRect = 0;
     orient = _orient;
     destructionCapacity = desCap;
     sprite.setTexture(*texture);
     if (_type == 1)
-        sprite.setTextureRect(shootRect1[posRect]);
+        createProject1(orient, type, pos);
     if (_type == 2)
-        sprite.setTextureRect(shootRect2[posRect]);
+        createProject2(orient, type, pos);
     if (_type == 3)
-        sprite.setTextureRect(shootRect3[posRect]);
+        createProject3(orient, type, pos);
     if (_type == 4)
-        sprite.setTextureRect(shootRect4[posRect]);
+        createProject4(orient, type, pos);
+}
+
+Projectile::~Projectile()
+{
+}
+
+void Projectile::createProject1(int orient, int type, sf::Vector2f pos)
+{
+    shootRect1.push_back(sf::IntRect(166, 212, 42, 42));
+    shootRect1.push_back(sf::IntRect(960, 212, 22, 42));
+
     shoot1Time.push_back(0.4);
     shoot1Time.push_back(0.5);
+
+    shoot1Move.push_back(sf::Vector2f(0.f, 0.f));
+    if (orient > 0) {
+        if (type == 1) {
+            pos.x += 40;
+            pos.y += 7;
+        }
+        sprite.setScale(sf::Vector2f(1.5, 1.5));
+        shoot1Move.push_back(sf::Vector2f(30.f, 0.f));
+    }
+    else {
+        if (type == 1) {
+            pos.x -= 40;
+            pos.y += 7;
+        }
+        sprite.setScale(sf::Vector2f(-1.5, 1.5));
+        shoot1Move.push_back(sf::Vector2f(-30.f, 0.f));
+    }
+    sprite.setTextureRect(shootRect1[posRect]);
+    sprite.setPosition(pos);
+}
+
+void Projectile::createProject2(int orient, int type, sf::Vector2f pos)
+{
+    shootRect2.push_back(sf::IntRect(110, 462, 49, 44));
+    shootRect2.push_back(sf::IntRect(286, 456, 112, 61));
+    shootRect2.push_back(sf::IntRect(286, 453, 22, 42));
+    shootRect2.push_back(sf::IntRect(694, 450, 89, 64));
 
     shoot2Time.push_back(0.3);
     shoot2Time.push_back(0.2);
     shoot2Time.push_back(0.2);
     shoot2Time.push_back(0.4);
 
+    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
+    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
+    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
+    if (orient > 0) {
+        if (type == 2) {
+            pos.x += 20;
+            pos.y -= 12;
+        }
+        sprite.setScale(sf::Vector2f(1.5, 1.5));
+        shoot2Move.push_back(sf::Vector2f(30.f, 0.f));
+    }
+    else {
+        if (type == 2) {
+            pos.x -= 20;
+            pos.y -= 10;
+        }
+        sprite.setScale(sf::Vector2f(-1.5, 1.5));
+        shoot2Move.push_back(sf::Vector2f(-30.f, 0.f));
+    }
+    sprite.setTextureRect(shootRect2[posRect]);
+    sprite.setPosition(pos);
+}
+void Projectile::createProject3(int orient, int type, sf::Vector2f pos)
+{
+    shootRect3.push_back(sf::IntRect(164, 310, 44, 49));
+    shootRect3.push_back(sf::IntRect(362, 310, 117, 65));
+    shootRect3.push_back(sf::IntRect(760, 310, 95, 42));
+
     shoot3Time.push_back(0.3);
     shoot3Time.push_back(0.2);
     shoot3Time.push_back(0.2);
+
+    shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
+    shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
+    if (orient > 0) {
+        if (type == 3) {
+            pos.x += 20;
+            pos.y -= 6;
+        }
+        sprite.setScale(sf::Vector2f(1.5, 1.5));
+        shoot3Move.push_back(sf::Vector2f(30.f, 0.f));
+    }
+    else {
+        if (type == 3) {
+            pos.x += 20;
+            pos.y -= 6;
+        }
+        sprite.setScale(sf::Vector2f(-1.5, 1.5));
+        shoot3Move.push_back(sf::Vector2f(-30.f, 0.f));
+    }
+    sprite.setTextureRect(shootRect3[posRect]);
+    sprite.setPosition(pos);
+}
+
+void Projectile::createProject4(int orient, int type, sf::Vector2f pos)
+{
+    shootRect4.push_back(sf::IntRect(0, 0, 0, 0));
+    shootRect4.push_back(sf::IntRect(64, 623, 26, 28));
+    shootRect4.push_back(sf::IntRect(858, 613, 92, 44));
+    shootRect4.push_back(sf::IntRect(1008, 604, 93, 66));
 
     shoot4Time.push_back(0.3);
     shoot4Time.push_back(0.6);
     shoot4Time.push_back(0.3);
     shoot4Time.push_back(0.2);
 
-    shoot1Move.push_back(sf::Vector2f(0.f, 0.f));
-
-    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
-    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
-    shoot2Move.push_back(sf::Vector2f(0.f, 0.f));
-    shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
-    shoot3Move.push_back(sf::Vector2f(0.f, 0.f));
-
     shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
     shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
     shoot4Move.push_back(sf::Vector2f(0.f, 0.f));
-
     if (orient > 0) {
-        shoot1Move.push_back(sf::Vector2f(30.f, 0.f));
-        shoot2Move.push_back(sf::Vector2f(30.f, 0.f));
-        shoot3Move.push_back(sf::Vector2f(30.f, 0.f));
-        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
-        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
-        sprite.setScale(sf::Vector2f(1.5, 1.5));
-        if (type == 1) {
-            pos.x += 40;
-            pos.y += 7;
-        }
-        if (type == 2) {
-            pos.x += 20;
-            pos.y -= 12;
-        }
-        if (type == 3) {
-            pos.x += 20;
-            pos.y -= 6;
-        }
         if (type == 4) {
             pos.x += 20;
             pos.y -= 80;
         }
+        sprite.setScale(sf::Vector2f(1.5, 1.5));
+        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(30.f, 0.f));
     }
     else {
-        shoot1Move.push_back(sf::Vector2f(-30.f, 0.f));
-        shoot2Move.push_back(sf::Vector2f(-30.f, 0.f));
-        shoot3Move.push_back(sf::Vector2f(-30.f, 0.f));
-        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
-        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
-        sprite.setScale(sf::Vector2f(-1.5, 1.5));
-        if (type == 1) {
-            pos.x -= 40;
-            pos.y += 7;
-        }
-        if (type == 2) {
-            pos.x -= 20;
-            pos.y -= 10;
-        }
-        if (type == 3) {
-            pos.x += 20;
-            pos.y -= 6;
-        }
         if (type == 4) {
             pos.x -= 20;
             pos.y -= 80;
         }
+        sprite.setScale(sf::Vector2f(-1.5, 1.5));
+        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
+        shoot4Move.push_back(sf::Vector2f(-30.f, 0.f));
     }
+    sprite.setTextureRect(shootRect4[posRect]);
     sprite.setPosition(pos);
-}
-
-Projectile::~Projectile()
-{
 }
 
 int Projectile::getTimeAnim(float diff)

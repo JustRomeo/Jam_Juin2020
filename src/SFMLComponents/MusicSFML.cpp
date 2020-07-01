@@ -7,6 +7,7 @@ MusicSFML::MusicSFML() {
     _music = new sf::Music;
     _music->setVolume((float)_volume);
 }
+
 MusicSFML::~MusicSFML() {
     _music->stop();
     delete(_music);

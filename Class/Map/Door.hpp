@@ -13,7 +13,8 @@ class Door {
         Door(int X = 0, int Y = 0);
         ~Door();
 
-        void doorOpen(void);
+        void doorOpen(sf::Sprite persoSprite);
+        bool getOpen();
         void setOpening(bool);
         int getAnim();
         size_t getSize(void) const;

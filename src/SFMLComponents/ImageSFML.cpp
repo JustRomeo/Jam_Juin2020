@@ -16,8 +16,25 @@ ImageSFML::ImageSFML(string path)
     _width = _sprite.getTexture()->getSize().x;
     _heigh = _sprite.getTexture()->getSize().y;
 }
+ImageSFML::ImageSFML()
+{
+}
+
 ImageSFML::~ImageSFML() {
     delete _texture;
+}
+
+ImageSFML &ImageSFML::operator=(const ImageSFML &to_cmp)
+{
+    _width = to_cmp._width;
+    _heigh = to_cmp._heigh;
+    _pos = to_cmp._pos;
+    _sprite = to_cmp._sprite;
+    _texture = to_cmp._texture;
+    _sprite.setTexture(*_texture);
+    _width = _sprite.getTexture()->getSize().x;
+    _heigh = _sprite.getTexture()->getSize().y;
+    return (*this);
 }
 
 sf::Texture *ImageSFML::getTexture(void) {
