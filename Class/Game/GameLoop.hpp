@@ -28,25 +28,27 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
-        void MapGeneration(vector<string> map);
-        void EnnemiGeneration(vector<string> map);
-        void PlusGeneration(vector<string> map);
+        int endScreen();
         int fondue(void);
         void clear(void);
-        void display(Door door_s);
+        int shootEvent();
         int checkOpen(void);
+        int switchWeaponEvent();
+        int gameLoop(Door door);
+        void display(Door door_s);
+        int movementEvent(sf::Event event);
+        void MapGeneration(vector<string> map);
+        void PlusGeneration(vector<string> map);
+        void EnnemiGeneration(vector<string> map);
         void setPlayerPosition(vector<string> map);
         shared_ptr<sf::RenderWindow> getWindow(void);
         int getEvent(vector<shared_ptr<Block>> mapSFML);
         void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
-        int gameLoop(Door door);
-        int endScreen();
-
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
-        ImageSFML font;
+        std::shared_ptr<ImageSFML> font;
         std::shared_ptr<GameMusic> gameMusic;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;

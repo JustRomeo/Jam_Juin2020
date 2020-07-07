@@ -25,7 +25,7 @@ GameLoop::GameLoop()
         view = std::make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = std::make_shared<Sprite>("resources/Images/space.png");
         perso = std::make_shared<Character>();
-        font = ImageSFML("resources/Images/sprite_font.png");
+        font = std::make_shared<ImageSFML>("resources/Images/sprite_font.png");
         window->setView(*view);
     } catch (std::bad_alloc &e) {
         throw(Exception("can't initiate window and view\n"));
@@ -133,6 +133,45 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
     }
 }
 
+int GameLoop::movementEvent(sf::Event event)
+{
+    if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            perso->jump();
+            return (3);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+            perso->moveLeft(window, mapSFML);
+            return (3);
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            return (3);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            perso->moveRigth(window, mapSFML);
+            return (3);
+        }
+    }
+    return (0);
+}
+
+int GameLoop::shootEvent()
+{
+    perso->shoot();
+    if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1)
+        projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
+    else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1)
+        projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), -1, perso->getSprite().getPosition(), 1));
+    return (3);
+}
+
+int GameLoop::switchWeaponEvent()
+{
+    gameMusic->pause_music(perso->getWeapon());
+    perso->incWeapon();
+    gameMusic->switch_music(perso->getWeapon());
+    return (3);
+}
+
 int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
@@ -140,20 +179,12 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        } if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible()) {
-            perso->shoot();
-            if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1)
-                projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
-            else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1)
-                projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), -1, perso->getSprite().getPosition(), 1));
-            return (3);
         }
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F) {
-            gameMusic->pause_music(perso->getWeapon());
-            perso->incWeapon();
-            gameMusic->switch_music(perso->getWeapon());
-            return (3);
-        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() &&  perso->getMun() > 0) {
+        if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible())
+            return (shootEvent());
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
+            return (switchWeaponEvent());
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() &&  perso->getMun() > 0) {
             perso->channeling();
             if (perso->getSprite().getScale().x > 0)
                 projectile.push_back(std::make_shared<Projectile>(4, 1, perso->getSprite().getPosition(), perso->getMun()));
@@ -162,23 +193,14 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->channelBat();
             return (3);
         }
-    } if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-            perso->jump();
-            return (3);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-            perso->moveLeft(window, mapSFML);
-            return (3);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            return (3);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            perso->moveRigth(window, mapSFML);
-            return (3);
-        }
-    } if (perso->isActionPossible()) {
+    }
+    if (movementEvent(event) == 3)
+        return (3);
+    if (perso->isActionPossible()) {
         perso->restartPos();
         window->setView(window->getView());
-    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
         switch (EchapMenu().Menu(*window)) {
             case -1: return -1; // Quit
@@ -382,6 +404,10 @@ void GameLoop::setPlayerPosition(vector<string> map) {
 
 void GameLoop::display(Door door_s)
 {
+    font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
+    window->draw(font->getSprite());
+    for (int i = 0; i < PlusList.size(); i++)
+        PlusList[i]->display(window);
     BlockUpdate(*window, mapSFML);
     EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
     window->draw(door_s.getSprite());
@@ -396,7 +422,6 @@ int GameLoop::gameLoop(Door door) {
     size_t loop = 0;
     int is_end = 0;
     Door door_s = door;
-    ImageSFML font("resources/Images/sprite_font.png");
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
@@ -408,13 +433,9 @@ int GameLoop::gameLoop(Door door) {
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
-    font.setScale(sf::Vector2f(3, 3.5));
+    font->setScale(sf::Vector2f(3, 3.5));
     while (window->isOpen()) {
-        font.setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
-        window->draw(font.getSprite());
         door_s.doorOpen(perso->getSprite());
-        for (int i = 0; i < PlusList.size(); i++)
-         PlusList[i]->display(window);
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         display(door);
         clear();

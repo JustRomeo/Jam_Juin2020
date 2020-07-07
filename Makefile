@@ -31,6 +31,7 @@ SRC =	$(SRCP)main.cpp			\
 		$(MENP)MainMenu.cpp		\
 		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
+		$(PLAP)Time.cpp 		\
 		$(PLAP)Battery.cpp		\
 		$(PLAP)HUD.cpp			\
 		$(PLAP)MunPlus.cpp		\
