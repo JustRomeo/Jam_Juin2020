@@ -13,30 +13,36 @@ MENP = 	src/Menu/
 PLAP =	src/Player/
 COMP =	src/SFMLComponents/
 SYSP =	src/System/
+PROJ = 	src/Projectile/
 
-SRC =	$(SRCP)main.cpp			\
+SRC =	$(SRCP)main.cpp					\
 		\
-		$(COMP)ImageSFML.cpp	\
-		$(COMP)MusicSFML.cpp	\
-		$(DISP)Sprite.cpp		\
-		$(DISP)Window.cpp		\
-		$(GAMP)Ennemis.cpp		\
-		$(GAMP)Projectile.cpp	\
-		$(GAMP)GameLoop.cpp		\
-		$(GAMP)GameMusic.cpp	\
-		$(MAPP)Block.cpp		\
-		$(MAPP)Door.cpp			\
-		$(MENP)Death.cpp		\
-		$(MENP)Echap.cpp		\
-		$(MENP)MainMenu.cpp		\
-		$(SYSP)Exception.cpp	\
-		$(PLAP)Character.cpp	\
-		$(PLAP)Time.cpp 		\
-		$(PLAP)Battery.cpp		\
-		$(PLAP)HUD.cpp			\
-		$(PLAP)MunPlus.cpp		\
-		$(MAPP)Mapper.cpp		\
-		$(SYSP)System.cpp		\
+		$(COMP)ImageSFML.cpp			\
+		$(COMP)MusicSFML.cpp			\
+		$(DISP)Sprite.cpp				\
+		$(DISP)Window.cpp				\
+		$(GAMP)Ennemis.cpp				\
+		$(GAMP)Projectile.cpp			\
+		$(GAMP)GameLoop.cpp				\
+		$(GAMP)GameMusic.cpp			\
+		$(MAPP)Block.cpp				\
+		$(MAPP)Door.cpp					\
+		$(MENP)Death.cpp				\
+		$(MENP)Echap.cpp				\
+		$(MENP)MainMenu.cpp				\
+		$(SYSP)Exception.cpp			\
+		$(PLAP)Character.cpp			\
+		$(PLAP)Time.cpp 				\
+		$(PLAP)Battery.cpp				\
+		$(PLAP)HUD.cpp					\
+		$(PLAP)MunPlus.cpp				\
+		$(MAPP)Mapper.cpp				\
+		$(SYSP)System.cpp				\
+		$(PROJ)OrangeProjectile.cpp 	\
+		$(PROJ)BlueProjectile.cpp 		\
+		$(PROJ)PurpleProjectile.cpp 	\
+		$(PROJ)GreenProjectile.cpp 	\
+		$(PROJ)ProjectileFactory.cpp 	\
 
 OBJ =	$(SRC:.cpp=.o)
 
@@ -63,6 +69,7 @@ CPPFLAGS =	-I./include/				\
 			-I./Class/Player			\
 			-I./Class/SFMLComponents	\
 			-I./Class/System			\
+			-I./Class/Projectile		\
 			$(SFML)
 
 RM =	rm -rvf

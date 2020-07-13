@@ -12,13 +12,20 @@ Character::Character()
 
     jump_sound = new MusicSFML();
     coli_sound = new MusicSFML();
-    shot_sound = new MusicSFML();
+    shot_sound1 = new MusicSFML();
+    shot_sound2 = new MusicSFML();
+    shot_sound3 = new MusicSFML();
+    shot_sound4 = new MusicSFML();
 
     jump_sound->load("resources/Sounds/Jump.ogg");
     coli_sound->load("resources/Sounds/Colision.ogg");
     _lifes = 3;
     textureFight = std::make_shared<sf::Texture>();
     texture = std::make_shared<sf::Texture>();
+    shot_sound1->load("resources/Sounds/shot1.ogg");
+    shot_sound2->load("resources/Sounds/shot1.ogg");
+    shot_sound3->load("resources/Sounds/shot1.ogg");
+    shot_sound4->load("resources/Sounds/channelingShot.ogg");
     if (texture->loadFromFile("./resources/character/adventurer-Sheet.png") == false)
         throw(Exception("resources load failed"));
     if (textureFight->loadFromFile("./resources/character/adventurer-bow-Sheet.png") == false)
@@ -242,20 +249,13 @@ void Character::shoot()
 
     switch (getWeapon()) {
         case 1:
-            shot_sound->load("resources/Sounds/shot1.ogg");
-            shot_sound->start();
+            shot_sound1->start();
             break;
         case 2:
-            shot_sound->load("resources/Sounds/shot2.ogg");
-            shot_sound->start();
+            shot_sound2->start();
             break;
         case 3:
-            shot_sound->load("resources/Sounds/shot3.ogg");
-            shot_sound->start();
-            break;
-        case 4:
-            shot_sound->load("resources/Sounds/channelingShot.ogg");
-            shot_sound->start();
+            shot_sound3->start();
             break;
     } if (is_shooting != true && is_jumping == false && is_falling == false) {
         is_shooting = true;
@@ -377,8 +377,7 @@ void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
 void Character::channeling()
 {
     if (is_jumping == false && is_falling == false && is_shooting == false && is_channeling == false) {
-        shot_sound->load("resources/Sounds/channelingShot.ogg");
-        shot_sound->start();
+        shot_sound4->start();
         is_channeling = true;
         oldPose = sprite.getPosition();
         sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 30);
@@ -509,36 +508,6 @@ void Character::restartPos()
     sprite.setTextureRect(sf::IntRect(65, 6, 18, 30));
 }
 
-bool Character::isShooting()
-{
-    return (is_shooting);
-}
-
-bool Character::isJumping()
-{
-    return (is_jumping);
-}
-
-bool Character::isFalling()
-{
-    return (is_falling);
-}
-
-bool Character::getMoving()
-{
-    return (is_moving);
-}
-
-bool Character::isChanneling()
-{
-    return (is_channeling);
-}
-
-bool Character::isSwitching()
-{
-    return (is_switching);
-}
-
 bool Character::isActionPossible()
 {
     if (is_jumping == false && is_falling == false && is_channeling == false && is_switching == false && is_shooting == false)
@@ -551,20 +520,18 @@ void Character::setMoving(bool status)
     is_moving = status;
 }
 
-int Character::getMunBattery()
-{
-    return (hud->decBatteryMun());
-}
-
-int Character::getMun()
-{
-    return (hud->getMunBattery());
-}
-
 int Character::channelBat()
 {
     hud->batteryChanneling();
     return (0);
 }
 
+int Character::getMunBattery() {return (hud->decBatteryMun());}
+int Character::getMun() {return (hud->getMunBattery());}
 void Character::setSpritePosition(int x, int y) {sprite.setPosition(x, y);}
+bool Character::isShooting() {return (is_shooting);}
+bool Character::isJumping() {return (is_jumping);}
+bool Character::isFalling() {return (is_falling);}
+bool Character::getMoving() {return (is_moving);}
+bool Character::isChanneling() {return (is_channeling);}
+bool Character::isSwitching() {return (is_switching);}

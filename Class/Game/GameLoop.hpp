@@ -21,6 +21,8 @@
 #include "Projectile.hpp"
 #include "MunPlus.hpp"
 #include "GameMusic.hpp"
+#include "ProjectileFactory.hpp"
+#include "IProjectile.hpp"
 
 using namespace std;
 class GameLoop {
@@ -48,12 +50,13 @@ class GameLoop {
         shared_ptr<sf::RenderWindow> window;
     protected:
     private:
+        ProjectileFactory projFactory;
         std::shared_ptr<ImageSFML> font;
         std::shared_ptr<GameMusic> gameMusic;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
         shared_ptr<Sprite> background;
-        vector<std::shared_ptr<Projectile>> projectile;
+        vector<std::shared_ptr<IProjectile>> projectile;
         vector<shared_ptr<Block>> mapSFML;
         vector<shared_ptr<Ennemi>> Ennemilist;
         vector<shared_ptr<MunPlus>> PlusList;

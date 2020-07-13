@@ -158,9 +158,9 @@ int GameLoop::shootEvent()
 {
     perso->shoot();
     if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1)
-        projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
+        projectile.push_back(projFactory.createComponent(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
     else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1)
-        projectile.push_back(std::make_shared<Projectile>(perso->getWeapon(), -1, perso->getSprite().getPosition(), 1));
+        projectile.push_back(projFactory.createComponent(perso->getWeapon(), -1, perso->getSprite().getPosition(), 1));
     return (3);
 }
 
@@ -187,9 +187,9 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() &&  perso->getMun() > 0) {
             perso->channeling();
             if (perso->getSprite().getScale().x > 0)
-                projectile.push_back(std::make_shared<Projectile>(4, 1, perso->getSprite().getPosition(), perso->getMun()));
+                projectile.push_back(projFactory.createComponent(4, 1, perso->getSprite().getPosition(), perso->getMunBattery()));
             if (perso->getSprite().getScale().x < 0)
-                projectile.push_back(std::make_shared<Projectile>(4, -1, perso->getSprite().getPosition(), perso->getMun()));
+                projectile.push_back(projFactory.createComponent(4, -1, perso->getSprite().getPosition(), perso->getMunBattery()));
             perso->channelBat();
             return (3);
         }

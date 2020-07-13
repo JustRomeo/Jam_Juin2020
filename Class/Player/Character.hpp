@@ -83,7 +83,10 @@ class Character {
         sf::Vector2f oldPose;
         MusicSFML *jump_sound;
         MusicSFML *coli_sound;
-        MusicSFML *shot_sound;
+        MusicSFML *shot_sound1;
+        MusicSFML *shot_sound2;
+        MusicSFML *shot_sound3;
+        MusicSFML *shot_sound4;
         std::shared_ptr<HUD> hud;
         std::vector<float> channelingTime;
         std::vector<sf::IntRect> shootRect;
