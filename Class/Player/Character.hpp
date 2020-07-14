@@ -50,10 +50,12 @@ class Character {
         void setMoving(bool status);
         sf::Vector2f getSpriteMid();
         void setSpritePosition(int, int);
+        void collisionProblem();
         int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
         void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
         int not_colision(std::vector<std::shared_ptr<Block>> mapSFML);
         int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
+        void unblockCharacter(std::vector<std::shared_ptr<Block>> mapSFML);
         void display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);

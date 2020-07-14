@@ -156,7 +156,10 @@ int GameLoop::movementEvent(sf::Event event)
 
 int GameLoop::shootEvent()
 {
-    perso->shoot();
+    if (perso->getWeapon() == 4)
+        perso->channeling();
+    else
+        perso->shoot();
     if (perso->getSprite().getScale().x > 0 && perso->getMunBattery() == 1)
         projectile.push_back(projFactory.createComponent(perso->getWeapon(), 1, perso->getSprite().getPosition(), 1));
     else if (perso->getSprite().getScale().x < 0 && perso->getMunBattery() == 1)
@@ -184,7 +187,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             return (shootEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
             return (switchWeaponEvent());
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() &&  perso->getMun() > 0) {
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() && perso->getMun() > 0) {
             perso->channeling();
             if (perso->getSprite().getScale().x > 0)
                 projectile.push_back(projFactory.createComponent(4, 1, perso->getSprite().getPosition(), perso->getMunBattery()));

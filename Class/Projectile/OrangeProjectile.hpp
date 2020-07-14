@@ -31,7 +31,6 @@ class OrangeProjectile : virtual public Projectile {
         std::vector<float> shootTime;
         std::vector<sf::Vector2f> shootMove;
         int posRect;
-        int destructionCapacity;
         int orient;
 };
 

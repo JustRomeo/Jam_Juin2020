@@ -13,8 +13,6 @@ OrangeProjectile::OrangeProjectile(int _orient, sf::Vector2f pos, int desCap): P
     if (texture->loadFromFile("./resources/Images/sonor_shockwaves.png") == false)
         throw(Exception("resources load failed"));
     type = IProjectile::YELLOW;
-    // move_clock.restart();
-    // anim_clock.restart();
     posRect = 0;
     orient = _orient;
     sprite.setTexture(*texture);

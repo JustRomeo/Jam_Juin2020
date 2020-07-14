@@ -23,6 +23,8 @@ Battery::Battery(int _type, int _max_mun)
             munShape[i].setFillColor(sf::Color::Blue);
         if (_type == 3)
             munShape[i].setFillColor(sf::Color::Magenta);
+        if (_type == 4)
+            munShape[i].setFillColor(sf::Color::Green);
         munShape[i].setOutlineThickness(2);
         munShape[i].setPosition(x, y);
         x += 20;
@@ -90,6 +92,7 @@ int Battery::incMun()
 int Battery::decMun()
 {
     if (mun > 0) {
+        reload.restart();
         mun--;
         return (1);
     }

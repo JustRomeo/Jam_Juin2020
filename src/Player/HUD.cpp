@@ -9,7 +9,7 @@
 
 HUD::HUD()
 {
-    for (int i = 1; i < 4; i++) {
+    for (int i = 1; i < 5; i++) {
         battery.push_back(std::make_shared<Battery>(i, 3));
     }
     for (int i = 0; i < 3; i++) {
@@ -41,7 +41,7 @@ void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int
 void HUD::incWeaponType()
 {
     weapon_type++;
-    if (weapon_type > 3)
+    if (weapon_type > 4)
         weapon_type = 1;
 }
 
@@ -57,7 +57,7 @@ int HUD::getMunBattery()
 
 int HUD::decBatteryMun()
 {
-    return (battery[weapon_type -1]->decMun());
+    return (battery[weapon_type - 1]->decMun());
 }
 
 void HUD::batteryChanneling()
