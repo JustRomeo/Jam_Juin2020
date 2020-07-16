@@ -30,10 +30,23 @@ bool Ennemi::isFalllingStop(std::vector<std::shared_ptr<Block>> mapSFML) {
     int y = 0;
     sf::FloatRect ColisionArea;
     sf::FloatRect entite = _sprite.getGlobalBounds();
+    sf::Vector2f charact_xm = _sprite.getPosition();
+    sf::Vector2f charact_mx = _sprite.getPosition();
 
+    charact_xm.y += (_sprite.getTextureRect().height * 2) + 30;
+    charact_mx.y += (_sprite.getTextureRect().height * 2) + 30;
+    if (_sprite.getScale().x > 0) {
+        charact_mx.x += (_sprite.getTextureRect().width * 2) - 15;
+        charact_xm.x += 15;
+    }
+    else {
+        charact_mx.x -= (_sprite.getTextureRect().width * 2) - 15;
+        charact_xm.x -= 15;
+    }
     for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
         ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
-        if (entite.intersects(ColisionArea) == true && _sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y) {
+        if (entite.intersects(ColisionArea) == true && _sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y ||
+            (entite.contains(charact_mx) == true  || entite.contains(charact_xm) == true)) {
             _sprite.setTextureRect(sf::IntRect(315, 20, 44, 58));
             y = mapSFML[i]->getSprite().getPosition().y - (_sprite.getTextureRect().height * 2);
             _sprite.setPosition(_sprite.getPosition().x, y);
@@ -44,7 +57,8 @@ bool Ennemi::isFalllingStop(std::vector<std::shared_ptr<Block>> mapSFML) {
     return false;
 }
 
-void Ennemi::move(vector<shared_ptr<Block>> mapSFML) {
+void Ennemi::move(vector<shared_ptr<Block>> mapSFML)
+{
     if (this->isColisionned(mapSFML) && this->left)
         this->left = false;
     else if (this->isColisionned(mapSFML) && !this->left)
@@ -74,13 +88,13 @@ bool Ennemi::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
     charact_mx.y += (_sprite.getTextureRect().height * 2) + 30;
     if (_sprite.getScale().x > 0) {
         entite.x += (_sprite.getTextureRect().width * 2) / 2;
-        charact_mx.x += (_sprite.getTextureRect().width * 3) - 15;
-        charact_xm.x += 15;
+        charact_mx.x += (_sprite.getTextureRect().width * 2);
+        //charact_xm.x += 15;
     }
     else {
         entite.x -= (_sprite.getTextureRect().width * 2) / 2;
-        charact_mx.x -= (_sprite.getTextureRect().width * 3) - 15;
-        charact_xm.x -= 15;
+        charact_mx.x -= (_sprite.getTextureRect().width * 2);
+        //charact_xm.x -= 15;
     }
     for (size_t i = 0; i < mapSFML.size(); i ++) {
         ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();

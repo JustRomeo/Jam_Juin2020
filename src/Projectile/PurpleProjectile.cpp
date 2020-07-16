@@ -74,17 +74,20 @@ void PurpleProjectile::display(std::shared_ptr<sf::RenderWindow> window)
     window->draw(sprite);
 }
 
-int PurpleProjectile::checkDestruction(std::shared_ptr<Block> block)
+int PurpleProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
 {
     sf::FloatRect bullet = sprite.getGlobalBounds();
-    sf::FloatRect g = block->getSprite().getGlobalBounds();
+    sf::FloatRect g = mapSFML[0]->getSprite().getGlobalBounds();
 
-    if (bullet.intersects(g) == true) {
-        if (block->getType() == Block::Type::PURPLE) {
-            destructionCapacity--;
-            return (1);
+    for (int i = 0; i < mapSFML.size(); i++) {
+        g = mapSFML[i]->getSprite().getGlobalBounds();
+        if (bullet.intersects(g) == true) {
+            if (mapSFML[i]->getType() == Block::Type::PURPLE) {
+                mapSFML.erase(mapSFML.begin() + i);
+                return (0);
+            }
+            return (0);
         }
-        return (0);
     }
     return (-1);
 }

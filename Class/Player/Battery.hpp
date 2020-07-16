@@ -34,6 +34,7 @@ class Battery {
         int mun;
         int type;
         int max_mun;
+        float reload_time;
 };
 
 #endif /* !BATTERY_HPP_ */

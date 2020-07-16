@@ -14,6 +14,7 @@ Battery::Battery(int _type, int _max_mun)
     type = _type;
     mun = _max_mun;
     max_mun = _max_mun;
+    reload_time = 5;
     for (int i = 0; i < 5; i++) {
         munShape.push_back(sf::RectangleShape(sf::Vector2f(20, 40)));
         munShape[i].setOutlineColor(sf::Color::Black);
@@ -23,8 +24,10 @@ Battery::Battery(int _type, int _max_mun)
             munShape[i].setFillColor(sf::Color::Blue);
         if (_type == 3)
             munShape[i].setFillColor(sf::Color::Magenta);
-        if (_type == 4)
+        if (_type == 4) {
             munShape[i].setFillColor(sf::Color::Green);
+            reload_time = 10;
+        }
         munShape[i].setOutlineThickness(2);
         munShape[i].setPosition(x, y);
         x += 20;
@@ -106,7 +109,7 @@ int Battery::getType()
 
 int Battery::reloadBattery()
 {
-    if (getTimeDiff(5) == 1) {
+    if (getTimeDiff(reload_time) == 1) {
         return (incMun());
     }
     return (0);

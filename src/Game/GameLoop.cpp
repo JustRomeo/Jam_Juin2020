@@ -106,19 +106,17 @@ void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
 
     for (int i = 0; i < projectile.size(); i++) {
         res = -1;
-        for (int j = 0; j < mapSFML.size() && res != 0 && res != 1; j++) {
-            res = projectile[i]->checkDestruction(mapSFML[j]);
-            if (res == 0 || projectile[i]->getCurrentCapacity() <= 0)
-                projectile.erase(projectile.begin() + i);
-            if (res == 1)
-                mapSFML.erase(mapSFML.begin() + j);
-        }
+        res = projectile[i]->checkDestruction(mapSFML);
+        if (res == 0)
+            projectile.erase(projectile.begin() + i);
     }
 }
 
 void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
 {
     int res = -1;
+    sf::Sprite persoSprite = perso->getSprite();
+    sf::Vector2f swordPoint = persoSprite.getPosition();
 
     for (size_t i = 0; i < projectile.size(); i++) {
         res = -1;
@@ -127,9 +125,20 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
             if (projectile[i]->getCurrentCapacity() <= 0) {
                 gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
-            } if (res == 1)
+            }
+            if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
         }
+    }
+    swordPoint.y += (persoSprite.getTextureRect().height * persoSprite.getScale().y) / 3;
+    if (persoSprite.getScale().x > 0)
+        swordPoint.x += persoSprite.getTextureRect().width * persoSprite.getScale().x;
+    else
+        swordPoint.x -= persoSprite.getTextureRect().width * persoSprite.getScale().x * -1;
+    for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
+        if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint) == true 
+            && perso->isCac() == true)
+            Ennemilist.erase(Ennemilist.begin() + j);
     }
 }
 
@@ -187,13 +196,8 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             return (shootEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
             return (switchWeaponEvent());
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R && perso->isActionPossible() && perso->getMun() > 0) {
-            perso->channeling();
-            if (perso->getSprite().getScale().x > 0)
-                projectile.push_back(projFactory.createComponent(4, 1, perso->getSprite().getPosition(), perso->getMunBattery()));
-            if (perso->getSprite().getScale().x < 0)
-                projectile.push_back(projFactory.createComponent(4, -1, perso->getSprite().getPosition(), perso->getMunBattery()));
-            perso->channelBat();
+        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
+            perso->cacAttack();
             return (3);
         }
     }
@@ -440,10 +444,10 @@ int GameLoop::gameLoop(Door door) {
     while (window->isOpen()) {
         door_s.doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
-        display(door);
-        clear();
         checkDestruction(mapSFML);
         checkDeathEnemy(Ennemilist);
+        display(door);
+        clear();
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 1) {
             gameMusic->startDeathMusic();

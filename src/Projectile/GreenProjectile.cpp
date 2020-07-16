@@ -91,17 +91,37 @@ void GreenProjectile::display(std::shared_ptr<sf::RenderWindow> window)
     window->draw(sprite);
 }
 
-int GreenProjectile::checkDestruction(std::shared_ptr<Block> block)
+int GreenProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
 {
     sf::FloatRect bullet = sprite.getGlobalBounds();
-    sf::FloatRect g = block->getSprite().getGlobalBounds();
+    sf::FloatRect g;
+    sf::FloatRect r;
+    sf::CircleShape explosionRange;
+    sf::Vector2f rangePosition;
+    int j = 0;
 
-    if (bullet.intersects(g) == true) {
-        if (block->getType() != Block::Type::UNBREAKABLE) {
-            destructionCapacity--;
-            return (1);
+    for (int i = 0; i < mapSFML.size(); i++) {
+        g = mapSFML[i]->getSprite().getGlobalBounds();
+        if (bullet.intersects(g) == true) {
+            rangePosition.y = sprite.getPosition().y - 80;
+            if (mapSFML[i]->getSprite().getPosition().x - sprite.getPosition().x > 0)
+                rangePosition.x = sprite.getPosition().x;
+            else
+                rangePosition.x = sprite.getPosition().x - 200;
+            explosionRange.setPosition(rangePosition);
+            explosionRange.setRadius(120.f);
+            while (j < mapSFML.size()) {
+                r = mapSFML[j]->getSprite().getGlobalBounds();
+                if (r.intersects(explosionRange.getGlobalBounds()) == true
+                    && mapSFML[j]->getType() != Block::Type::UNBREAKABLE) {
+                    mapSFML.erase(mapSFML.begin() + j);
+                    j = 0;
+                    //return (1);
+                }
+                j++;
+            }
+            return (0);
         }
-        return (0);
     }
     return (-1);
 }
