@@ -9,8 +9,8 @@ Door::Door(int X, int Y) {
     _texture = new sf::Texture;
     pos = sf::Vector2f(X, Y);
     try {
-        this->openUp->load("resources/Sounds/door.ogg");
-        this->setTexture("resources/Images/Door.png");
+        this->openUp->load("resources/Sounds/sounds/door.ogg");
+        this->setTexture("resources/Images/Game/Door.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
     }
@@ -26,8 +26,8 @@ Door::Door(vector<string> map) {
     openUp = new MusicSFML();
     _anim = 0;
     try {
-        this->openUp->load("resources/Sounds/door.ogg");
-        this->setTexture("resources/Images/Door.png");
+        this->openUp->load("resources/Sounds/sounds/door.ogg");
+        this->setTexture("resources/Images/Game/Door.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
     }
@@ -38,24 +38,21 @@ Door::Door(vector<string> map) {
 
 Door::~Door() {}
 
-void Door::setTexture(string filepath)
-{
+void Door::setTexture(string filepath) {
     if (!_texture->loadFromFile(filepath))
         throw (Exception("Loading Ressource Failed"));
     _sprite.setTexture(*_texture);
     _sprite.setTextureRect(sf::IntRect(0, 0, 260, 375));
 }
 
-void Door::setPosition(vector<string> map)
-{
+void Door::setPosition(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'o')
                 this->setPosition(sf::Vector2f(j * 157, i * 157));
 }
 
-void Door::doorOpen(sf::Sprite persoSprite)
-{
+void Door::doorOpen(sf::Sprite persoSprite) {
     if (!_opening)
         return;
     if (_opening) {
@@ -66,8 +63,7 @@ void Door::doorOpen(sf::Sprite persoSprite)
             _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));
             _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
         }
-    }
-    else {
+    } else {
         if (persoSprite.getGlobalBounds().intersects(_sprite.getGlobalBounds()))
             setOpening(true);
     }

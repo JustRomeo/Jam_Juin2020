@@ -13,8 +13,8 @@ int DeathMenu::Menu(sf::RenderWindow &window) {
     sf::Event event;
     ImageSFML back("resources/Buttons/back.jpg");
     ImageSFML quit("resources/Buttons/quit.png");
-    ImageSFML background("resources/Images/DeathWallpaper.jpg");
-    ImageSFML cursor("resources/Images/cursor.png");
+    ImageSFML background("resources/Images/Game/DeathWallpaper.jpg");
+    ImageSFML cursor("resources/Images/Game/cursor.png");
 
     window.setMouseCursorVisible(false);
     cursor.setScale(sf::Vector2f(2.4, 2.4));

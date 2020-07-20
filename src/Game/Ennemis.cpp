@@ -8,7 +8,7 @@ Ennemi::Ennemi(int X, int Y) {
     _texture = new sf::Texture;
     gravity = sf::Vector2f(0, 0);
     try {
-        this->setTexture("resources/Images/robot.png");
+        this->setTexture("resources/Images/Game/robot.png");
     } catch(Exception &e) {
         cout << e.what() << endl;
     }
@@ -56,8 +56,7 @@ void Ennemi::move(vector<shared_ptr<Block>> mapSFML) {
         }
         else if (getTimeDiff(0.07) == 1)
             this->movePosition(left ? -2 : 2, gravity.y += 2);
-    }
-    else if (left)
+    } else if (left)
         goLeft();
     else
         goRight();
@@ -76,18 +75,15 @@ bool Ennemi::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
         entite.x += (_sprite.getTextureRect().width * 2) / 2;
         charact_mx.x += (_sprite.getTextureRect().width * 3) - 15;
         charact_xm.x += 15;
-    }
-    else {
+    } else {
         entite.x -= (_sprite.getTextureRect().width * 2) / 2;
         charact_mx.x -= (_sprite.getTextureRect().width * 3) - 15;
         charact_xm.x -= 15;
-    }
-    for (size_t i = 0; i < mapSFML.size(); i ++) {
+    } for (size_t i = 0; i < mapSFML.size(); i ++) {
         ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
         if (ColisionArea.contains(entite) || ColisionArea.contains(charact_xm) || ColisionArea.contains(charact_mx))
             return false;
-    }
-    if (!is_falling) {
+    } if (!is_falling) {
         is_falling = true;
         _sprite.setTextureRect(sf::IntRect(72, 20, 44, 60));
         gravity = sf::Vector2f(0, 0);

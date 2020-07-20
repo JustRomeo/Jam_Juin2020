@@ -7,15 +7,13 @@
 
 #include "Character.hpp"
 
-Character::Character()
-{
-
+Character::Character() {
     jump_sound = new MusicSFML();
     coli_sound = new MusicSFML();
     shot_sound = new MusicSFML();
 
-    jump_sound->load("resources/Sounds/Jump.ogg");
-    coli_sound->load("resources/Sounds/Colision.ogg");
+    jump_sound->load("resources/Sounds/sounds/Jump.ogg");
+    coli_sound->load("resources/Sounds/sounds/Colision.ogg");
     _lifes = 3;
     textureFight = std::make_shared<sf::Texture>();
     texture = std::make_shared<sf::Texture>();
@@ -47,12 +45,9 @@ Character::Character()
     createAnimRec();
 }
 
-Character::~Character()
-{
-}
+Character::~Character() {}
 
-void Character::createAnimRec()
-{
+void Character::createAnimRec() {
     shootRect.push_back(sf::IntRect(12, 8, 35, 35));
     shootRect.push_back(sf::IntRect(62, 8, 28, 30));
     shootRect.push_back(sf::IntRect(114, 8, 29, 29));
@@ -82,8 +77,7 @@ void Character::createAnimRec()
     channelingTime.push_back(0.3);
 }
 
-int Character::getTimeDiff(float diff)
-{
+int Character::getTimeDiff(float diff) {
     sf::Time time;
     float seconds = 0;
 
@@ -96,8 +90,7 @@ int Character::getTimeDiff(float diff)
     return (0);
 }
 
-int Character::getTimeMove(float diff)
-{
+int Character::getTimeMove(float diff) {
     sf::Time time;
     float seconds = 0;
 
@@ -110,8 +103,7 @@ int Character::getTimeMove(float diff)
     return (0);
 }
 
-int Character::getTimeSwitch(float diff)
-{
+int Character::getTimeSwitch(float diff) {
     sf::Time time;
     float seconds = 0;
 
@@ -124,10 +116,8 @@ int Character::getTimeSwitch(float diff)
     return (0);
 }
 
-void Character::shootAnimation()
-{
-    if (getTimeDiff(0.06) == 1)
-    {
+void Character::shootAnimation() {
+    if (getTimeDiff(0.06) == 1) {
         shootRectPos++;
         if (shootRectPos > 8) {
             is_shooting = false;
@@ -139,8 +129,7 @@ void Character::shootAnimation()
     }
 }
 
-void Character::switchAnimation()
-{
+void Character::switchAnimation() {
     sf::IntRect rect;
 
     if (getTimeSwitch(0.2) == 1) {
@@ -150,17 +139,14 @@ void Character::switchAnimation()
             is_switching = false;
             sprite.setTexture(*texture);
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
-        }
-        else
+        } else
             sprite.setTextureRect(rect);
     }
 }
 
-void Character::channelingAnimation()
-{
-    if (getTimeDiff(channelingTime[channelRectPos]) == 1)
-    {
-        channelRectPos++;
+void Character::channelingAnimation() {
+    if (getTimeDiff(channelingTime[channelRectPos]) == 1) {
+        channelRectPos ++;
         if (channelRectPos > 7) {
             is_channeling = false;
             channelRectPos = 0;
@@ -181,9 +167,7 @@ void Character::channelingAnimation()
     }
 }
 
-void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view = window->getView();
 
@@ -197,8 +181,7 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             is_jumping = false;
             sprite.setTextureRect(sf::IntRect(215, 77, 25, 36));
             is_falling = true;
-        }
-        else if (not_colision(mapSFML) == 1) {
+        } else if (not_colision(mapSFML) == 1) {
             sprite.move(move);
             view.move(move);
         } else {
@@ -211,9 +194,7 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
     }
 }
 
-void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::Vector2f pos = sprite.getPosition();
     sf::View view = window->getView();
@@ -243,8 +224,7 @@ void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
     }
 }
 
-void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     if (is_shooting)
         shootAnimation();
     if (is_jumping)
@@ -259,8 +239,7 @@ void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<st
     window->draw(sprite);
 }
 
-void Character::jump()
-{
+void Character::jump() {
     if (is_jumping == false && is_falling == false) {
         is_jumping = true;
         jump_sound->start();
@@ -269,8 +248,7 @@ void Character::jump()
     }
 }
 
-void Character::fall()
-{
+void Character::fall() {
     if (is_falling == false) {
         is_falling = true;
         sprite.setTextureRect(sf::IntRect(215, 78, 25, 28));
@@ -278,26 +256,25 @@ void Character::fall()
     }
 }
 
-void Character::shoot()
-{
+void Character::shoot() {
     sf::IntRect rect = sprite.getTextureRect();
     int toTurn = 0;
 
     switch (getWeapon()) {
         case 1:
-            shot_sound->load("resources/Sounds/shot1.ogg");
+            shot_sound->load("resources/Sounds/sounds/shot1.ogg");
             shot_sound->start();
             break;
         case 2:
-            shot_sound->load("resources/Sounds/shot2.ogg");
+            shot_sound->load("resources/Sounds/sounds/shot2.ogg");
             shot_sound->start();
             break;
         case 3:
-            shot_sound->load("resources/Sounds/shot3.ogg");
+            shot_sound->load("resources/Sounds/sounds/shot3.ogg");
             shot_sound->start();
             break;
         case 4:
-            shot_sound->load("resources/Sounds/channelingShot.ogg");
+            shot_sound->load("resources/Sounds/sounds/channelingShot.ogg");
             shot_sound->start();
             break;
     } if (is_shooting != true && is_jumping == false && is_falling == false) {
@@ -313,8 +290,7 @@ void Character::shoot()
     }
 }
 
-void Character::incWeapon()
-{
+void Character::incWeapon() {
     int toTurn = 0;
 
     if (is_switching == false && is_jumping == false && is_falling == false
@@ -336,9 +312,7 @@ void Character::incWeapon()
     }
 }
 
-void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view= window->getView();
 
@@ -380,9 +354,7 @@ void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
     }
 }
 
-void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view= window->getView();
 
@@ -424,8 +396,7 @@ void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
     }
 }
 
-void Character::channeling()
-{
+void Character::channeling() {
     if (is_jumping == false && is_falling == false && is_shooting == false && is_channeling == false) {
         shot_sound->load("resources/Sounds/channelingShot.ogg");
         shot_sound->start();
@@ -436,8 +407,7 @@ void Character::channeling()
     }
 }
 
-sf::Vector2f Character::getSpriteMid()
-{
+sf::Vector2f Character::getSpriteMid() {
     sf::Vector2f charact = sprite.getPosition();
 
     charact.y += (sprite.getTextureRect().height * 3) + 30;
@@ -448,8 +418,7 @@ sf::Vector2f Character::getSpriteMid()
     return (charact);
 }
 
-int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML) {
     int i = 0;
     sf::FloatRect charact = sprite.getGlobalBounds();
     sf::FloatRect g;
@@ -465,8 +434,7 @@ int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
     return (1);
 }
 
-int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML) {
     int i = 0;
     int y = 0;
     sf::FloatRect charact = sprite.getGlobalBounds();
@@ -480,8 +448,7 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
     if (sprite.getScale().x > 0) {
         charact_mx.x += (sprite.getTextureRect().width * 3) - 15;
         charact_xm.x += 15;
-    }
-    else {
+    } else {
         charact_mx.x -= (sprite.getTextureRect().width * 3) - 15;
         charact_xm.x -= 15;
     }
@@ -495,13 +462,12 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
             sprite.setPosition(sprite.getPosition().x, y);
             return (0);
         }
-        i++;
+        i ++;
     }
     return (1);
 }
 
-int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
     int i = 0;
     int y = 0;
     sf::Vector2f charact = sprite.getPosition();
@@ -525,24 +491,17 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
             g.contains(charact_mx) == true) {
             return (0);
         }
-        i++;
+        i ++;
     }
     fall();
     return (1);
 }
 
-sf::Sprite Character::getSprite()
-{
-    return (sprite);
-}
+sf::Sprite Character::getSprite() {return (sprite);}
 
-int Character::getWeapon()
-{
-    return (weapon_type);
-}
+int Character::getWeapon() {return (weapon_type);}
 
-void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList)
-{
+void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
     sf::FloatRect rect;
 
     for (int i = 0; i < PlusList.size(); i++) {
@@ -554,62 +513,24 @@ void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList)
     }
 }
 
-void Character::restartPos()
-{
-    sprite.setTextureRect(sf::IntRect(65, 6, 19, 30));
-}
+void Character::restartPos() {sprite.setTextureRect(sf::IntRect(65, 6, 19, 30));}
+bool Character::isShooting() {return (is_shooting);}
+bool Character::isJumping() {return (is_jumping);}
+bool Character::isFalling() {return (is_falling);}
+bool Character::getMoving() {return (is_moving);}
+bool Character::isChanneling() {return (is_channeling);}
 
-bool Character::isShooting()
-{
-    return (is_shooting);
-}
+bool Character::isSwitching() {return (is_switching);}
 
-bool Character::isJumping()
-{
-    return (is_jumping);
-}
-
-bool Character::isFalling()
-{
-    return (is_falling);
-}
-
-bool Character::getMoving()
-{
-    return (is_moving);
-}
-
-bool Character::isChanneling()
-{
-    return (is_channeling);
-}
-
-bool Character::isSwitching()
-{
-    return (is_switching);
-}
-
-bool Character::isActionPossible()
-{
+bool Character::isActionPossible(){
     if (is_jumping == false && is_falling == false && is_channeling == false && is_switching == false && is_shooting == false)
         return (true);
     return (false);
 }
 
-void Character::setMoving(bool status)
-{
-    is_moving = status;
-}
-
-int Character::getMunBattery()
-{
-    return (hud->decBatteryMun());
-}
-
-int Character::getMun()
-{
-    return (hud->getMunBattery());
-}
+void Character::setMoving(bool status) {is_moving = status;}
+int Character::getMunBattery() {return (hud->decBatteryMun());}
+int Character::getMun() {return (hud->getMunBattery());}
 
 int Character::channelBat()
 {

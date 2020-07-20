@@ -8,6 +8,7 @@
 SRCP =	src/
 DISP =	src/Display/
 GAMP =	src/Game/
+INTP =	src/Interface/
 MAPP =	src/Map/
 MENP = 	src/Menu/
 PLAP =	src/Player/
@@ -24,17 +25,19 @@ SRC =	$(SRCP)main.cpp			\
 		$(GAMP)Projectile.cpp	\
 		$(GAMP)GameLoop.cpp		\
 		$(GAMP)GameMusic.cpp	\
+		$(INTP)Multiplayer.cpp	\
 		$(MAPP)Block.cpp		\
 		$(MAPP)Door.cpp			\
+		$(MAPP)Mapper.cpp		\
 		$(MENP)Death.cpp		\
 		$(MENP)Echap.cpp		\
 		$(MENP)MainMenu.cpp		\
-		$(SYSP)Exception.cpp	\
 		$(PLAP)Character.cpp	\
 		$(PLAP)Battery.cpp		\
 		$(PLAP)HUD.cpp			\
 		$(PLAP)MunPlus.cpp		\
-		$(MAPP)Mapper.cpp		\
+		$(SYSP)Connection.cpp	\
+		$(SYSP)Exception.cpp	\
 		$(SYSP)System.cpp		\
 
 OBJ =	$(SRC:.cpp=.o)
@@ -57,6 +60,7 @@ CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
 			-I./Class/Display			\
 			-I./Class/Game				\
+			-I./Class/Interface			\
 			-I./Class/Map				\
 			-I./Class/Menu				\
 			-I./Class/Player			\
