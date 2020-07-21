@@ -25,11 +25,13 @@ class Character {
         Character();
         ~Character();
 
+        void dash();
         void jump();
         void fall();
         bool isCac();
         void shoot();
         int getMun();
+        void sprint();
         int getWeapon();
         void incWeapon();
         bool isJumping();
@@ -37,14 +39,17 @@ class Character {
         bool isFalling();
         int channelBat();
         void cacAttack();
+        void stopSprint();
         bool isShooting();
         void channeling();
         void restartPos();
         bool isSwitching();
         bool isChanneling();
+        bool isSprinting();
         int getMunBattery();
         void cacAnimation();
         void createAnimRec();
+        void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
         void shootAnimation();
         sf::Sprite getSprite();
         void switchAnimation();
@@ -73,6 +78,7 @@ class Character {
         int move_Xmax;
         int notMove_Y;
         int weapon_type;
+        int sprintBar;
 
         int cacRectPos;
         int shootRectPos;
@@ -83,13 +89,17 @@ class Character {
         bool is_moving;
         bool is_jumping;
         bool is_falling;
+        bool is_dashing;
         bool is_shooting;
         bool is_switching;
+        bool is_sprinting;
         bool is_channeling;
 
         Time move_clock;
         Time anim_clock;
         Time cac_clock;
+        Time sprint_clock;
+        Time dash_clock;
 
         sf::Vector2f move;
         sf::Sprite sprite;

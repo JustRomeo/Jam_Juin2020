@@ -15,7 +15,7 @@ class Battery {
     public:
         Battery(int type, int max_mun);
         ~Battery();
-        void display(std::shared_ptr<sf::RenderWindow> window);
+        void display(std::shared_ptr<sf::RenderWindow> window, sf::Vector2f pos);
         int getMun();
         int incMun();
         int decMun();

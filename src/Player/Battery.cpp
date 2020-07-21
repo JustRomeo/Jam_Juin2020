@@ -52,27 +52,23 @@ int Battery::getTimeDiff(float diff)
     return (0);
 }
 
-void Battery::display(std::shared_ptr<sf::RenderWindow> window)
+void Battery::display(std::shared_ptr<sf::RenderWindow> window, sf::Vector2f pos)
 {
     sf::View view = window->getView();
-    sf::RectangleShape hudBack = sf::RectangleShape(sf::Vector2f(250, 150));
     sf::RectangleShape emptyMun = sf::RectangleShape(sf::Vector2f(20, 40));
     int x = 20;
 
     emptyMun.setOutlineColor(sf::Color::Black);
     emptyMun.setFillColor(sf::Color::White);
-    hudBack.setFillColor(sf::Color::Black);
     emptyMun.setOutlineThickness(2);
-    hudBack.setPosition(view.getCenter().x - 935 + x, view.getCenter().y + 370);
-    window->draw(hudBack);
     for (int i = 0; i < mun; i++) {
-        munShape[i].setPosition(view.getCenter().x - 900 + x, view.getCenter().y + 450);
+        munShape[i].setPosition(pos.x + x, pos.y);
         window->draw(munShape[i]);
         x+= 20;
     }
     if (mun < max_mun) {
         for (int i = mun; i < max_mun; i++) {
-            emptyMun.setPosition(view.getCenter().x - 900 + x, view.getCenter().y + 450);
+            emptyMun.setPosition(pos.x + x, pos.y);
             window->draw(emptyMun);
             x+= 20;
         }

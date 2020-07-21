@@ -145,7 +145,11 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
 int GameLoop::movementEvent(sf::Event event)
 {
     if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+            perso->sprint();
+        else
+            perso->stopSprint();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             perso->jump();
             return (3);
         }
@@ -264,7 +268,7 @@ int GameLoop::fondue()
     sf::Color c4(255, 255, 255, 0);
 
     clock.restart();
-    if (font.loadFromFile("./resources/character/arial.ttf") == false)
+    if (font.loadFromFile("./resources/character/police.ttf") == false)
         return (false);
     fade.setFillColor(sf::Color::Black);
     sf::Text text("Aventurier!\n", font);
