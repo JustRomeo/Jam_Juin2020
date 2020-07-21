@@ -9,11 +9,10 @@
 
 HUD::HUD()
 {
-    for (int i = 1; i < 5; i++) {
+    for (int i = 1; i < 5; i++)
         battery.push_back(std::make_shared<Battery>(i, 3));
-    }
-    for (int i = 0; i < 3; i++) {
-        heart.push_back(std::make_shared<ImageSFML>("resources/Images/heart.png"));
+    for (int i = 0; i < 3; i ++) {
+        heart.push_back(std::make_shared<ImageSFML>("resources/Images/Hud/heart.png"));
         heart[i]->setScale(sf::Vector2f(0.25, 0.25));
     }
     weapon_type = 1;
@@ -23,9 +22,7 @@ HUD::~HUD()
 {
 }
 
-
-void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int life)
-{
+void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int life) {
     int x = 800;
     int x1 = 20;
     sf::Font font;

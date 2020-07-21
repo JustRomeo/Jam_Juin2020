@@ -12,8 +12,6 @@
 #include "Battery.hpp"
 #include <memory>
 
-
-
 class HUD {
     public:
         HUD();

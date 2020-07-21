@@ -7,9 +7,7 @@
 
 #include "Character.hpp"
 
-Character::Character()
-{
-
+Character::Character() {
     jump_sound = new MusicSFML();
     coli_sound = new MusicSFML();
     shot_sound1 = new MusicSFML();
@@ -17,15 +15,15 @@ Character::Character()
     shot_sound3 = new MusicSFML();
     shot_sound4 = new MusicSFML();
 
-    jump_sound->load("resources/Sounds/Jump.ogg");
-    coli_sound->load("resources/Sounds/Colision.ogg");
+    jump_sound->load("resources/Sounds/sounds/Jump.ogg");
+    coli_sound->load("resources/Sounds/sounds/Colision.ogg");
     _lifes = 3;
     textureFight = std::make_shared<sf::Texture>();
     texture = std::make_shared<sf::Texture>();
-    shot_sound1->load("resources/Sounds/shot1.ogg");
-    shot_sound2->load("resources/Sounds/shot1.ogg");
-    shot_sound3->load("resources/Sounds/shot1.ogg");
-    shot_sound4->load("resources/Sounds/channelingShot.ogg");
+    shot_sound1->load("resources/Sounds/sounds/shot1.ogg");
+    shot_sound2->load("resources/Sounds/sounds/shot2.ogg");
+    shot_sound3->load("resources/Sounds/sounds/shot3.ogg");
+    shot_sound4->load("resources/Sounds/sounds/channelingShot.ogg");
     if (texture->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png") == false)
         throw(Exception("resources load failed"));
     if (textureFight->loadFromFile("./resources/character/adventurer-bow-Sheet.png") == false)
@@ -57,12 +55,9 @@ Character::Character()
     createAnimRec();
 }
 
-Character::~Character()
-{
-}
+Character::~Character() {}
 
-void Character::createAnimRec()
-{
+void Character::createAnimRec() {
     shootRect.push_back(sf::IntRect(12, 8, 35, 35));
     shootRect.push_back(sf::IntRect(62, 8, 28, 30));
     shootRect.push_back(sf::IntRect(114, 8, 29, 29));
@@ -175,9 +170,7 @@ void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
         unblockCharacter(mapSFML);
 }
 
-void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view = window->getView();
 
@@ -191,8 +184,7 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
             is_jumping = false;
             sprite.setTextureRect(sf::IntRect(215, 77, 25, 31));
             is_falling = true;
-        }
-        else if (not_colision(mapSFML) == 1) {
+        } else if (not_colision(mapSFML) == 1) {
             sprite.move(move);
             view.move(move);
         } else {
@@ -206,9 +198,7 @@ void Character::jumpAnimation(std::shared_ptr<sf::RenderWindow> window,
     }
 }
 
-void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+void Character::fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::Vector2f pos = sprite.getPosition();
     sf::View view = window->getView();
@@ -343,8 +333,7 @@ void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<st
     window->draw(sprite);
 }
 
-void Character::jump()
-{
+void Character::jump() {
     if (is_jumping == false && is_falling == false) {
         is_jumping = true;
         jump_sound->start();
@@ -353,8 +342,7 @@ void Character::jump()
     }
 }
 
-void Character::fall()
-{
+void Character::fall() {
     if (is_falling == false) {
         is_falling = true;
         sprite.setTextureRect(sf::IntRect(215, 78, 25, 28));
@@ -461,8 +449,7 @@ void Character::spriteAnimation()
     }
 }
 
-sf::Vector2f Character::getSpriteMid()
-{
+sf::Vector2f Character::getSpriteMid() {
     sf::Vector2f charact = sprite.getPosition();
 
     charact.y += (sprite.getTextureRect().height * 3) + 30;
@@ -511,8 +498,7 @@ int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML)
     return (1);
 }
 
-int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML) {
     int i = 0;
     int y = 0;
     sf::FloatRect charact = sprite.getGlobalBounds();
@@ -526,8 +512,7 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
     if (sprite.getScale().x > 0) {
         charact_mx.x += (sprite.getTextureRect().width * 3) - 15;
         charact_xm.x += 15;
-    }
-    else {
+    } else {
         charact_mx.x -= (sprite.getTextureRect().width * 3) - 15;
         charact_xm.x -= 15;
     }
@@ -544,13 +529,12 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML)
             }
             return (0);
         }
-        i++;
+        i ++;
     }
     return (1);
 }
 
-int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
-{
+int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
     int i = 0;
     int y = 0;
     sf::Vector2f charact = sprite.getPosition();
@@ -574,24 +558,17 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML)
             g.contains(charact_mx) == true) {
             return (0);
         }
-        i++;
+        i ++;
     }
     fall();
     return (1);
 }
 
-sf::Sprite Character::getSprite()
-{
-    return (sprite);
-}
+sf::Sprite Character::getSprite() {return (sprite);}
 
-int Character::getWeapon()
-{
-    return (weapon_type);
-}
+int Character::getWeapon() {return (weapon_type);}
 
-void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList)
-{
+void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
     sf::FloatRect rect;
 
     for (int i = 0; i < PlusList.size(); i++) {

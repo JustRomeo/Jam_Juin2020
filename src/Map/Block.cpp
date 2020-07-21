@@ -12,10 +12,10 @@ Block::Block(int X, int Y, size_t size, Block::Type type) {
     pos = sf::Vector2f(X, Y);
     try {
         switch(_type) {
-            case Block::Type::BLUE:   this->setTexture("resources/Images/brokable_blue.png"); break;
-            case Block::Type::PURPLE: this->setTexture("resources/Images/brokable_purple.png"); break;
-            case Block::Type::YELLOW: this->setTexture("resources/Images/brokable_yellow.png"); break;
-            default:                  this->setTexture("resources/Images/blockCobble.png"); break;
+            case Block::Type::BLUE:   this->setTexture("resources/Images/Map/brokable_blue.png"); break;
+            case Block::Type::PURPLE: this->setTexture("resources/Images/Map/brokable_purple.png"); break;
+            case Block::Type::YELLOW: this->setTexture("resources/Images/Map/brokable_yellow.png"); break;
+            default:                  this->setTexture("resources/Images/Map/blockCobble.png"); break;
         }
     } catch(Exception &e) {
         cout << e.what() << endl;
@@ -23,8 +23,7 @@ Block::Block(int X, int Y, size_t size, Block::Type type) {
     this->_sprite.setPosition(pos);
     this->_sprite.setScale(sf::Vector2f(0.5, 0.5));
 }
-Block::~Block() 
-{
+Block::~Block() {
     //delete(_texture);
 }
 
@@ -33,6 +32,7 @@ void Block::setTexture(string filepath) {
         throw (Exception("Loading Ressource Failed"));
     _sprite.setTexture(*_texture);
 }
+
 Block::Type Block::getType() const {return _type;}
 size_t Block::getSize(void) const {return _size;}
 sf::Vector2f Block::getPosition(void) {return pos;}

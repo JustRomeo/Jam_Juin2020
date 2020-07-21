@@ -19,6 +19,7 @@
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "Exception.hpp"
+#include "Multiplayer.hpp"
 
 using namespace std;
 static bool isEnvDisplay(char **env) {
@@ -31,8 +32,8 @@ static bool isEnvDisplay(char **env) {
 }
 
 int main(int ac, char **av, char **env) {
-    int replay = 1;
     Mapper mapper;
+    int replay = 1;
     std::shared_ptr<GameLoop> game;
     vector<string> map = System().openfile("maps/.map1");
     Door door(map);

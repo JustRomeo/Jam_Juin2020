@@ -8,6 +8,7 @@
 SRCP =	src/
 DISP =	src/Display/
 GAMP =	src/Game/
+INTP =	src/Interface/
 MAPP =	src/Map/
 MENP = 	src/Menu/
 PLAP =	src/Player/
@@ -25,6 +26,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(GAMP)Projectile.cpp			\
 		$(GAMP)GameLoop.cpp				\
 		$(GAMP)GameMusic.cpp			\
+		$(INTP)Multiplayer.cpp			\
 		$(MAPP)Block.cpp				\
 		$(MAPP)Door.cpp					\
 		$(MENP)Death.cpp				\
@@ -37,6 +39,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
 		$(MAPP)Mapper.cpp				\
+		$(SYSP)Connection.cpp			\
 		$(SYSP)System.cpp				\
 		$(PROJ)OrangeProjectile.cpp 	\
 		$(PROJ)BlueProjectile.cpp 		\
@@ -64,6 +67,7 @@ CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
 			-I./Class/Display			\
 			-I./Class/Game				\
+			-I./Class/Interface			\
 			-I./Class/Map				\
 			-I./Class/Menu				\
 			-I./Class/Player			\

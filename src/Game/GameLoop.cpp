@@ -11,42 +11,37 @@
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "MusicSFML.hpp"
+#include "Multiplayer.hpp"
 
-GameLoop::GameLoop()
-{
+GameLoop::GameLoop() {
     try {
         gameMusic = std::make_shared<GameMusic>();
         window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
         auto image = sf::Image {};
-        if (!image.loadFromFile("resources/Images/icon.png"))
+        if (!image.loadFromFile("resources/Images/Icon/icon.png"))
             throw Exception("Loading Ressource Failed");
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
         view = std::make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
-        background = std::make_shared<Sprite>("resources/Images/space.png");
+        background = std::make_shared<Sprite>("resources/Images/Game/space.png");
         perso = std::make_shared<Character>();
-        font = std::make_shared<ImageSFML>("resources/Images/sprite_font.png");
+        font = std::make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
         window->setView(*view);
     } catch (std::bad_alloc &e) {
-        throw(Exception("can't initiate window and view\n"));
+        throw Exception("can't initiate window and view\n");
     }
 }
 
-GameLoop::~GameLoop()
-{
-}
+GameLoop::~GameLoop() {}
 
-
-void GameLoop::EnnemiGeneration(vector<string> map)
-{
+void GameLoop::EnnemiGeneration(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E')
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
 }
 
-void GameLoop::PlusGeneration(vector<string> map)
-{
+void GameLoop::PlusGeneration(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++) {
         for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == '1')
@@ -59,8 +54,7 @@ void GameLoop::PlusGeneration(vector<string> map)
     }
 }
 
-void GameLoop::MapGeneration(vector<string> _map)
-{
+void GameLoop::MapGeneration(vector<string> _map) {
     for (size_t i = 0; i < _map.size(); i ++) {
         for (size_t j = 0; j < _map[i].length(); j ++) {
             if (_map[i][j] == '#')
@@ -82,29 +76,26 @@ void GameLoop::MapGeneration(vector<string> _map)
                 throw (Exception("Unknown Symbol in File: Abort"));
         }
     }
+    door = std::make_shared<Door>(_map);
 }
 
 
-shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) 
-{
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
     return this->window;
 }
 
-void GameLoop::clear()
-{
+void GameLoop::clear() {
     window->clear(sf::Color::White);
 }
 
-int GameLoop::checkOpen()
-{
+int GameLoop::checkOpen() {
     return window->isOpen();
 }
 
-void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
-{
+void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML) {
     int res = -1;
 
-    for (int i = 0; i < projectile.size(); i++) {
+    for (int i = 0; i < projectile.size(); i ++) {
         res = -1;
         res = projectile[i]->checkDestruction(mapSFML);
         if (res == 0)
@@ -112,8 +103,7 @@ void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     }
 }
 
-void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist)
-{
+void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     int res = -1;
     sf::Sprite persoSprite = perso->getSprite();
     sf::Vector2f swordPoint = persoSprite.getPosition();
@@ -257,6 +247,7 @@ static int getTimeDiff(float diff, sf::Clock &clock)
 
 int GameLoop::fondue()
 {
+    sf::View view;
     sf::RectangleShape fade = sf::RectangleShape(sf::Vector2f(1920, 1080));
     sf::Event event;
     int quit = 0;
@@ -267,6 +258,9 @@ int GameLoop::fondue()
     sf::Color c3(255, 255, 255, 0);
     sf::Color c4(255, 255, 255, 0);
 
+    view.setSize(1920, 1080);
+    view.setCenter(960, 540);
+    window->setView(view);
     clock.restart();
     if (font.loadFromFile("./resources/character/police.ttf") == false)
         return (false);
@@ -300,6 +294,7 @@ int GameLoop::fondue()
         window->draw(text2);
         window->draw(text3);
         window->draw(text4);
+        window->display();
         if (c1.a == 255 && c2.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
                 c2.a++;
@@ -317,13 +312,12 @@ int GameLoop::fondue()
         }
         if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
-       //display();
-       clear();
-       while (window->pollEvent(event)) {
-           if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
-            perso->incWeapon();
-            return (true);
-        }
+        clear();
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
+                perso->incWeapon();
+                return (true);
+            }
        }
     }
     return (true);
@@ -377,6 +371,7 @@ int GameLoop::endScreen()
         window->draw(text2);
         window->draw(text3);
         window->draw(text4);
+        window->display();
         if (c1.a == 255 && c2.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
                 c2.a++;
@@ -394,7 +389,6 @@ int GameLoop::endScreen()
         }
         if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
-        //display();
         clear();
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::S) {
@@ -413,7 +407,7 @@ void GameLoop::setPlayerPosition(vector<string> map) {
                 perso->setSpritePosition(j * 157, i * 157 + 60);
 }
 
-void GameLoop::display(Door door_s)
+void GameLoop::display()
 {
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
     window->draw(font->getSprite());
@@ -421,36 +415,46 @@ void GameLoop::display(Door door_s)
         PlusList[i]->display(window);
     BlockUpdate(*window, mapSFML);
     EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
-    window->draw(door_s.getSprite());
+    window->draw(door->getSprite());
     perso->display(window, mapSFML);
-    for (int i = 0; i < projectile.size(); i ++)
+    for (size_t i = 0; i < projectile.size(); i ++)
         projectile[i]->display(window);
     window->display();
 }
 
+
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(Door door) {
     size_t loop = 0;
-    int is_end = 0;
-    Door door_s = door;
+    //this->door = door;
+    //Door door_s = door;
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
-    // if (!MainMenu().Menu(*window))
-    //    return QUIT;
-    // if (!fondue())
-    //     return QUIT;
+    if (!MainMenu().Menu(window))
+        return QUIT;
+    if (!fondue())
+        return QUIT;
+
+
+    // Roméo: En Developement =================================================
+    // Multi_Screen multi(getWindow());
+
+    // multi.display();
+    // Roméo: En Developement =================================================
+
+
     gameMusic->stopMainMusic();
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
     while (window->isOpen()) {
-        door_s.doorOpen(perso->getSprite());
+        this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         checkDestruction(mapSFML);
         checkDeathEnemy(Ennemilist);
-        display(door);
+        display();
         clear();
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 1) {
@@ -472,10 +476,10 @@ int GameLoop::gameLoop(Door door) {
             }
             window->setMouseCursorVisible(false);
         } catch (Exception &e) {
-            throw e;
+            throw Exception("Error in map event: " + *e.what());
         }
     }
-    if (is_end == 1)
-        endScreen();
+    // } if (is_end)
+    //     endScreen();
     return QUIT;
 }

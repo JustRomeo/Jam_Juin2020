@@ -10,7 +10,7 @@
 GreenProjectile::GreenProjectile(int _orient, sf::Vector2f pos, int desCap): Projectile(desCap)
 {
      texture = std::make_shared<sf::Texture>();
-    if (texture->loadFromFile("./resources/Images/sonor_shockwaves.png") == false)
+    if (texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png") == false)
         throw(Exception("resources load failed"));
     type = IProjectile::CHARGED;
     posRect = 0;
