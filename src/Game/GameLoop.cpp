@@ -8,6 +8,7 @@
 #include "Door.hpp"
 #include "Echap.hpp"
 #include "Death.hpp"
+#include "System.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "MusicSFML.hpp"
@@ -31,7 +32,6 @@ GameLoop::GameLoop() {
         throw Exception("can't initiate window and view\n");
     }
 }
-
 GameLoop::~GameLoop() {}
 
 void GameLoop::EnnemiGeneration(vector<string> map) {
@@ -41,14 +41,29 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
 }
 
+void GameLoop::ItemsGeneration(vector<string> map) {
+    size_t row = 0;
+    vector<string> items = System().openfile("./maps/.item1");
+
+    for (size_t i = 0; i < map.size(); i ++)
+        for (size_t j = 0; j < map[i].length(); j ++)
+            if (map[i][j] == '+') {
+                string name = System().strtowordarray(items[row], "|")[0];
+
+                cout << "Generate: " << row << "° item > " << name << " | x:" << j << " y:" << i << endl;
+                Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157)));
+                row += 1;
+            }
+}
+
 void GameLoop::PlusGeneration(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++) {
         for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == '1')
                 PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60));
-            if (map[i][j] == '2')
+            else if (map[i][j] == '2')
                 PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60));
-            if (map[i][j] == '3')
+            else if (map[i][j] == '3')
                 PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60));
         }
     }
@@ -57,40 +72,30 @@ void GameLoop::PlusGeneration(vector<string> map) {
 void GameLoop::MapGeneration(vector<string> _map) {
     for (size_t i = 0; i < _map.size(); i ++) {
         for (size_t j = 0; j < _map[i].length(); j ++) {
-            if (_map[i][j] == '#')
-                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157)));
-            else if (_map[i][j] == ' ');
-            else if (_map[i][j] == 'E');
-            else if (_map[i][j] == 'o');
-            else if (_map[i][j] == '1');
-            else if (_map[i][j] == '2');
-            else if (_map[i][j] == '3');
-            else if (_map[i][j] == 'P');
-            else if (_map[i][j] == 'Y')
-                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW)));
-            else if (_map[i][j] == 'U')
-                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE)));
-            else if (_map[i][j] == 'B')
-                mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE)));
-            else
-                throw (Exception("Unknown Symbol in File: Abort"));
+            switch(_map[i][j]) {
+                case '+': break;
+                case '#': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157))); break;
+                case ' ': break;
+                case 'o': break;
+                case '1': break;
+                case '2': break;
+                case '3': break;
+                case 'B': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE))); break;
+                case 'E': break;
+                case 'P': break;
+                case 'U': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE))); break;
+                case 'Y': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW))); break;
+                default:  throw (Exception("Unknown Symbol in File: Abort")); break;
+            }
         }
     }
     door = std::make_shared<Door>(_map);
 }
 
 
-shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {
-    return this->window;
-}
-
-void GameLoop::clear() {
-    window->clear(sf::Color::White);
-}
-
-int GameLoop::checkOpen() {
-    return window->isOpen();
-}
+int GameLoop::checkOpen() {return window->isOpen();}
+void GameLoop::clear() {window->clear(sf::Color::White);}
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {return this->window;}
 
 void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML) {
     int res = -1;
@@ -115,8 +120,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
             if (projectile[i]->getCurrentCapacity() <= 0) {
                 gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
-            }
-            if (res == 1)
+            } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
         }
     }
@@ -126,14 +130,13 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     else
         swordPoint.x -= persoSprite.getTextureRect().width * persoSprite.getScale().x * -1;
     for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
-        if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint) == true 
-            && perso->isCac() == true)
+        if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint) 
+            && perso->isCac())
             Ennemilist.erase(Ennemilist.begin() + j);
     }
 }
 
-int GameLoop::movementEvent(sf::Event event)
-{
+int GameLoop::movementEvent(sf::Event event) {
     if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             perso->sprint();
@@ -142,12 +145,10 @@ int GameLoop::movementEvent(sf::Event event)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             perso->jump();
             return (3);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             perso->moveLeft(window, mapSFML);
             return (3);
-        }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             perso->moveRigth(window, mapSFML);
@@ -157,8 +158,7 @@ int GameLoop::movementEvent(sf::Event event)
     return (0);
 }
 
-int GameLoop::shootEvent()
-{
+int GameLoop::shootEvent() {
     if (perso->getWeapon() == 4)
         perso->channeling();
     else
@@ -170,8 +170,7 @@ int GameLoop::shootEvent()
     return (3);
 }
 
-int GameLoop::switchWeaponEvent()
-{
+int GameLoop::switchWeaponEvent() {
     gameMusic->pause_music(perso->getWeapon());
     perso->incWeapon();
     gameMusic->switch_music(perso->getWeapon());
@@ -185,8 +184,7 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        }
-        if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible())
+        } if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible())
             return (shootEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
             return (switchWeaponEvent());
@@ -194,14 +192,12 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             perso->cacAttack();
             return (3);
         }
-    }
-    if (movementEvent(event) == 3)
+    } if (movementEvent(event) == 3)
         return (3);
     if (perso->isActionPossible()) {
         perso->restartPos();
         window->setView(window->getView());
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+    } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
         switch (EchapMenu().Menu(*window)) {
             case -1: return -1; // Quit
@@ -217,22 +213,21 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
 
 static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &Ennemilist, vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> &perso) {
     for (size_t i = 0; i < Ennemilist.size(); i ++) {
-            window.draw(Ennemilist[i]->getSprite());
-            Ennemilist[i]->move(mapSFML);
-            if (perso->invulnerability < 1 && sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Ennemilist[i]->getSprite().getGlobalBounds()))) {
-                perso->_lifes --;
-                perso->invulnerability += 60;
-            }
+        window.draw(Ennemilist[i]->getSprite());
+        Ennemilist[i]->move(mapSFML);
+        if (perso->invulnerability < 1 && sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Ennemilist[i]->getSprite().getGlobalBounds()))) {
+            perso->_lifes --;
+            perso->invulnerability += 60;
         }
+    }
 }
 
 static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapSFML) {
     for (size_t i = 0; i < mapSFML.size(); i++)
-            window.draw(mapSFML[i]->getSprite());
+        window.draw(mapSFML[i]->getSprite());
 }
 
-static int getTimeDiff(float diff, sf::Clock &clock)
-{
+static int getTimeDiff(float diff, sf::Clock &clock) {
     sf::Time time;
     float seconds = 0;
 
@@ -245,8 +240,7 @@ static int getTimeDiff(float diff, sf::Clock &clock)
     return (0);
 }
 
-int GameLoop::fondue()
-{
+int GameLoop::fondue() {
     sf::View view;
     sf::RectangleShape fade = sf::RectangleShape(sf::Vector2f(1920, 1080));
     sf::Event event;
@@ -262,7 +256,7 @@ int GameLoop::fondue()
     view.setCenter(960, 540);
     window->setView(view);
     clock.restart();
-    if (font.loadFromFile("./resources/character/police.ttf") == false)
+    if (!font.loadFromFile("./resources/character/police.ttf"))
         return (false);
     fade.setFillColor(sf::Color::Black);
     sf::Text text("Aventurier!\n", font);
@@ -288,7 +282,7 @@ int GameLoop::fondue()
     text4.setStyle(sf::Text::Bold);
     text4.setFillColor(c4);
     text4.setPosition(sf::Vector2f(200, 500));
-    while (window->isOpen() == true && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
+    while (window->isOpen() && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
         window->draw(fade);
         window->draw(text);
         window->draw(text2);
@@ -297,20 +291,17 @@ int GameLoop::fondue()
         window->display();
         if (c1.a == 255 && c2.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c2.a++;
+                c2.a ++;
             text2.setFillColor(c2);
-        }
-        if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
+        } if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c3.a++;
+                c3.a ++;
             text3.setFillColor(c3);
-        }
-        else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
+        } else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c4.a++;
+                c4.a ++;
             text4.setFillColor(c4);
-        }
-        if (c2.a == 255 && c3.a == 255 && c4.a == 255)
+        } if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
         clear();
         while (window->pollEvent(event)) {
@@ -323,8 +314,7 @@ int GameLoop::fondue()
     return (true);
 }
 
-int GameLoop::endScreen()
-{
+int GameLoop::endScreen() {
     sf::RectangleShape fade = sf::RectangleShape(sf::Vector2f(1920, 1080));
     sf::Event event;
     int quit = 0;
@@ -365,7 +355,7 @@ int GameLoop::endScreen()
     text4.setStyle(sf::Text::Bold);
     text4.setFillColor(c4);
     text4.setPosition(sf::Vector2f(930, 500));
-    while (window->isOpen() == true && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
+    while (window->isOpen() && quit != 1 || (c1.a != 255 && c2.a != 255 && c3.a != 255 && c4.a != 255)) {
         window->draw(fade);
         window->draw(text);
         window->draw(text2);
@@ -374,20 +364,17 @@ int GameLoop::endScreen()
         window->display();
         if (c1.a == 255 && c2.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c2.a++;
+                c2.a ++;
             text2.setFillColor(c2);
-        }
-        if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
+        } if (c1.a == 255 && c2.a == 255 && c3.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c3.a++;
+                c3.a ++;
             text3.setFillColor(c3);
-        }
-        else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
+        } else if (c1.a == 255 && c2.a == 255 && c3.a == 255 && c4.a != 255) {
             if (getTimeDiff(0.01, clock) == 1)
-                c4.a++;
+                c4.a ++;
             text4.setFillColor(c4);
-        }
-        if (c2.a == 255 && c3.a == 255 && c4.a == 255)
+        } if (c2.a == 255 && c3.a == 255 && c4.a == 255)
             break;
         clear();
         while (window->pollEvent(event)) {
@@ -407,8 +394,7 @@ void GameLoop::setPlayerPosition(vector<string> map) {
                 perso->setSpritePosition(j * 157, i * 157 + 60);
 }
 
-void GameLoop::display()
-{
+void GameLoop::display() {
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
     window->draw(font->getSprite());
     for (int i = 0; i < PlusList.size(); i++)
@@ -419,6 +405,8 @@ void GameLoop::display()
     perso->display(window, mapSFML);
     for (size_t i = 0; i < projectile.size(); i ++)
         projectile[i]->display(window);
+    for (size_t i = 0; i < Itemslist.size(); i ++)
+        window->draw(Itemslist[i]->getImage()->getSprite());
     window->display();
 }
 
@@ -431,19 +419,8 @@ int GameLoop::gameLoop(Door door) {
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
-    if (!MainMenu().Menu(window))
+    if (!MainMenu().Menu(window) || !fondue())
         return QUIT;
-    if (!fondue())
-        return QUIT;
-
-
-    // Roméo: En Developement =================================================
-    // Multi_Screen multi(getWindow());
-
-    // multi.display();
-    // Roméo: En Developement =================================================
-
-
     gameMusic->stopMainMusic();
     window->setFramerateLimit(40);
     view->setCenter(perso->getSprite().getPosition());
@@ -479,7 +456,5 @@ int GameLoop::gameLoop(Door door) {
             throw Exception("Error in map event: " + *e.what());
         }
     }
-    // } if (is_end)
-    //     endScreen();
     return QUIT;
 }

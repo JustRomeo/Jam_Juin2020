@@ -23,6 +23,7 @@
 #include "GameMusic.hpp"
 #include "ProjectileFactory.hpp"
 #include "IProjectile.hpp"
+#include "Lootable.hpp"
 
 using namespace std;
 class GameLoop {
@@ -30,26 +31,30 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
-        void display();
-        int endScreen();
         int fondue(void);
         void clear(void);
-        int shootEvent();
+        int gameLoop(Door);
+        void display(void);
+        int endScreen(void);
         int checkOpen(void);
-        int switchWeaponEvent();
-        int gameLoop(Door door);
-        int movementEvent(sf::Event event);
-        void MapGeneration(vector<string> map);
-        void PlusGeneration(vector<string> map);
-        void DoorGeneration(vector<string> map);
-        void EnnemiGeneration(vector<string> map);
-        void setPlayerPosition(vector<string> map);
+        int shootEvent(void);
+        int switchWeaponEvent(void);
+        int movementEvent(sf::Event);
+        void MapGeneration(vector<string>);
+        void PlusGeneration(vector<string>);
+        void DoorGeneration(vector<string>);
+        void ItemsGeneration(vector<string>);
+        void EnnemiGeneration(vector<string>);
+        void setPlayerPosition(vector<string>);
+        int getEvent(vector<shared_ptr<Block>>);
         shared_ptr<sf::RenderWindow> getWindow(void);
-        int getEvent(vector<shared_ptr<Block>> mapSFML);
-        void checkDestruction(vector<shared_ptr<Block>> &mapSFML);
-        void checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist);
+        void checkDestruction(vector<shared_ptr<Block>> &);
+        void checkDeathEnemy(vector<shared_ptr<Ennemi>> &);
+
         shared_ptr<sf::RenderWindow> window;
+
     protected:
+
     private:
         shared_ptr<Door> door;
         shared_ptr<sf::View> view;
@@ -58,10 +63,11 @@ class GameLoop {
         ProjectileFactory projFactory;
         std::shared_ptr<ImageSFML> font;
         vector<shared_ptr<Block>> mapSFML;
-        vector<shared_ptr<Ennemi>> Ennemilist;
         vector<shared_ptr<MunPlus>> PlusList;
         std::shared_ptr<GameMusic> gameMusic;
+        vector<shared_ptr<Ennemi>> Ennemilist;
+        vector<shared_ptr<Lootable>> Itemslist;
         vector<std::shared_ptr<IProjectile>> projectile;
 };
 
-#endif /* !GAMELOOP_HPP_ */
+#endif

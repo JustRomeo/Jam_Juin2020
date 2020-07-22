@@ -34,13 +34,12 @@ SRC =	$(SRCP)main.cpp					\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
 		$(MENP)MainMenu.cpp				\
-		$(SYSP)Exception.cpp			\
+		$(MAPP)Mapper.cpp				\
 		$(PLAP)Character.cpp			\
 		$(PLAP)Time.cpp 				\
 		$(PLAP)Battery.cpp				\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
-		$(MAPP)Mapper.cpp				\
 		$(PROJ)OrangeProjectile.cpp 	\
 		$(PROJ)BlueProjectile.cpp 		\
 		$(PROJ)PurpleProjectile.cpp 	\
@@ -48,6 +47,8 @@ SRC =	$(SRCP)main.cpp					\
 		$(PROJ)ProjectileFactory.cpp 	\
 		$(SYSP)Connection.cpp			\
 		$(SYSP)ErrorHandling.cpp		\
+		$(SYSP)Exception.cpp			\
+		$(SYSP)Paths.cpp				\
 		$(SYSP)System.cpp				\
 
 OBJ =	$(SRC:.cpp=.o)
