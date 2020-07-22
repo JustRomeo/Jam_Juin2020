@@ -12,9 +12,9 @@ INTP =	src/Interface/
 MAPP =	src/Map/
 MENP = 	src/Menu/
 PLAP =	src/Player/
+PROJ = 	src/Projectile/
 COMP =	src/SFMLComponents/
 SYSP =	src/System/
-PROJ = 	src/Projectile/
 
 SRC =	$(SRCP)main.cpp					\
 		\
@@ -23,8 +23,10 @@ SRC =	$(SRCP)main.cpp					\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
+		$(GAMP)Objet.cpp				\
 		$(GAMP)Projectile.cpp			\
 		$(GAMP)GameLoop.cpp				\
+		$(GAMP)Lootable.cpp				\
 		$(GAMP)GameMusic.cpp			\
 		$(INTP)Multiplayer.cpp			\
 		$(MAPP)Block.cpp				\
@@ -39,13 +41,14 @@ SRC =	$(SRCP)main.cpp					\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
 		$(MAPP)Mapper.cpp				\
-		$(SYSP)Connection.cpp			\
-		$(SYSP)System.cpp				\
 		$(PROJ)OrangeProjectile.cpp 	\
 		$(PROJ)BlueProjectile.cpp 		\
 		$(PROJ)PurpleProjectile.cpp 	\
-		$(PROJ)GreenProjectile.cpp 	\
+		$(PROJ)GreenProjectile.cpp 		\
 		$(PROJ)ProjectileFactory.cpp 	\
+		$(SYSP)Connection.cpp			\
+		$(SYSP)ErrorHandling.cpp		\
+		$(SYSP)System.cpp				\
 
 OBJ =	$(SRC:.cpp=.o)
 

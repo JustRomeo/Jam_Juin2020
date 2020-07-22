@@ -5,20 +5,19 @@
 ** Character
 */
 
-#ifndef CHARACTER_HPP_
-#define CHARACTER_HPP_
+#ifndef __CHARACTER_HPP__
+#define __CHARACTER_HPP__
 
-#include "../include/LibGraphics.hpp"
-#include "Exception.hpp"
-#include "Block.hpp"
 #include "time.h"
+#include "HUD.hpp"
+#include "Time.hpp"
 #include "Block.hpp"
+#include "Block.hpp"
+#include "Objet.hpp"
+#include "MunPlus.hpp"
 #include "Exception.hpp"
 #include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
-#include "MunPlus.hpp"
-#include "HUD.hpp"
-#include "Time.hpp"
 
 class Character {
     public:
@@ -119,8 +118,9 @@ class Character {
         std::shared_ptr<sf::Texture> texture;
         std::vector<sf::IntRect> cacAttackRect;
         std::vector<sf::IntRect> channelingRect;
+        std::vector<shared_ptr<Objet>> _objects;
         std::shared_ptr<sf::Texture> textureFight;
         std::vector<sf::IntRect> jumpCacAttackRect;
 };
 
-#endif /* !CHARACTER_HPP_ */
+#endif
