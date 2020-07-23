@@ -18,8 +18,10 @@ SYSP =	src/System/
 
 SRC =	$(SRCP)main.cpp					\
 		\
+		$(COMP)EventHandler.cpp			\
 		$(COMP)ImageSFML.cpp			\
 		$(COMP)MusicSFML.cpp			\
+		$(COMP)TextSFML.cpp				\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
@@ -36,11 +38,11 @@ SRC =	$(SRCP)main.cpp					\
 		$(MENP)Echap.cpp				\
 		$(MENP)MainMenu.cpp				\
 		$(MAPP)Mapper.cpp				\
-		$(PLAP)Character.cpp			\
-		$(PLAP)Time.cpp 				\
 		$(PLAP)Battery.cpp				\
+		$(PLAP)Character.cpp			\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
+		$(PLAP)Time.cpp 				\
 		$(PROJ)OrangeProjectile.cpp 	\
 		$(PROJ)BlueProjectile.cpp 		\
 		$(PROJ)PurpleProjectile.cpp 	\
