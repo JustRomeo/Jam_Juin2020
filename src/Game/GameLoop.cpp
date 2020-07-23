@@ -93,11 +93,6 @@ void GameLoop::MapGeneration(vector<string> _map) {
     door = make_shared<Door>(_map);
 }
 
-
-int GameLoop::checkOpen() {return window->isOpen();}
-void GameLoop::clear() {window->clear(sf::Color::White);}
-shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {return this->window;}
-
 void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML) {
     int res = -1;
 
@@ -273,10 +268,11 @@ int GameLoop::gameLoop(Door door) {
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
                 perso->addValue(Itemslist[i]->getObject());
                 Itemslist.erase(Itemslist.begin() + i);
+
+                for (size_t i = 0; i < perso->getItems().size(); i ++)
+                    cout << perso->getItems()[i]->getName() << endl;
             }
 
-        for (size_t i = 0; i < Itemslist.size(); i ++)
-            cout << perso->getItems()[i];
         // Roméo : Developpement ===========================================================================================
 
         this->door->doorOpen(perso->getSprite());
@@ -310,3 +306,7 @@ int GameLoop::gameLoop(Door door) {
     }
     return QUIT;
 }
+
+int GameLoop::checkOpen() {return window->isOpen();}
+void GameLoop::clear() {window->clear(sf::Color::White);}
+shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {return this->window;}

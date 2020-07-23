@@ -1,8 +1,8 @@
 #include "Objet.hpp"
 
-Objet::Objet() {
-    _speed = 0;
-    _name = "";
+Objet::Objet(string name, int speed) {
+    _name = name;
+    _speed = speed;
 }
 Objet::~Objet() {
     _name.clear();

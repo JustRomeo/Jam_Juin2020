@@ -4,7 +4,7 @@
 Lootable::Lootable(TYPE type, string name, size_t x, size_t y) {
     _type = type;
     _pos = sf::Vector2f(x, y);
-    _objet = make_shared<Objet>();
+    _objet = make_shared<Objet>(name, 0);
     _image = make_shared<ImageSFML>("resources/Images/Game/Object/Chestplate.png");
 
     _image->setPosition(sf::Vector2f(x + 60, y + 60));

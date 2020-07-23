@@ -6,7 +6,7 @@
 using namespace std;
 class Objet {
     public:
-        Objet();
+        Objet(string name, int speed);
         ~Objet();
 
         void setSpeed(int nbr);

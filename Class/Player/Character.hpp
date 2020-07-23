@@ -62,10 +62,10 @@ class Character {
         void addValue(shared_ptr<Objet>);
         vector<shared_ptr<Objet>> getItems(void) const;
         int checkFall(vector<shared_ptr<Block>> mapSFML);
-        void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
         int not_colision(vector<shared_ptr<Block>> mapSFML);
         int collisionFall(vector<shared_ptr<Block>> mapSFML);
         void unblockCharacter(vector<shared_ptr<Block>> mapSFML);
+        void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
         void moveChar(shared_ptr<sf::RenderWindow> window, int orient);
         void display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
         void moveLeft(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
