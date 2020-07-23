@@ -14,16 +14,16 @@
 #include "Block.hpp"
 #include "Window.hpp"
 #include "Ennemis.hpp"
+#include "MunPlus.hpp"
+#include "Lootable.hpp"
 #include "Character.hpp"
 #include "ImageSFML.hpp"
 #include "Exception.hpp"
-#include "LibGraphics.hpp"
-#include "Projectile.hpp"
-#include "MunPlus.hpp"
 #include "GameMusic.hpp"
-#include "ProjectileFactory.hpp"
+#include "Projectile.hpp"
+#include "LibGraphics.hpp"
 #include "IProjectile.hpp"
-#include "Lootable.hpp"
+#include "ProjectileFactory.hpp"
 
 using namespace std;
 class GameLoop {
@@ -31,7 +31,6 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
-        int fondue(void);
         void clear(void);
         int gameLoop(Door);
         void display(void);

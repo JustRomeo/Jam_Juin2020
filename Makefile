@@ -29,6 +29,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(GAMP)Lootable.cpp				\
 		$(GAMP)GameMusic.cpp			\
 		$(INTP)Multiplayer.cpp			\
+		$(INTP)Cinematique.cpp			\
 		$(MAPP)Block.cpp				\
 		$(MAPP)Door.cpp					\
 		$(MENP)Death.cpp				\
