@@ -112,8 +112,7 @@ void Character::moveChar(std::shared_ptr<sf::RenderWindow> window, int orient) {
 }
 
 void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+    std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view= window->getView();
     float timeAnim;
@@ -139,8 +138,7 @@ void Character::moveLeft(std::shared_ptr<sf::RenderWindow> window,
 }
 
 void Character::moveRigth(std::shared_ptr<sf::RenderWindow> window,
-    std::vector<std::shared_ptr<Block>> mapSFML)
-{
+    std::vector<std::shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
     sf::View view= window->getView();
     float timeAnim;
@@ -232,8 +230,7 @@ void Character::channelingAnimation() {
             channelRectPos = 0;
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
             sprite.setPosition(oldPose);
-        }
-        else {
+        } else {
             if (channelRectPos == 2)
                 sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 47);
             if (channelRectPos == 4)
@@ -296,8 +293,7 @@ void Character::switchAnimation() {
             is_switching = false;
             sprite.setTexture(*texture);
             sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
-        }
-        else
+        } else
             sprite.setTextureRect(rect);
     }
 }
@@ -382,8 +378,7 @@ void Character::cacAttack() {
         if (is_jumping == false && is_falling == false) {
             sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 30);
             sprite.setTextureRect(cacAttackRect[cacRectPos]);
-        }
-        else
+        } else
             sprite.setTextureRect(jumpCacAttackRect[jumpCacRectPos]);
     }
 }
@@ -391,8 +386,7 @@ void Character::cacAttack() {
 void Character::incWeapon() {
     int toTurn = 0;
 
-    if (is_switching == false && is_jumping == false && is_falling == false
-        && is_channeling == false && is_shooting == false) {
+    if (!is_switching && !is_jumping && !is_falling && !is_channeling && !is_shooting) {
         is_switching = true;
         hud->incWeaponType();
         weapon_type++;
@@ -411,10 +405,10 @@ void Character::incWeapon() {
 }
 
 void Character::spriteAnimation() {
-    sf::IntRect rect = sprite.getTextureRect();
     float timeAnim;
+    sf::IntRect rect = sprite.getTextureRect();
 
-    is_sprinting == true ? timeAnim = 0.05 : timeAnim = 0.1;
+    is_sprinting ? timeAnim = 0.05 : timeAnim = 0.1;
     if (anim_clock.getTimeDiff(timeAnim) == 1) {
         if (rect.left >= 265)
             rect.left = 65;
@@ -446,32 +440,29 @@ void Character::unblockCharacter(std::vector<std::shared_ptr<Block>> mapSFML) {
         rightPoint = {sprite.getPosition().x, sprite.getPosition().y + (sprite.getTextureRect().height / 2)};
         leftPoint = {sprite.getPosition().x - sprite.getTextureRect().width, sprite.getPosition().y + (sprite.getTextureRect().height / 2)};
     }
-    for (int i = 0; i < mapSFML.size(); i++) {
-        if (mapSFML[i]->getSprite().getGlobalBounds().contains(leftPoint) == true)
+    for (size_t i = 0; i < mapSFML.size(); i++) {
+        if (mapSFML[i]->getSprite().getGlobalBounds().contains(leftPoint))
             sprite.move(sf::Vector2f(15.f, 0));
-        else if (mapSFML[i]->getSprite().getGlobalBounds().contains(rightPoint) == true)
+        else if (mapSFML[i]->getSprite().getGlobalBounds().contains(rightPoint))
             sprite.move(sf::Vector2f(-15.f, 0));
     }
 }
 
 int Character::not_colision(std::vector<std::shared_ptr<Block>> mapSFML) {
-    int i = 0;
-    sf::FloatRect charact = sprite.getGlobalBounds();
     sf::FloatRect g;
+    sf::FloatRect charact = sprite.getGlobalBounds();
 
-    while (i < mapSFML.size() - 1) {
+    for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
         if (charact.intersects(g)) {
             coli_sound->start();
             return (0);
         }
-        i ++;
     }
     return (1);
 }
 
 int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML) {
-    int i = 0;
     int y = 0;
     sf::FloatRect charact = sprite.getGlobalBounds();
     sf::FloatRect g;
@@ -488,26 +479,23 @@ int Character::collisionFall(std::vector<std::shared_ptr<Block>> mapSFML) {
         charact_mx.x -= (sprite.getTextureRect().width * 3) - 15;
         charact_xm.x -= 15;
     }
-    while (i < mapSFML.size() - 1) {
+    for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if ((charact.intersects(g) == true && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y &&
+        if ((charact.intersects(g) && sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y &&
             sp.x > mapSFML[i]->getSprite().getPosition().x &&
             sp.x < mapSFML[i]->getSprite().getPosition().x + (mapSFML[i]->getSprite().getTextureRect().width * 0.5)) ||
-            g.contains(charact_mx) == true  || g.contains(charact_xm) == true) {
+            g.contains(charact_mx)  || g.contains(charact_xm)) {
             y = mapSFML[i]->getSprite().getPosition().y - (30.f * 3) - 3;
             sprite.setPosition(sprite.getPosition().x, y);
-            if (not_colision(mapSFML) == 0) {
+            if (not_colision(mapSFML) == 0)
                 unblockCharacter(mapSFML);
-            }
             return (0);
         }
-        i ++;
     }
     return (1);
 }
 
 int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
-    int i = 0;
     int y = 0;
     sf::Vector2f charact = sprite.getPosition();
     sf::Vector2f charact_xm = sprite.getPosition();
@@ -524,13 +512,12 @@ int Character::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
         charact.x -= (sprite.getTextureRect().width * 3) / 2;
         charact_mx.x -= (sprite.getTextureRect().width * 3);
     }
-    while (i < mapSFML.size()) {
+    for (size_t i = 0; i < mapSFML.size(); i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (g.contains(charact) == true || g.contains(charact_xm) == true ||
-            g.contains(charact_mx) == true) {
+        if (g.contains(charact) || g.contains(charact_xm) ||
+            g.contains(charact_mx)) {
             return (0);
         }
-        i ++;
     }
     fall();
     return (1);
@@ -541,7 +528,7 @@ void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
 
     for (int i = 0; i < PlusList.size(); i++) {
         rect = PlusList[i]->getMunShape();
-        if (rect.intersects(sprite.getGlobalBounds()) == true) {
+        if (rect.intersects(sprite.getGlobalBounds())) {
             hud->incMun(PlusList[i]->getType() - 1);
             PlusList.erase(PlusList.begin() + i);
         }
