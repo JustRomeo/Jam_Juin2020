@@ -19,58 +19,63 @@
 #include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
 
+using namespace std;
 class Character {
     public:
         Character();
         ~Character();
 
-        void dash();
-        void jump();
-        void fall();
-        bool isCac();
-        void shoot();
-        int getMun();
-        void sprint();
-        int getWeapon();
-        void incWeapon();
-        bool isJumping();
-        bool getMoving();
-        bool isFalling();
-        int channelBat();
-        void cacAttack();
-        void stopSprint();
-        bool isShooting();
-        void channeling();
-        void restartPos();
-        bool isSwitching();
-        bool isChanneling();
-        bool isSprinting();
-        int getMunBattery();
-        void cacAnimation();
-        void createAnimRec();
-        void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
-        void shootAnimation();
-        sf::Sprite getSprite();
-        void switchAnimation();
-        void spriteAnimation();
-        void collisionProblem();
-        bool isActionPossible();
-        void channelingAnimation();
+        void dash(void);
+        void jump(void);
+        void fall(void);
+        bool isCac(void);
+        void shoot(void);
+        int getMun(void);
+        void sprint(void);
+        int getWeapon(void);
+        void incWeapon(void);
+        bool isJumping(void);
+        bool getMoving(void);
+        bool isFalling(void);
+        int channelBat(void);
+        void cacAttack(void);
+        void stopSprint(void);
+        bool isShooting(void);
+        void channeling(void);
+        void restartPos(void);
+        bool isSwitching(void);
+        bool isSprinting(void);
+        bool isChanneling(void);
+        int getMunBattery(void);
+        void cacAnimation(void);
+        void createAnimRec(void);
+        void shootAnimation(void);
+        sf::Sprite getSprite(void);
+        void switchAnimation(void);
+        void spriteAnimation(void);
+        void collisionProblem(void);
+        bool isActionPossible(void);
         void setMoving(bool status);
-        sf::Vector2f getSpriteMid();
+        void channelingAnimation(void);
+        sf::Vector2f getSpriteMid(void);
         void setSpritePosition(int, int);
-        int checkFall(std::vector<std::shared_ptr<Block>> mapSFML);
+        void addValue(shared_ptr<Objet>);
+        vector<shared_ptr<Objet>> getItems(void) const;
+        int checkFall(vector<shared_ptr<Block>> mapSFML);
         void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
-        int not_colision(std::vector<std::shared_ptr<Block>> mapSFML);
-        int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
-        void unblockCharacter(std::vector<std::shared_ptr<Block>> mapSFML);
-        void display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
+        int not_colision(vector<shared_ptr<Block>> mapSFML);
+        int collisionFall(vector<shared_ptr<Block>> mapSFML);
+        void unblockCharacter(vector<shared_ptr<Block>> mapSFML);
+        void moveChar(shared_ptr<sf::RenderWindow> window, int orient);
+        void display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void moveLeft(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void moveRigth(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void fallingAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+
         int _lifes;
         int invulnerability;
+
     protected:
     private:
         int move_Y;
@@ -112,15 +117,15 @@ class Character {
         MusicSFML *shot_sound3;
         MusicSFML *shot_sound4;
 
-        std::shared_ptr<HUD> hud;
-        std::vector<float> channelingTime;
-        std::vector<sf::IntRect> shootRect;
-        std::shared_ptr<sf::Texture> texture;
-        std::vector<sf::IntRect> cacAttackRect;
-        std::vector<sf::IntRect> channelingRect;
-        std::vector<shared_ptr<Objet>> _objects;
-        std::shared_ptr<sf::Texture> textureFight;
-        std::vector<sf::IntRect> jumpCacAttackRect;
+        shared_ptr<HUD> hud;
+        vector<float> channelingTime;
+        vector<sf::IntRect> shootRect;
+        shared_ptr<sf::Texture> texture;
+        vector<sf::IntRect> cacAttackRect;
+        vector<sf::IntRect> channelingRect;
+        vector<shared_ptr<Objet>> _objects;
+        shared_ptr<sf::Texture> textureFight;
+        vector<sf::IntRect> jumpCacAttackRect;
 };
 
 #endif

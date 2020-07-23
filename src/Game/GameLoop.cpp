@@ -228,19 +228,6 @@ static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapS
         window.draw(mapSFML[i]->getSprite());
 }
 
-static int getTimeDiff(float diff, sf::Clock &clock) {
-    sf::Time time;
-    float seconds = 0;
-
-    time = clock.getElapsedTime();
-    seconds = time.asMicroseconds() / 1000000.0;
-    if (seconds > diff) {
-        clock.restart();
-        return (1);
-    }
-    return (0);
-}
-
 void GameLoop::setPlayerPosition(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
@@ -251,7 +238,7 @@ void GameLoop::setPlayerPosition(vector<string> map) {
 void GameLoop::display() {
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
     window->draw(font->getSprite());
-    for (int i = 0; i < PlusList.size(); i++)
+    for (size_t i = 0; i < PlusList.size(); i ++)
         PlusList[i]->display(window);
     BlockUpdate(*window, mapSFML);
     EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
@@ -280,6 +267,18 @@ int GameLoop::gameLoop(Door door) {
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
     while (window->isOpen()) {
+
+        // Roméo : Developpement ===========================================================================================
+        for (size_t i = 0; i < Itemslist.size(); i ++)
+            if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
+                perso->addValue(Itemslist[i]->getObject());
+                Itemslist.erase(Itemslist.begin() + i);
+            }
+
+        for (size_t i = 0; i < Itemslist.size(); i ++)
+            cout << perso->getItems()[i];
+        // Roméo : Developpement ===========================================================================================
+
         this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         checkDestruction(mapSFML);
