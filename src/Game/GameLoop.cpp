@@ -60,12 +60,12 @@ void GameLoop::ItemsGeneration(vector<string> map) {
 void GameLoop::PlusGeneration(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++) {
         for (size_t j = 0; j < map[i].length(); j ++) {
-            if (map[i][j] == '1')
-                PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60));
-            else if (map[i][j] == '2')
-                PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60));
-            else if (map[i][j] == '3')
-                PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60));
+            switch(map[i][j]) {
+                case '1': PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60)); break;
+                case '2': PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60)); break;
+                case '3': PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60)); break;
+                default: continue;
+            }
         }
     }
 }

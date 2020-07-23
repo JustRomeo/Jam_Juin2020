@@ -144,7 +144,7 @@ void Character::moveLeft(shared_ptr<sf::RenderWindow> window,
 void Character::moveRigth(shared_ptr<sf::RenderWindow> window,
     vector<shared_ptr<Block>> mapSFML) {
     sf::IntRect rect = sprite.getTextureRect();
-    sf::View view= window->getView();
+    sf::View view = window->getView();
     float timeAnim;
 
     is_sprinting ? timeAnim = 0.005 : timeAnim = 0.01;
@@ -517,10 +517,8 @@ int Character::checkFall(vector<shared_ptr<Block>> mapSFML) {
     }
     for (size_t i = 0; i < mapSFML.size(); i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (g.contains(charact) || g.contains(charact_xm) ||
-            g.contains(charact_mx)) {
+        if (g.contains(charact) || g.contains(charact_xm) || g.contains(charact_mx))
             return (0);
-        }
     }
     fall();
     return (1);
