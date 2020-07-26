@@ -37,6 +37,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
 		$(MENP)MainMenu.cpp				\
+		$(MENP)MapMenu.cpp				\
 		$(MAPP)Mapper.cpp				\
 		$(PLAP)Battery.cpp				\
 		$(PLAP)Character.cpp			\

@@ -42,6 +42,14 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
 }
 
+void GameLoop::reset_map(void) {
+    mapSFML.clear();
+    PlusList.clear();
+    Itemslist.clear();
+    Ennemilist.clear();
+    projectile.clear();
+}
+
 void GameLoop::ItemsGeneration(vector<string> map) {
     size_t row = 0;
     vector<string> items = System().openfile("./maps/.item1");
@@ -246,6 +254,7 @@ void GameLoop::display() {
     window->display();
 }
 
+#include "MapMenu.hpp"
 enum CHOICE {QUIT = 0, REPLAY = 1};
 int GameLoop::gameLoop(Door door) {
     size_t loop = 0;
@@ -254,7 +263,22 @@ int GameLoop::gameLoop(Door door) {
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
-    if (!MainMenu().Menu(window) || !Cinematique().Intro(window, perso))
+    if (!MainMenu().Menu(window))
+        return QUIT;
+    try {
+        vector<string> map;
+        size_t value = MapMenu().choice(*this);
+
+        map = System().openfile("maps/.map" + to_string(value));
+        this->EnnemiGeneration(map);
+        this->PlusGeneration(map);
+        this->MapGeneration(map);
+        this->setPlayerPosition(map);
+        this->ItemsGeneration(map);
+    } catch (Exception &e) {
+        cout << e.what() << endl;
+    }
+    if (!Cinematique().Intro(window, perso))
         return QUIT;
     gameMusic->stopMainMusic();
     window->setFramerateLimit(40);
@@ -262,8 +286,6 @@ int GameLoop::gameLoop(Door door) {
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
     while (window->isOpen()) {
-
-        // Roméo : Developpement ===========================================================================================
         for (size_t i = 0; i < Itemslist.size(); i ++)
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
                 perso->addValue(Itemslist[i]->getObject());
@@ -272,9 +294,6 @@ int GameLoop::gameLoop(Door door) {
                 for (size_t i = 0; i < perso->getItems().size(); i ++)
                     cout << perso->getItems()[i]->getName() << endl;
             }
-
-        // Roméo : Developpement ===========================================================================================
-
         this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         checkDestruction(mapSFML);

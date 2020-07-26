@@ -13,6 +13,7 @@
 #include "Door.hpp"
 #include "System.hpp"
 #include "Mapper.hpp"
+#include "MapMenu.hpp"
 #include "GameLoop.hpp"
 #include "Exception.hpp"
 #include "ErrorHandling.hpp"
@@ -25,11 +26,16 @@ int main(int ac, char **av, char **env) {
     vector<string> map = System().openfile("maps/.map1");
     Door door(map);
 
+    try {
+        game = make_shared<GameLoop>();
+    } catch (Exception &e) {
+        cout << e.what() << endl;
+        return 84;
+    }
     while (replay == 1) {
         if (!ErrorHandling().isEnvDisplay(env))
             return 84;
         try {
-            game = make_shared<GameLoop>();
             game->EnnemiGeneration(map);
             game->PlusGeneration(map);
             game->MapGeneration(map);

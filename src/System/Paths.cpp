@@ -19,8 +19,7 @@ void Paths::fillPathList(vector<string> &list, string filepath) {
     }
     print = readdir(Folder);
     for (size_t i = 0; print; i ++) {
-        if (print->d_name[0] == '.');
-        else if (print->d_type == DT_DIR);
+        if (print->d_type == DT_DIR);
         else {
             char cwd[1024];
             getcwd(cwd, sizeof(cwd));

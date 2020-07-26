@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 
+#include "Door.hpp"
 #include "Block.hpp"
 #include "Window.hpp"
 #include "Ennemis.hpp"
@@ -37,6 +38,7 @@ class GameLoop {
         int endScreen(void);
         int checkOpen(void);
         int shootEvent(void);
+        void reset_map(void);
         int switchWeaponEvent(void);
         int movementEvent(sf::Event);
         void MapGeneration(vector<string>);
