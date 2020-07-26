@@ -12,8 +12,6 @@
 
 #include "Door.hpp"
 #include "System.hpp"
-#include "Mapper.hpp"
-#include "MapMenu.hpp"
 #include "GameLoop.hpp"
 #include "Exception.hpp"
 #include "ErrorHandling.hpp"

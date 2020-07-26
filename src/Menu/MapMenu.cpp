@@ -7,8 +7,8 @@ MapMenu::~MapMenu() {}
 
 size_t MapMenu::choice(GameLoop game) {
     sf::Event event;
-    vector<string> maps;
     ImageSFML *cursor;
+    vector<string> maps;
     ImageSFML *background;
     vector<shared_ptr<TextSfml>> texts;
     vector<shared_ptr<ImageSFML>> images;
