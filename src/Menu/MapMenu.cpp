@@ -17,7 +17,6 @@ size_t MapMenu::choice(GameLoop game) {
         cursor = new ImageSFML("resources/Images/Game/cursor.png");
         background = new ImageSFML("resources/Images/Game/wallpaper.jpg");
 
-        game.reset_map();
         Paths().fillPathList(maps, "maps/");
         maps = getOnlyMaps(maps);
         texts = loadTexts(maps);
@@ -35,7 +34,7 @@ size_t MapMenu::choice(GameLoop game) {
         } while (game.getWindow()->pollEvent(event)) {
             for(size_t i = 0; i < images.size(); i ++)
                 if (images[i]->isClicked(event))
-                    return i;
+                    return i + 1;
         }
         game.getWindow()->draw(cursor->getSprite());
         game.getWindow()->display();

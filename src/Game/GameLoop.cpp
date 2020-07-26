@@ -270,6 +270,7 @@ int GameLoop::gameLoop(Door door) {
         size_t value = MapMenu().choice(*this);
 
         map = System().openfile("maps/.map" + to_string(value));
+        this->reset_map();
         this->EnnemiGeneration(map);
         this->PlusGeneration(map);
         this->MapGeneration(map);

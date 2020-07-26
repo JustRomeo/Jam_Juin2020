@@ -20,7 +20,6 @@
 
 using namespace std;
 int main(int ac, char **av, char **env) {
-    Mapper mapper;
     int replay = 1;
     shared_ptr<GameLoop> game;
     vector<string> map = System().openfile("maps/.map1");
