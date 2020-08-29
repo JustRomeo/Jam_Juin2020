@@ -37,7 +37,7 @@ class GameLoop {
         int shootEvent();
         int checkOpen(void);
         int switchWeaponEvent();
-        int gameLoop(Door door);
+        int gameLoop();
         int movementEvent(sf::Event event);
         void MapGeneration(vector<string> map);
         void PlusGeneration(vector<string> map);

@@ -42,6 +42,7 @@ Character::Character() {
     invulnerability = 0;
     cacRectPos = 0;
     jumpCacRectPos = 0;
+
     is_cac = false;
     is_shooting = false;
     is_moving = false;
@@ -51,6 +52,14 @@ Character::Character() {
     is_channeling = false;
     is_sprinting = false;
     is_dashing = false;
+
+    cac_clock.restartClock();
+    dash_clock.restartClock();
+    move_clock.restartClock();
+    anim_clock.restartClock();
+    switch_clock.restartClock();
+    sprint_clock.restartClock();
+
     hud = std::make_shared<HUD>();
     createAnimRec();
 }
@@ -106,7 +115,8 @@ void Character::moveChar(std::shared_ptr<sf::RenderWindow> window, int orient)
     if (is_jumping == true || is_falling == true)
         is_sprinting == true ? move = {10.f * orient, 0.f} : move = {5.f * orient, 0.f};
     else
-        is_sprinting == true ? move = {20.f * orient, 0.f} : move = {10.f * orient, 0.f};
+        is_sprinting == true ? move = {20.f * orient, 0.f} : move;
+    is_dashing == true ? move = {40.f * orient, 0.f}: move;
     view.move(move);
     sprite.move(move);
     window->setView(view);
@@ -295,6 +305,21 @@ void Character::shootAnimation()
     }
 }
 
+void Character::dashAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML)
+{
+    if (move_clock.getTimeDiff(0.01) == 1) {
+        if (dash_clock.getTimeDiff(0.5) == 1) {
+            if (not_colision(mapSFML) == 0)
+                unblockCharacter(mapSFML);
+            is_dashing = false;
+            sprite.getScale().x > 0 ? moveRigth(window, mapSFML) : moveLeft(window, mapSFML);
+        }
+        else if (not_colision(mapSFML) == 1) {
+            sprite.getScale().x > 0 ? moveChar(window, 1) : moveChar(window, -1);
+        }
+    }
+}
+
 void Character::switchAnimation()
 {
     sf::IntRect rect;
@@ -320,12 +345,14 @@ void Character::display(std::shared_ptr<sf::RenderWindow> window, std::vector<st
         jumpAnimation(window, mapSFML);
     if (is_falling)
         fallingAnimation(window, mapSFML);
-    if (is_channeling == true)
+    if (is_channeling)
         channelingAnimation();
-    if (is_switching == true)
+    if (is_switching)
         switchAnimation();
-    if (is_cac == true)
+    if (is_cac)
         cacAnimation();
+    if (is_dashing)
+        dashAnimation(window, mapSFML);
     hud->display(window, weapon_type, _lifes);
     hud->displaySprintBar(window, sprintBar);
     if (sprint_clock.getTimeDiff(0.1))
@@ -345,15 +372,18 @@ void Character::jump() {
 void Character::fall() {
     if (is_falling == false) {
         is_falling = true;
-        sprite.setTextureRect(sf::IntRect(215, 78, 25, 28));
+        sprite.setTextureRect(sf::IntRect(17, 52, 17, 22));
         move = sf::Vector2f(0.f, 0.f);
     }
 }
 
 void Character::dash()
 {
-    if (is_shooting == false && is_channeling == false && is_cac == false) {
+    if (is_dashing == false && is_shooting == false 
+        && is_channeling == false && is_cac == false) {
         is_dashing = true;
+        sprite.setTextureRect(sf::IntRect(215, 78, 25, 28));
+        dash_clock.restartClock();
     }
 }
 
@@ -588,7 +618,8 @@ void Character::restartPos()
 bool Character::isActionPossible()
 {
     if (is_jumping == false && is_falling == false && is_channeling == false &&
-        is_switching == false && is_shooting == false && is_cac == false)
+        is_switching == false && is_shooting == false && is_cac == false && is_dashing == false
+        && is_hooking == false)
         return (true);
     return (false);
 }
@@ -624,3 +655,5 @@ bool Character::isChanneling() {return (is_channeling);}
 bool Character::isSwitching() {return (is_switching);}
 bool Character::isCac() {return (is_cac);}
 bool Character::isSprinting() {return (is_sprinting);}
+bool Character::isDashing() {return (is_dashing);}
+bool Character::isHooking() {return (is_hooking);}

@@ -33,9 +33,11 @@ class Character {
         int getMun();
         void sprint();
         int getWeapon();
+        bool isDashing();
         void incWeapon();
         bool isJumping();
         bool getMoving();
+        bool isHooking();
         bool isFalling();
         int channelBat();
         void cacAttack();
@@ -49,7 +51,6 @@ class Character {
         int getMunBattery();
         void cacAnimation();
         void createAnimRec();
-        void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
         void shootAnimation();
         sf::Sprite getSprite();
         void switchAnimation();
@@ -65,10 +66,12 @@ class Character {
         int not_colision(std::vector<std::shared_ptr<Block>> mapSFML);
         int collisionFall(std::vector<std::shared_ptr<Block>> mapSFML);
         void unblockCharacter(std::vector<std::shared_ptr<Block>> mapSFML);
+        void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
         void display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
+        void dashAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         int _lifes;
         int invulnerability;
@@ -90,20 +93,21 @@ class Character {
         bool is_jumping;
         bool is_falling;
         bool is_dashing;
+        bool is_hooking;
         bool is_shooting;
         bool is_switching;
         bool is_sprinting;
         bool is_channeling;
 
+        Time cac_clock;
+        Time dash_clock;
         Time move_clock;
         Time anim_clock;
-        Time cac_clock;
+        Time switch_clock;
         Time sprint_clock;
-        Time dash_clock;
 
         sf::Vector2f move;
         sf::Sprite sprite;
-        Time switch_clock;
         sf::Vector2f oldPose;
 
         MusicSFML *jump_sound;

@@ -47,7 +47,7 @@ int main(int ac, char **av, char **env) {
             game->PlusGeneration(map);
             game->MapGeneration(map);
             game->setPlayerPosition(map);
-            replay = game->gameLoop(door);
+            replay = game->gameLoop();
         } catch (Exception &e) {
             cout << e.what() << endl;
             return 84;

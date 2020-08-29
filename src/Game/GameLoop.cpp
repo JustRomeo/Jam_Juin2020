@@ -134,7 +134,11 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
 
 int GameLoop::movementEvent(sf::Event event)
 {
-    if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
+    if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching() && !perso->isDashing()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+            perso->dash();
+            return (3);
+        }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             perso->sprint();
         else
@@ -143,13 +147,13 @@ int GameLoop::movementEvent(sf::Event event)
             perso->jump();
             return (3);
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             perso->moveLeft(window, mapSFML);
             return (3);
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             perso->moveRigth(window, mapSFML);
             return (3);
         }
@@ -186,8 +190,12 @@ int GameLoop::getEvent(std::vector<std::shared_ptr<Block>> mapSFML) {
             window->close();
             return (-1);
         }
-        if (event.type == sf::Event::MouseButtonReleased && perso->isActionPossible())
+        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left &&  perso->isActionPossible())
             return (shootEvent());
+        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right && perso->isActionPossible()) {
+            printf("lets hook something\n");
+            return (3);
+        }
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
             return (switchWeaponEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
@@ -424,10 +432,8 @@ void GameLoop::display()
 
 
 enum CHOICE {QUIT = 0, REPLAY = 1};
-int GameLoop::gameLoop(Door door) {
+int GameLoop::gameLoop() {
     size_t loop = 0;
-    //this->door = door;
-    //Door door_s = door;
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
