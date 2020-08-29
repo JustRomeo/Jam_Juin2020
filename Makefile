@@ -12,40 +12,48 @@ INTP =	src/Interface/
 MAPP =	src/Map/
 MENP = 	src/Menu/
 PLAP =	src/Player/
+PROJ = 	src/Projectile/
 COMP =	src/SFMLComponents/
 SYSP =	src/System/
-PROJ = 	src/Projectile/
 
 SRC =	$(SRCP)main.cpp					\
 		\
+		$(COMP)EventHandler.cpp			\
 		$(COMP)ImageSFML.cpp			\
 		$(COMP)MusicSFML.cpp			\
+		$(COMP)TextSFML.cpp				\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
+		$(GAMP)Objet.cpp				\
 		$(GAMP)Projectile.cpp			\
 		$(GAMP)GameLoop.cpp				\
+		$(GAMP)Lootable.cpp				\
 		$(GAMP)GameMusic.cpp			\
 		$(INTP)Multiplayer.cpp			\
+		$(INTP)Cinematique.cpp			\
 		$(MAPP)Block.cpp				\
 		$(MAPP)Door.cpp					\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
 		$(MENP)MainMenu.cpp				\
-		$(SYSP)Exception.cpp			\
-		$(PLAP)Character.cpp			\
-		$(PLAP)Time.cpp 				\
+		$(MENP)MapMenu.cpp				\
+		$(MAPP)Mapper.cpp				\
 		$(PLAP)Battery.cpp				\
+		$(PLAP)Character.cpp			\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
-		$(MAPP)Mapper.cpp				\
-		$(SYSP)Connection.cpp			\
-		$(SYSP)System.cpp				\
+		$(PLAP)Time.cpp 				\
 		$(PROJ)OrangeProjectile.cpp 	\
 		$(PROJ)BlueProjectile.cpp 		\
 		$(PROJ)PurpleProjectile.cpp 	\
-		$(PROJ)GreenProjectile.cpp 	\
+		$(PROJ)GreenProjectile.cpp 		\
 		$(PROJ)ProjectileFactory.cpp 	\
+		$(SYSP)Connection.cpp			\
+		$(SYSP)ErrorHandling.cpp		\
+		$(SYSP)Exception.cpp			\
+		$(SYSP)Paths.cpp				\
+		$(SYSP)System.cpp				\
 
 OBJ =	$(SRC:.cpp=.o)
 

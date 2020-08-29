@@ -9,8 +9,8 @@ int EchapMenu::Menu(sf::RenderWindow &window) {
     ImageSFML play("resources/Buttons/play.png");
     ImageSFML back("resources/Buttons/back.jpg");
     ImageSFML quit("resources/Buttons/quit.png");
-    ImageSFML background("resources/Images/Menu_options.png");
-    ImageSFML cursor("resources/Images/cursor.png");
+    ImageSFML cursor("resources/Images/Game/cursor.png");
+    ImageSFML background("resources/Images/Game/Menu_options.png");
 
     window.setView(window.getDefaultView());
     play.setPosition(sf::Vector2f(800, 325));
