@@ -14,6 +14,7 @@
 #include "System.hpp"
 #include "GameLoop.hpp"
 #include "Exception.hpp"
+#include "MapUpdater.hpp"
 #include "ErrorHandling.hpp"
 
 using namespace std;
@@ -36,7 +37,7 @@ int main(int ac, char **av, char **env) {
             game->EnnemiGeneration(map);
             game->PlusGeneration(map);
             game->MapGeneration(map);
-            game->setPlayerPosition(map);
+            MapUpdater().setPlayerPosition(map, game->getCharacter());
             game->ItemsGeneration(map);
             replay = game->gameLoop(door);
         } catch (Exception &e) {

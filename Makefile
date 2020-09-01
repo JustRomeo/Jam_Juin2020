@@ -34,11 +34,12 @@ SRC =	$(SRCP)main.cpp					\
 		$(INTP)Cinematique.cpp			\
 		$(MAPP)Block.cpp				\
 		$(MAPP)Door.cpp					\
+		$(MAPP)Mapper.cpp				\
+		$(MAPP)MapUpdater.cpp			\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
 		$(MENP)MainMenu.cpp				\
 		$(MENP)MapMenu.cpp				\
-		$(MAPP)Mapper.cpp				\
 		$(PLAP)Battery.cpp				\
 		$(PLAP)Character.cpp			\
 		$(PLAP)HUD.cpp					\
