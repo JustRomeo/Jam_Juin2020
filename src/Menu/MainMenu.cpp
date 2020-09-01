@@ -7,24 +7,26 @@
 
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu()
-{
+MainMenu::MainMenu() {
     try {
         play = std::make_shared<Button>(sf::Vector2f(800, 300), sf::Vector2f(250, 100));
         play->setColor(sf::Color::White, sf::Color::Black, 5);
         play->setText("resources/Buttons/text/Aileron-Black.otf", "play", 75, sf::Color::Black);
-        quit = std::make_shared<Button>(sf::Vector2f(800, 740), sf::Vector2f(250, 100));
+        quit = std::make_shared<Button>(sf::Vector2f(800, 850), sf::Vector2f(250, 100));
         quit->setColor(sf::Color::White, sf::Color::Black, 5);
         quit->setText("resources/Buttons/text/Aileron-Black.otf", "quit", 75, sf::Color::Black);
-        bugs = std::make_shared<Button>(sf::Vector2f(800, 630), sf::Vector2f(250, 100));
+        bugs = std::make_shared<Button>(sf::Vector2f(800, 740), sf::Vector2f(250, 100));
         bugs->setColor(sf::Color::White, sf::Color::Black, 5);
         bugs->setText("resources/Buttons/text/Aileron-Black.otf", "bugs", 75, sf::Color::Black);
-        ctrl = std::make_shared<Button>(sf::Vector2f(800, 520), sf::Vector2f(250, 100));
+        ctrl = std::make_shared<Button>(sf::Vector2f(800, 630), sf::Vector2f(250, 100));
         ctrl->setColor(sf::Color::White, sf::Color::Black, 5);
         ctrl->setText("resources/Buttons/text/Aileron-Black.otf", "ctrl", 75, sf::Color::Black);
-        multi = std::make_shared<Button>(sf::Vector2f(800, 410), sf::Vector2f(250, 100));
+        multi = std::make_shared<Button>(sf::Vector2f(800, 520), sf::Vector2f(250, 100));
         multi->setColor(sf::Color::White, sf::Color::Black, 5);
         multi->setText("resources/Buttons/text/Aileron-Black.otf", "multi", 75, sf::Color::Black);
+        local = std::make_shared<Button>(sf::Vector2f(800, 410), sf::Vector2f(250, 100));
+        local->setColor(sf::Color::White, sf::Color::Black, 5);
+        local->setText("resources/Buttons/text/Aileron-Black.otf", "Local", 75, sf::Color::Black);
         background = std::make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
         cursor = std::make_shared<ImageSFML>("resources/Images/Game/cursor.png");
 
@@ -35,8 +37,7 @@ MainMenu::MainMenu()
 }
 MainMenu::~MainMenu() {}
 
-static void control_panel(shared_ptr<sf::RenderWindow> window) 
-{
+static void control_panel(shared_ptr<sf::RenderWindow> window) {
     sf::Event event;
     ImageSFML panel("resources/Images/Menu/Controltext.png");
 
@@ -48,8 +49,7 @@ static void control_panel(shared_ptr<sf::RenderWindow> window)
     }
 }
 
-static void form_panel(shared_ptr<sf::RenderWindow> window) 
-{
+static void form_panel(shared_ptr<sf::RenderWindow> window) {
     size_t row = 0;
     sf::Event event;
     vector<shared_ptr<TextSfml>> texts;
@@ -86,8 +86,7 @@ static void form_panel(shared_ptr<sf::RenderWindow> window)
     }
 }
 
-bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) 
-{
+bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
     sf::Event event;
     sf::Vector2i cursorPos;
 
@@ -99,6 +98,7 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window)
         window->draw(background->getSprite());
         play->drawButton(window);
         multi->drawButton(window);
+        local->drawButton(window);
         ctrl->drawButton(window);
         bugs->drawButton(window);
         quit->drawButton(window);

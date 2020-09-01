@@ -89,7 +89,6 @@ void GameLoop::ItemsGeneration(vector<string> map) {
             if (map[i][j] == '+') {
                 string name = System().strtowordarray(items[row], "|")[0];
 
-                cout << "Generate: " << row << "° item > " << name << " | x:" << j << " y:" << i << endl;
                 Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157)));
                 row += 1;
             }
@@ -170,12 +169,10 @@ int GameLoop::movementEvent(sf::Event event)
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
             perso->jump();
             return (3);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
             perso->moveLeft(window, mapSFML);
             return (3);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             perso->moveRigth(window, mapSFML);
@@ -198,10 +195,10 @@ int GameLoop::shootEvent() {
 }
 
 int GameLoop::switchWeaponEvent() {
+    perso->incWeapon();
     if (!_sound)
         return 3;
     gameMusic->pause_music(perso->getWeapon());
-    perso->incWeapon();
     gameMusic->switch_music(perso->getWeapon());
     return (3);
 }
@@ -213,14 +210,12 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        }
-        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left &&  perso->isActionPossible())
+        } if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left &&  perso->isActionPossible())
             return (shootEvent());
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right && perso->isActionPossible()) {
             printf("lets hook something\n");
             return (3);
-        }
-        if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
+        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
             return (switchWeaponEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
             perso->cacAttack();
