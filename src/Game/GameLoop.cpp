@@ -9,11 +9,14 @@
 #include "Echap.hpp"
 #include "Death.hpp"
 #include "System.hpp"
+#include "MapMenu.hpp"
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "MusicSFML.hpp"
 #include "Multiplayer.hpp"
 #include "Cinematique.hpp"
+
+enum CHOICE {QUIT = 0, REPLAY = 1};
 
 GameLoop::GameLoop() {
     try {
@@ -35,11 +38,36 @@ GameLoop::GameLoop() {
 }
 GameLoop::~GameLoop() {}
 
-void GameLoop::EnnemiGeneration(vector<string> map) {
+void GameLoop::EnnemiGeneration(vector<string> map)
+{
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E')
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
+}
+
+int GameLoop::menu()
+{
+    window->setMouseCursorVisible(false);
+    gameMusic->playMainMusic();
+    if (!MainMenu().Menu(window))
+        return QUIT;
+    try {
+        vector<string> map;
+        size_t value = MapMenu().choice(*this);
+
+        map = System().openfile("maps/.map" + to_string(value));
+        reset_map();
+        EnnemiGeneration(map);
+        PlusGeneration(map);
+        MapGeneration(map);
+        setPlayerPosition(map);
+        ItemsGeneration(map);
+        return (gameLoop());
+    } catch (Exception &e) {
+        cout << e.what() << endl;
+    }
+    return (QUIT);
 }
 
 void GameLoop::reset_map(void) {
@@ -262,29 +290,10 @@ void GameLoop::display() {
     window->display();
 }
 
-#include "MapMenu.hpp"
-enum CHOICE {QUIT = 0, REPLAY = 1};
-int GameLoop::gameLoop() {
+int GameLoop::gameLoop()
+{
     size_t loop = 0;
 
-    window->setMouseCursorVisible(false);
-    gameMusic->playMainMusic();
-    if (!MainMenu().Menu(window))
-        return QUIT;
-    try {
-        vector<string> map;
-        size_t value = MapMenu().choice(*this);
-
-        map = System().openfile("maps/.map" + to_string(value));
-        this->reset_map();
-        this->EnnemiGeneration(map);
-        this->PlusGeneration(map);
-        this->MapGeneration(map);
-        this->setPlayerPosition(map);
-        this->ItemsGeneration(map);
-    } catch (Exception &e) {
-        cout << e.what() << endl;
-    }
     if (!Cinematique().Intro(window, perso))
         return QUIT;
     gameMusic->stopMainMusic();

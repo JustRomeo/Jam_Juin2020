@@ -33,12 +33,7 @@ int main(int ac, char **av, char **env) {
         if (!ErrorHandling().isEnvDisplay(env))
             return 84;
         try {
-            game->EnnemiGeneration(map);
-            game->PlusGeneration(map);
-            game->MapGeneration(map);
-            game->setPlayerPosition(map);
-            game->ItemsGeneration(map);
-            replay = game->gameLoop();
+            replay = game->menu();
         } catch (Exception &e) {
             cout << e.what() << endl;
             return 84;

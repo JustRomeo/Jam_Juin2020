@@ -36,6 +36,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(MAPP)Door.cpp					\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
+		$(MENP)Button.cpp 				\
 		$(MENP)MainMenu.cpp				\
 		$(MENP)MapMenu.cpp				\
 		$(MAPP)Mapper.cpp				\

@@ -32,8 +32,9 @@ class GameLoop {
         GameLoop();
         ~GameLoop();
 
-        void clear(void);
+        int menu();
         int gameLoop();
+        void clear(void);
         void display(void);
         int endScreen(void);
         int checkOpen(void);
