@@ -57,6 +57,7 @@ class GameLoop {
     protected:
 
     private:
+        bool _sound;
         shared_ptr<Door> door;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;
