@@ -198,6 +198,8 @@ int GameLoop::shootEvent() {
 }
 
 int GameLoop::switchWeaponEvent() {
+    if (!_sound)
+        return 3;
     gameMusic->pause_music(perso->getWeapon());
     perso->incWeapon();
     gameMusic->switch_music(perso->getWeapon());
