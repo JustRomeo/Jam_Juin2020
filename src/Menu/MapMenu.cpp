@@ -24,14 +24,15 @@ size_t MapMenu::choice(GameLoop game) {
         cursor->setScale(sf::Vector2f(2.4, 2.4));
     } catch (Exception &e) {
         throw Exception("Initialisation failed: " + *e.what());
-    }
-    while (game.getWindow()->isOpen()) {
+    } while (game.getWindow()->isOpen()) {
         cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         game.getWindow()->draw(background->getSprite());
         for(size_t i = 0; i < maps.size(); i ++) {
             game.getWindow()->draw(images[i]->getSprite());
             game.getWindow()->draw(texts[i]->getData());
         } while (game.getWindow()->pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                game.getWindow()->close();
             for(size_t i = 0; i < images.size(); i ++)
                 if (images[i]->isClicked(event))
                     return i + 1;

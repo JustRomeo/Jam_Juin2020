@@ -13,6 +13,7 @@
 #include "GameLoop.hpp"
 #include "MainMenu.hpp"
 #include "MusicSFML.hpp"
+#include "MapUpdater.hpp"
 #include "Multiplayer.hpp"
 #include "Cinematique.hpp"
 
@@ -20,6 +21,7 @@ enum CHOICE {QUIT = 0, REPLAY = 1};
 
 GameLoop::GameLoop() {
     try {
+        _sound = true;
         gameMusic = make_shared<GameMusic>();
         window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);
@@ -61,7 +63,7 @@ int GameLoop::menu()
         EnnemiGeneration(map);
         PlusGeneration(map);
         MapGeneration(map);
-        setPlayerPosition(map);
+        MapUpdater().setPlayerPosition(map, perso);
         ItemsGeneration(map);
         return (gameLoop());
     } catch (Exception &e) {
@@ -129,28 +131,18 @@ void GameLoop::MapGeneration(vector<string> _map) {
     door = make_shared<Door>(_map);
 }
 
-void GameLoop::checkDestruction(vector<shared_ptr<Block>> &mapSFML) {
-    int res = -1;
-
-    for (size_t i = 0; i < projectile.size(); i ++) {
-        res = -1;
-        res = projectile[i]->checkDestruction(mapSFML);
-        if (res == 0)
-            projectile.erase(projectile.begin() + i);
-    }
-}
-
 void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     int res = -1;
     sf::Sprite persoSprite = perso->getSprite();
     sf::Vector2f swordPoint = persoSprite.getPosition();
 
-    for (size_t i = 0; i < projectile.size(); i++) {
+    for (size_t i = 0; i < projectile.size(); i ++) {
         res = -1;
         for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
             res = projectile[i]->checkKill(Ennemilist[j]);
             if (projectile[i]->getCurrentCapacity() <= 0) {
-                gameMusic->startDeathMusic();
+                if (_sound)
+                    gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
             } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
@@ -239,7 +231,7 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
-        switch (EchapMenu().Menu(*window)) {
+        switch (EchapMenu().Menu(*window, _sound)) {
             case -1: return -1; // Quit
             case 0:  return 0;  // resume
             case 1:  return 1;  // replay
@@ -251,36 +243,13 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
     return 0;
 }
 
-static void EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &Ennemilist, vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> &perso) {
-    for (size_t i = 0; i < Ennemilist.size(); i ++) {
-        window.draw(Ennemilist[i]->getSprite());
-        Ennemilist[i]->move(mapSFML);
-        if (perso->invulnerability < 1 && sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Ennemilist[i]->getSprite().getGlobalBounds()))) {
-            perso->_lifes --;
-            perso->invulnerability += 60;
-        }
-    }
-}
-
-static void BlockUpdate(sf::RenderWindow &window, vector<shared_ptr<Block>> mapSFML) {
-    for (size_t i = 0; i < mapSFML.size(); i++)
-        window.draw(mapSFML[i]->getSprite());
-}
-
-void GameLoop::setPlayerPosition(vector<string> map) {
-    for (size_t i = 0; i < map.size(); i ++)
-        for (size_t j = 0; j < map[i].length(); j ++)
-            if (map[i][j] == 'P')
-                perso->setSpritePosition(j * 157, i * 157 + 60);
-}
-
 void GameLoop::display() {
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
     window->draw(font->getSprite());
     for (size_t i = 0; i < PlusList.size(); i ++)
         PlusList[i]->display(window);
-    BlockUpdate(*window, mapSFML);
-    EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
+    MapUpdater().BlockUpdate(*window, mapSFML);
+    MapUpdater().EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
     window->draw(door->getSprite());
     perso->display(window, mapSFML);
     for (size_t i = 0; i < projectile.size(); i ++)
@@ -312,13 +281,14 @@ int GameLoop::gameLoop()
             }
         this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
-        checkDestruction(mapSFML);
+        MapUpdater().checkDestruction(mapSFML, projectile);
         checkDeathEnemy(Ennemilist);
         display();
         clear();
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 1) {
-            gameMusic->startDeathMusic();
+            if (_sound)
+                gameMusic->startDeathMusic();
             window->setMouseCursorVisible(true);
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;
@@ -337,11 +307,13 @@ int GameLoop::gameLoop()
             window->setMouseCursorVisible(false);
         } catch (Exception &e) {
             throw Exception("Error in map event: " + *e.what());
-        }
+        } if (!_sound)
+            gameMusic->endAllMusic();
     }
     return QUIT;
 }
 
 int GameLoop::checkOpen() {return window->isOpen();}
 void GameLoop::clear() {window->clear(sf::Color::White);}
+shared_ptr<Character> GameLoop::getCharacter(void) const {return perso;}
 shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {return this->window;}

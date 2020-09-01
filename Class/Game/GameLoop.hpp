@@ -47,9 +47,9 @@ class GameLoop {
         void DoorGeneration(vector<string>);
         void ItemsGeneration(vector<string>);
         void EnnemiGeneration(vector<string>);
-        void setPlayerPosition(vector<string>);
         int getEvent(vector<shared_ptr<Block>>);
         shared_ptr<sf::RenderWindow> getWindow(void);
+        shared_ptr<Character> getCharacter(void) const;
         void checkDestruction(vector<shared_ptr<Block>> &);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &);
 
@@ -58,6 +58,7 @@ class GameLoop {
     protected:
 
     private:
+        bool _sound;
         shared_ptr<Door> door;
         shared_ptr<sf::View> view;
         shared_ptr<Character> perso;

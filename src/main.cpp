@@ -14,6 +14,7 @@
 #include "System.hpp"
 #include "GameLoop.hpp"
 #include "Exception.hpp"
+#include "MapUpdater.hpp"
 #include "ErrorHandling.hpp"
 
 using namespace std;

@@ -9,7 +9,7 @@ class EchapMenu {
         EchapMenu();
         ~EchapMenu();
 
-        int Menu(sf::RenderWindow &window);
+        int Menu(sf::RenderWindow &, bool &);
     private:
 };
 
