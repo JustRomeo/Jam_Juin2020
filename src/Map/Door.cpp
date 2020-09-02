@@ -1,12 +1,13 @@
 #include "Door.hpp"
 
-Door::Door(int X, int Y) {
+Door::Door(int X, int Y)
+{
     _anim = 0;
     _opening = false;
     alreadyopen = false;
     move_clock.restart();
-    openUp = new MusicSFML();
-    _texture = new sf::Texture;
+    openUp = make_shared<MusicSFML>();
+    _texture = make_shared<sf::Texture>();
     pos = sf::Vector2f(X, Y);
     try {
         this->openUp->load("resources/Sounds/sounds/door.ogg");
@@ -19,12 +20,15 @@ Door::Door(int X, int Y) {
     _size = this->getSize();
 }
 
-Door::Door(vector<string> map) {
-    alreadyopen = false;
-    _texture = new sf::Texture;
-    pos = sf::Vector2f(0, 0);
-    openUp = new MusicSFML();
+Door::Door(vector<string> map)
+{
     _anim = 0;
+    _opening = false;
+    alreadyopen = false;
+    move_clock.restart();
+    openUp = make_shared<MusicSFML>();
+    _texture = make_shared<sf::Texture>();
+    pos = sf::Vector2f(0, 0);
     try {
         this->openUp->load("resources/Sounds/sounds/door.ogg");
         this->setTexture("resources/Images/Game/Door.png");
@@ -36,23 +40,28 @@ Door::Door(vector<string> map) {
     _size = this->getSize();
 }
 
-Door::~Door() {}
+Door::~Door()
+{
+}
 
-void Door::setTexture(string filepath) {
+void Door::setTexture(string filepath)
+{
     if (!_texture->loadFromFile(filepath))
         throw (Exception("Loading Ressource Failed"));
     _sprite.setTexture(*_texture);
     _sprite.setTextureRect(sf::IntRect(0, 0, 260, 375));
 }
 
-void Door::setPosition(vector<string> map) {
+void Door::setPosition(vector<string> map)
+{
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'o')
                 this->setPosition(sf::Vector2f(j * 157, i * 157));
 }
 
-void Door::doorOpen(sf::Sprite persoSprite) {
+void Door::doorOpen(sf::Sprite persoSprite)
+{
     if (!_opening)
         return;
     if (_opening) {
@@ -92,5 +101,5 @@ int Door::getAnim() {return _anim;}
 size_t Door::getSize(void) const {return _size;}
 void Door::setOpening(bool var) {_opening = var;}
 sf::Vector2f Door::getPosition(void) {return pos;}
-sf::Texture *Door::getTexture(void) {return _texture;}
+shared_ptr<sf::Texture> Door::getTexture(void) {return _texture;}
 sf::Sprite Door::getSprite(void) const {return (_sprite);}

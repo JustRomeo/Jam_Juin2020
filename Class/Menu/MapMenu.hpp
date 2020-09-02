@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 
+#include "Button.hpp"
 #include "TextSFML.hpp"
 #include "GameLoop.hpp"
 #include "ImageSFML.hpp"
@@ -18,9 +19,11 @@ class MapMenu {
 
         size_t choice(GameLoop);
         vector<string> getOnlyMaps(vector<string>);
-        vector<shared_ptr<TextSfml>> loadTexts(vector<string>);
-        vector<shared_ptr<ImageSFML>> loadImages(vector<string>);
+        void loadTexts(vector<string>);
+        void loadImages(vector<string>);
     private:
+        vector<shared_ptr<Button>> button;
+        shared_ptr<Button> go_back_button;
     protected:
 };
 

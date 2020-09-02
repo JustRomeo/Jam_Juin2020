@@ -48,10 +48,11 @@ Character::Character() {
     jumpCacRectPos = 0;
 
     is_cac = false;
-    is_shooting = false;
     is_moving = false;
-    is_falling = false;
     is_jumping = false;
+    is_shooting = false;
+    is_falling = false;
+    is_hooking = false;
     is_switching = false;
     is_channeling = false;
     is_sprinting = false;
@@ -542,7 +543,8 @@ void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
 bool Character::isActionPossible()
 {
     if (is_jumping == false && is_falling == false && is_channeling == false &&
-        is_switching == false && is_shooting == false && is_cac == false && is_hooking == false)
+        is_switching == false && is_shooting == false && is_cac == false && is_hooking == false &&
+        is_sprinting == false)
         return (true);
     return (false);
 }

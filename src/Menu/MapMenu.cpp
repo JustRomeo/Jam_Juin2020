@@ -10,8 +10,6 @@ size_t MapMenu::choice(GameLoop game) {
     ImageSFML *cursor;
     vector<string> maps;
     ImageSFML *background;
-    vector<shared_ptr<TextSfml>> texts;
-    vector<shared_ptr<ImageSFML>> images;
 
     try {
         cursor = new ImageSFML("resources/Images/Game/cursor.png");
@@ -19,23 +17,27 @@ size_t MapMenu::choice(GameLoop game) {
 
         Paths().fillPathList(maps, "maps/");
         maps = getOnlyMaps(maps);
-        texts = loadTexts(maps);
-        images = loadImages(maps);
+        loadImages(maps);
+        loadTexts(maps);
         cursor->setScale(sf::Vector2f(2.4, 2.4));
     } catch (Exception &e) {
         throw Exception("Initialisation failed: " + *e.what());
-    } while (game.getWindow()->isOpen()) {
+    }
+    while (game.getWindow()->isOpen()) {
         cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         game.getWindow()->draw(background->getSprite());
-        for(size_t i = 0; i < maps.size(); i ++) {
-            game.getWindow()->draw(images[i]->getSprite());
-            game.getWindow()->draw(texts[i]->getData());
-        } while (game.getWindow()->pollEvent(event)) {
+        for(size_t i = 0; i < maps.size(); i ++)
+            button[i]->drawButton(game.getWindow());
+        go_back_button->drawButton(game.getWindow());
+        while (game.getWindow()->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 game.getWindow()->close();
-            for(size_t i = 0; i < images.size(); i ++)
-                if (images[i]->isClicked(event))
+            for(size_t i = 0; i < button.size(); i ++) {
+                if (button[i]->isClicked(event))
                     return i + 1;
+                if (go_back_button->isClicked(event))
+                    return (-1);
+            }
         }
         game.getWindow()->draw(cursor->getSprite());
         game.getWindow()->display();
@@ -54,23 +56,20 @@ vector<string> MapMenu::getOnlyMaps(vector<string> files) {
     return maps;
 }
 
-vector<shared_ptr<TextSfml>> MapMenu::loadTexts(vector<string> maps) {
+void MapMenu::loadTexts(vector<string> maps) {
     vector<shared_ptr<TextSfml>> texts;
 
-    for (size_t i = 0; i < maps.size(); i ++) {
-        texts.push_back(make_shared<TextSfml>(maps[i], "resources/character/arial.ttf", sf::Color::Black, 0, 0));
-        texts[i]->setSize(35);
-        texts[i]->setPosition(sf::Vector2f(900, 330 + 110 * i));
-    }
-    return texts;
+    go_back_button->setText("resources/character/arial.ttf", "back", 35, sf::Color::Black);
+    for (size_t i = 0; i < maps.size(); i ++)
+        button[i]->setText("resources/character/arial.ttf", maps[i], 35, sf::Color::Black);
 }
 
-vector<shared_ptr<ImageSFML>> MapMenu::loadImages(vector<string> maps) {
-    vector<shared_ptr<ImageSFML>> images;
+void MapMenu::loadImages(vector<string> maps) {
 
     for (size_t i = 0; i < maps.size(); i ++) {
-        images.push_back(make_shared<ImageSFML>("resources/Buttons/empty.png"));
-        images[i]->setPosition(sf::Vector2f(800, 300 + 110 * i));
+        button.push_back(make_shared<Button>(sf::Vector2f(800, 300 + 110 * i), sf::Vector2f(250, 100)));
+        button[i]->setColor(sf::Color::White, sf::Color::Black, 5);
     }
-    return images;
+    go_back_button = make_shared<Button>(sf::Vector2f(100, 700), sf::Vector2f(250, 100));
+    go_back_button->setColor(sf::Color::White, sf::Color::Black, 5);
 }
