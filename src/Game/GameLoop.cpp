@@ -17,7 +17,7 @@
 #include "Multiplayer.hpp"
 #include "Cinematique.hpp"
 
-enum CHOICE {QUIT = 0, REPLAY = 1};
+enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 
 GameLoop::GameLoop() {
     try {
@@ -50,22 +50,28 @@ void GameLoop::EnnemiGeneration(vector<string> map)
 
 int GameLoop::menu()
 {
+    int res = -1;
+    vector<string> map;
+    size_t value;
+
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
-    if (!MainMenu().Menu(window))
-        return QUIT;
     try {
-        vector<string> map;
-        size_t value = MapMenu().choice(*this);
-
-        map = System().openfile("maps/.map" + to_string(value));
-        reset_map();
-        EnnemiGeneration(map);
-        PlusGeneration(map);
-        MapGeneration(map);
-        MapUpdater().setPlayerPosition(map, perso);
-        ItemsGeneration(map);
-        return (gameLoop());
+        while (res == -1) {
+            if (!MainMenu().Menu(window))
+                return QUIT;
+            value = MapMenu().choice(*this);
+            if (value != RETURN) {
+                map = System().openfile("maps/.map" + to_string(value));
+                reset_map();
+                EnnemiGeneration(map);
+                PlusGeneration(map);
+                MapGeneration(map);
+                MapUpdater().setPlayerPosition(map, perso);
+                ItemsGeneration(map);
+                return (gameLoop());
+            }
+        }
     } catch (Exception &e) {
         cout << e.what() << endl;
     }

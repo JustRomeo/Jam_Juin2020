@@ -19,7 +19,7 @@ class Door {
         int getAnim();
         size_t getSize(void) const;
         int getTimeDiff(float diff);
-        sf::Texture *getTexture(void);
+        shared_ptr<sf::Texture> getTexture(void);
         sf::Vector2f getPosition(void);
         void setTexture(string filepath);
         sf::Sprite getSprite(void) const;
@@ -32,10 +32,10 @@ class Door {
         size_t _size;
         bool _opening;
         sf::Vector2f pos;
-        MusicSFML *openUp;
+        shared_ptr<MusicSFML> openUp;
         sf::Sprite _sprite;
         sf::Clock move_clock;
-        sf::Texture *_texture;
+        shared_ptr<sf::Texture> _texture;
 };
 
 #endif
