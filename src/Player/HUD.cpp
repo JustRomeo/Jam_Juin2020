@@ -74,7 +74,7 @@ void HUD::displaySprintBar(std::shared_ptr<sf::RenderWindow> window, int sprintB
     back.setFillColor(sf::Color::White);
     back.setPosition(window->getView().getCenter().x - 890, window->getView().getCenter().y + 380);
     back.setOutlineColor(sf::Color::Magenta);
-    front.setSize({sprintBar * 200 / 100, 45});
+    front.setSize(sf::Vector2f(sprintBar * 200 / 100, 45));
     front.setFillColor(sf::Color::Yellow);
     front.setPosition(window->getView().getCenter().x - 885, window->getView().getCenter().y + 382);
     window->draw(back);
