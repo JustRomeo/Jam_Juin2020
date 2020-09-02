@@ -37,6 +37,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(MAPP)Mapper.cpp				\
 		$(MAPP)MapUpdater.cpp			\
 		$(MENP)BugsScreen.cpp			\
+		$(MENP)ControlPanel.cpp			\
 		$(MENP)Death.cpp				\
 		$(MENP)Echap.cpp				\
 		$(MENP)Button.cpp 				\

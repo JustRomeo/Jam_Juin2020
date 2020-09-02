@@ -1,5 +1,5 @@
-#ifndef __BugsScreen__
-#define __BugsScreen__
+#ifndef __ControlPanel__
+#define __ControlPanel__
 
 #include <vector>
 #include <memory>
@@ -10,16 +10,14 @@
 #include "EventHandler.hpp"
 
 using namespace std;
-class BugsScreen {
+class ControlPanel {
     public:
-        BugsScreen();
-        ~BugsScreen();
+        ControlPanel();
+        ~ControlPanel();
 
-        void form_panel(shared_ptr<sf::RenderWindow>);
+        void control_panel(shared_ptr<sf::RenderWindow>);
 
     private:
-        vector<string> input;
-
     protected:
 };
 

@@ -7,6 +7,7 @@
 
 #include "MainMenu.hpp"
 #include "BugsScreen.hpp"
+#include "ControlPanel.hpp"
 
 MainMenu::MainMenu() {
     try {
@@ -38,18 +39,6 @@ MainMenu::MainMenu() {
 }
 MainMenu::~MainMenu() {}
 
-static void control_panel(shared_ptr<sf::RenderWindow> window) {
-    sf::Event event;
-    ImageSFML panel("resources/Images/Menu/Controltext.png");
-
-    while (window->isOpen()) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-            break;
-        window->draw(panel.getSprite());
-        window->display();
-    }
-}
-
 bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
     sf::Event event;
     sf::Vector2i cursorPos;
@@ -77,7 +66,7 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
             else if (bugs->isClicked(event))
                 BugsScreen().form_panel(window);
             else if (ctrl->isClicked(event))
-                control_panel(window);
+                ControlPanel().control_panel(window);
             else if (quit->isClicked(event))
                 return false;
         }
