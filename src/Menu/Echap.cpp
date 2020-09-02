@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "Echap.hpp"
 #include "GameLoop.hpp"
 
@@ -7,6 +8,7 @@ EchapMenu::~EchapMenu() {}
 
 enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
 int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
+    GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
     sf::Event event;
     ImageSFML play("resources/Buttons/play.png");
     ImageSFML back("resources/Buttons/back.jpg");
@@ -14,10 +16,8 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
     ImageSFML cursor("resources/Images/Game/cursor.png");
     ImageSFML background("resources/Images/Game/Menu_options.png");
     ImageSFML sound(sound_on ? "resources/Images/Menu/sound.png" : "resources/Images/Menu/sound_off.png");
-
     ImageSFML larrow("resources/Images/Menu/arrowHUD.png");
     ImageSFML rarrow("resources/Images/Menu/arrowHUD.png");
-    GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
     ImageSFML controler(controler_on == GameLoop::Controler::KeyBoard ? "resources/Images/Menu/Control.png" : "resources/Images/Menu/mannette.png");
 
     window.setView(window.getDefaultView());
@@ -63,7 +63,7 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
             else if (sound.isClicked(event)) {
                 sound_on = !sound_on;
                 sound.setTexture(sound_on ? "resources/Images/Menu/sound.png" : "resources/Images/Menu/sound_off.png");
-            } else if (larrow.isClicked(event)) {
+            } else if (larrow.isClicked(event) || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)) {
                 switch (controler_on) {
                     case GameLoop::Controler::KeyBoard: controler_on = GameLoop::Controler::RemoteXBOX; break;
                     case GameLoop::Controler::RemoteXBOX: controler_on = GameLoop::Controler::RemotePS; break;
@@ -73,7 +73,7 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
                     controler.setPosition(controler_on == GameLoop::Controler::KeyBoard ? sf::Vector2f(1325, 750) : sf::Vector2f(1350, 700));
                     controler.setScale(controler_on == GameLoop::Controler::KeyBoard ? sf::Vector2f(0.3, 0.3) : sf::Vector2f(1, 1));
                 }
-            } else if (rarrow.isClicked(event)) {
+            } else if (rarrow.isClicked(event) || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Right)) {
                 switch (controler_on) {
                     case GameLoop::Controler::KeyBoard: controler_on = GameLoop::Controler::RemotePS; break;
                     case GameLoop::Controler::RemotePS: controler_on = GameLoop::Controler::RemoteXBOX; break;
@@ -92,6 +92,9 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
     quit.~ImageSFML();
     sound.~ImageSFML();
     cursor.~ImageSFML();
+    larrow.~ImageSFML();
+    rarrow.~ImageSFML();
+    controler.~ImageSFML();
     background.~ImageSFML();
     return false;
 }
