@@ -18,10 +18,11 @@
 #include "Cinematique.hpp"
 
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
-
 GameLoop::GameLoop() {
     try {
+        _players = 1;
         _sound = true;
+        _remote = Controler::KeyBoard;
         gameMusic = make_shared<GameMusic>();
         window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
         window->setFramerateLimit(60);

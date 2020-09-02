@@ -2,9 +2,7 @@
 #include "ImageSFML.hpp"
 
 using namespace std;
-
-ImageSFML::ImageSFML(string path)
-{
+ImageSFML::ImageSFML(string path) {
     _width = 0;
     _heigh = 0;
     _pos = sf::Vector2f(0, 0);
@@ -16,16 +14,9 @@ ImageSFML::ImageSFML(string path)
     _width = _sprite.getTexture()->getSize().x;
     _heigh = _sprite.getTexture()->getSize().y;
 }
-ImageSFML::ImageSFML()
-{
-}
-
-ImageSFML::~ImageSFML() {
-    delete _texture;
-}
-
-ImageSFML &ImageSFML::operator=(const ImageSFML &to_cmp)
-{
+ImageSFML::ImageSFML() {}
+ImageSFML::~ImageSFML() {delete _texture;}
+ImageSFML &ImageSFML::operator=(const ImageSFML &to_cmp) {
     _width = to_cmp._width;
     _heigh = to_cmp._heigh;
     _pos = to_cmp._pos;
@@ -37,9 +28,6 @@ ImageSFML &ImageSFML::operator=(const ImageSFML &to_cmp)
     return (*this);
 }
 
-sf::Texture *ImageSFML::getTexture(void) {
-    return this->_texture;
-}
 bool ImageSFML::isClicked(sf::Event event) {
     sf::Vector2i mouse(sf::Mouse::getPosition());
 
@@ -50,19 +38,18 @@ bool ImageSFML::isClicked(sf::Event event) {
     return false;
 }
 
-void ImageSFML::setTexture(string path)
-{
+void ImageSFML::setTexture(string path) {
     if (!_texture->loadFromFile(path))
         cout << "Loading Ressource Failed" << endl;
     _sprite.setTexture(*_texture);
 }
 
-void ImageSFML::setScale(sf::Vector2f size) {
-    _sprite.setScale(size);
-}
 void ImageSFML::setPosition(sf::Vector2f pos) {
     _pos = pos;
     _sprite.setPosition(pos);
 }
 
 sf::Sprite ImageSFML::getSprite(void) const {return (_sprite);}
+sf::Texture *ImageSFML::getTexture(void) {return this->_texture;}
+void ImageSFML::setRotate(float angle) {_sprite.setRotation(angle);}
+void ImageSFML::setScale(sf::Vector2f size) {_sprite.setScale(size);}

@@ -14,13 +14,14 @@ class ImageSFML {
         ~ImageSFML();
         ImageSFML &operator=(const ImageSFML &to_cmp);
 
-        void destroyTexture();
+        void setRotate(float);
+        void setTexture(string);
+        void destroyTexture(void);
+        bool isClicked(sf::Event);
+        void setScale(sf::Vector2f);
         sf::Sprite getSprite() const;
         sf::Texture *getTexture(void);
-        bool isClicked(sf::Event event);
-        void setTexture(string filepath);
-        void setScale(sf::Vector2f size);
-        void setPosition(sf::Vector2f pos);
+        void setPosition(sf::Vector2f);
 
     private:
         size_t _width;
