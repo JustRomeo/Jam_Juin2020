@@ -2,13 +2,17 @@
 
 #include "Echap.hpp"
 #include "GameLoop.hpp"
+#include "WindowLib.hpp"
 
 EchapMenu::EchapMenu() {}
 EchapMenu::~EchapMenu() {}
 
+// #include <Joystick.hpp>
 enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
-int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
+int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window, bool &sound_on) {
+    sf::Joystick joys;
     GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
+
     sf::Event event;
     ImageSFML play("resources/Buttons/play.png");
     ImageSFML back("resources/Buttons/back.jpg");
@@ -20,7 +24,26 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
     ImageSFML rarrow("resources/Images/Menu/arrowHUD.png");
     ImageSFML controler(controler_on == GameLoop::Controler::KeyBoard ? "resources/Images/Menu/Control.png" : "resources/Images/Menu/mannette.png");
 
-    window.setView(window.getDefaultView());
+    bool connected = sf::Joystick::isConnected(0);
+    size_t buttons = sf::Joystick::getButtonCount(0);
+
+    cout << (connected ? "A Joy's connected and support " : "No Joy's connected") << (connected ? to_string(buttons) : "") << (connected ? " buttons" : "") << endl;
+
+    if (connected) {
+        bool hasX = sf::Joystick::hasAxis(0, sf::Joystick::X);
+        bool hasY = sf::Joystick::hasAxis(0, sf::Joystick::Y);
+
+        if (!hasX || !hasY)
+            throw Exception("Error: Disfunction Mannette");
+        float positionX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+        float positionY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+        cout << "Position X:" << positionX << " | Y:" << positionY << endl;
+    }
+
+    // Is button #2 pressed on joystick #0?
+    // bool pressed = sf::Joystick::isButtonPressed(0, 2);
+
+    window->setView(window->getDefaultView());
 
     sound.setPosition(sf::Vector2f(50, 50));
     play.setPosition(sf::Vector2f(800, 325));
@@ -40,22 +63,14 @@ int EchapMenu::Menu(sf::RenderWindow &window, bool &sound_on) {
     rarrow.setRotate(90);
     larrow.setRotate(-90);
 
-    window.setMouseCursorVisible(false);
-    window.setFramerateLimit(60);
-    while (window.isOpen()) {
+    window->setMouseCursorVisible(false);
+    window->setFramerateLimit(60);
+    while (window->isOpen()) {
         cursor.setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 130));
-        window.clear();
-        window.draw(background.getSprite());
-        window.draw(play.getSprite());
-        window.draw(back.getSprite());
-        window.draw(quit.getSprite());
-        window.draw(sound.getSprite());
-        window.draw(rarrow.getSprite());
-        window.draw(larrow.getSprite());
-        window.draw(controler.getSprite());
-        window.draw(cursor.getSprite());
-        window.display();
-        while (window.pollEvent(event)) {
+        window->clear();
+        WindowLib().drawSprites(window, {background, play, back, quit, sound, rarrow, larrow, controler, cursor});
+        window->display();
+        while (window->pollEvent(event)) {
             if (quit.isClicked(event))
                 return QUIT;
             else if (play.isClicked(event))

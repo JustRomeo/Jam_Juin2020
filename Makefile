@@ -22,6 +22,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(COMP)ImageSFML.cpp			\
 		$(COMP)MusicSFML.cpp			\
 		$(COMP)TextSFML.cpp				\
+		$(COMP)WindowLib.cpp			\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
