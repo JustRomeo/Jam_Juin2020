@@ -54,7 +54,7 @@ int GameLoop::menu()
     vector<string> map;
     size_t value;
 
-    window->setMouseCursorVisible(false);
+    window->setMouseCursorVisible(true);
     gameMusic->playMainMusic();
     try {
         while (res == -1) {
@@ -221,7 +221,7 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left &&  perso->isActionPossible())
             return (shootEvent());
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right && perso->isActionPossible()) {
-            printf("lets hook something\n");
+            perso->hook(window);
             return (3);
         }
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
@@ -276,6 +276,7 @@ int GameLoop::gameLoop()
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
+    window->setMouseCursorVisible(true);
     while (window->isOpen()) {
         for (size_t i = 0; i < Itemslist.size(); i ++)
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
@@ -310,7 +311,6 @@ int GameLoop::gameLoop()
                 case 2: return REPLAY;
                 case 3: continue; break;
             }
-            window->setMouseCursorVisible(false);
         } catch (Exception &e) {
             throw Exception("Error in map event: " + *e.what());
         } if (!_sound)
