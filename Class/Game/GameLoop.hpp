@@ -43,6 +43,7 @@ class GameLoop {
         int shootEvent(void);
         void reset_map(void);
         void setPlayerNumber(int);
+        int SecondshootEvent(void);
         int switchWeaponEvent(void);
         int movementEvent(sf::Event);
         int SecondmovementEvent(sf::Event);

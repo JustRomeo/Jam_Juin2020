@@ -224,6 +224,18 @@ int GameLoop::shootEvent() {
     return (3);
 }
 
+int GameLoop::SecondshootEvent() {
+    if (perso2->getWeapon() == 4)
+        perso2->channeling();
+    else
+        perso2->shoot();
+    if (perso2->getSprite().getScale().x > 0 && perso2->getMunBattery() == 1)
+        projectile.push_back(projFactory.createComponent(perso2->getWeapon(), 1, perso2->getSprite().getPosition(), 1));
+    else if (perso2->getSprite().getScale().x < 0 && perso2->getMunBattery() == 1)
+        projectile.push_back(projFactory.createComponent(perso2->getWeapon(), -1, perso2->getSprite().getPosition(), 1));
+    return (3);
+}
+
 int GameLoop::switchWeaponEvent() {
     perso->incWeapon();
     if (!_sound)
@@ -241,8 +253,10 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        } if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left &&  perso->isActionPossible())
+        } if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left && perso->isActionPossible())
             return (shootEvent());
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::U) && perso2->isActionPossible())
+            return SecondshootEvent();
         if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right && perso->isActionPossible()) {
             perso->hook(window);
             return (3);
