@@ -41,16 +41,14 @@ GameLoop::GameLoop() {
 }
 GameLoop::~GameLoop() {}
 
-void GameLoop::EnnemiGeneration(vector<string> map)
-{
+void GameLoop::EnnemiGeneration(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E')
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
 }
 
-int GameLoop::menu()
-{
+int GameLoop::menu() {
     int res = -1;
     size_t value;
     vector<string> map;
@@ -128,6 +126,7 @@ void GameLoop::MapGeneration(vector<string> _map) {
                 case 'B': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE))); break;
                 case 'E': break;
                 case 'P': break;
+                case 'S': break;
                 case 'U': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE))); break;
                 case 'Y': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW))); break;
                 default:  throw (Exception("Unknown Symbol in File: Abort")); break;
@@ -166,8 +165,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     }
 }
 
-int GameLoop::movementEvent(sf::Event event)
-{
+int GameLoop::movementEvent(sf::Event event) {
     if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
             perso->sprint();
@@ -263,8 +261,7 @@ void GameLoop::display() {
     window->display();
 }
 
-int GameLoop::gameLoop()
-{
+int GameLoop::gameLoop() {
     size_t loop = 0;
 
     if (!Cinematique().Intro(window, perso))

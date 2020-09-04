@@ -8,12 +8,12 @@
 #include "Character.hpp"
 
 Character::Character() {
-    jump_sound = new MusicSFML();
-    coli_sound = new MusicSFML();
-    shot_sound1 = new MusicSFML();
-    shot_sound2 = new MusicSFML();
-    shot_sound3 = new MusicSFML();
-    shot_sound4 = new MusicSFML();
+    jump_sound = make_unique<MusicSFML>();
+    coli_sound = make_unique<MusicSFML>();
+    shot_sound1 = make_unique<MusicSFML>();
+    shot_sound2 = make_unique<MusicSFML>();
+    shot_sound3 = make_unique<MusicSFML>();
+    shot_sound4 = make_unique<MusicSFML>();
 
     try {
         jump_sound->load("resources/Sounds/sounds/Jump.ogg");
@@ -63,7 +63,7 @@ Character::Character() {
     switch_clock.restartClock();
     sprint_clock.restartClock();
 
-    hud = std::make_shared<HUD>();
+    hud = make_shared<HUD>();
     createAnimRec();
 }
 

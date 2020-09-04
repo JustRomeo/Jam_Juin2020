@@ -71,6 +71,7 @@ class Character {
         void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
+
         int _lifes;
         int invulnerability;
 
@@ -107,12 +108,12 @@ class Character {
         sf::Sprite sprite;
         sf::Vector2f oldPose;
 
-        MusicSFML *jump_sound;
-        MusicSFML *coli_sound;
-        MusicSFML *shot_sound1;
-        MusicSFML *shot_sound2;
-        MusicSFML *shot_sound3;
-        MusicSFML *shot_sound4;
+        unique_ptr<MusicSFML> jump_sound;
+        unique_ptr<MusicSFML> coli_sound;
+        unique_ptr<MusicSFML> shot_sound1;
+        unique_ptr<MusicSFML> shot_sound2;
+        unique_ptr<MusicSFML> shot_sound3;
+        unique_ptr<MusicSFML> shot_sound4;
 
         shared_ptr<HUD> hud;
         vector<float> channelingTime;
