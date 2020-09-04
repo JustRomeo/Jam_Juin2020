@@ -18,6 +18,7 @@ class MainMenu {
         ~MainMenu();
 
         bool Menu(shared_ptr<sf::RenderWindow> window);
+
     private:
         sf::Music *_music;
         std::shared_ptr<Button> play;

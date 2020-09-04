@@ -30,12 +30,13 @@
 using namespace std;
 class GameLoop {
     public:
+        enum Controler {RemoteXBOX, RemotePS, KeyBoard};
         GameLoop();
         ~GameLoop();
 
-        int menu();
-        int gameLoop();
+        int menu(void);
         void clear(void);
+        int gameLoop(void);
         void display(void);
         int endScreen(void);
         int checkOpen(void);
@@ -56,23 +57,26 @@ class GameLoop {
 
         shared_ptr<sf::RenderWindow> window;
 
-    protected:
-
     private:
         bool _sound;
+        size_t _players;
+        Controler _remote;
+
         shared_ptr<Door> door;
         shared_ptr<sf::View> view;
+        shared_ptr<ImageSFML> font;
         shared_ptr<Character> perso;
         shared_ptr<Sprite> background;
         ProjectileFactory projFactory;
-        std::shared_ptr<ImageSFML> font;
         shared_ptr<EchapMenu> echapMenu;
+        shared_ptr<GameMusic> gameMusic;
         vector<shared_ptr<Block>> mapSFML;
         vector<shared_ptr<MunPlus>> PlusList;
-        std::shared_ptr<GameMusic> gameMusic;
         vector<shared_ptr<Ennemi>> Ennemilist;
         vector<shared_ptr<Lootable>> Itemslist;
-        vector<std::shared_ptr<IProjectile>> projectile;
+        vector<shared_ptr<IProjectile>> projectile;
+
+    protected:
 };
 
 #endif
