@@ -25,6 +25,7 @@ class MainMenu {
         std::shared_ptr<Button> bugs;
         std::shared_ptr<Button> ctrl;
         std::shared_ptr<Button> multi;
+        std::shared_ptr<Button> local;
         std::shared_ptr<ImageSFML> cursor;
         std::shared_ptr<ImageSFML> background;
 };
