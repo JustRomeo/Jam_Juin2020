@@ -6,7 +6,7 @@ ImageSFML::ImageSFML(string path) {
     _width = 0;
     _heigh = 0;
     _pos = sf::Vector2f(0, 0);
-    _texture = new sf::Texture;
+    _texture = make_shared<sf::Texture>();
 
     if (!_texture->loadFromFile(path))
         cout << "Loading Ressource Failed" << endl;
@@ -15,9 +15,7 @@ ImageSFML::ImageSFML(string path) {
     _heigh = _sprite.getTexture()->getSize().y;
 }
 ImageSFML::ImageSFML() {}
-ImageSFML::~ImageSFML() {
-    // delete _texture;
-}
+ImageSFML::~ImageSFML() {}
 ImageSFML &ImageSFML::operator=(const ImageSFML &to_cmp) {
     _width = to_cmp._width;
     _heigh = to_cmp._heigh;
@@ -52,6 +50,6 @@ void ImageSFML::setPosition(sf::Vector2f pos) {
 }
 
 sf::Sprite ImageSFML::getSprite(void) const {return (_sprite);}
-sf::Texture *ImageSFML::getTexture(void) {return this->_texture;}
+shared_ptr<sf::Texture> ImageSFML::getTexture(void) {return this->_texture;}
 void ImageSFML::setRotate(float angle) {_sprite.setRotation(angle);}
 void ImageSFML::setScale(sf::Vector2f size) {_sprite.setScale(size);}

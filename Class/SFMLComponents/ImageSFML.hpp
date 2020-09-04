@@ -1,6 +1,7 @@
 #ifndef __IMAGE__
 #define __IMAGE__
 
+#include <memory>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -20,15 +21,15 @@ class ImageSFML {
         bool isClicked(sf::Event);
         void setScale(sf::Vector2f);
         sf::Sprite getSprite() const;
-        sf::Texture *getTexture(void);
         void setPosition(sf::Vector2f);
+        shared_ptr<sf::Texture> getTexture(void);
 
     private:
         size_t _width;
         size_t _heigh;
         sf::Vector2f _pos;
         sf::Sprite _sprite;
-        sf::Texture *_texture;
+        shared_ptr<sf::Texture> _texture;
 };
 
 #endif

@@ -14,7 +14,7 @@ class WindowLib {
         WindowLib();
         ~WindowLib();
 
-        void drawSprites(shared_ptr<sf::RenderWindow>, vector<ImageSFML>);
+        void drawSprites(shared_ptr<sf::RenderWindow>, vector<shared_ptr<ImageSFML>>);
 
     private:
     protected:
