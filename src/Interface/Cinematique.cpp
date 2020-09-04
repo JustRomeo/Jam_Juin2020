@@ -32,7 +32,7 @@ int Cinematique::Intro(shared_ptr<sf::RenderWindow> window, shared_ptr<Character
     view.setCenter(960, 540);
     window->setView(view);
     clock.restart();
-    if (!font.loadFromFile("./resources/character/police.ttf"))
+    if (!font.loadFromFile("resources/character/arial.ttf"))
         return (false);
     fade.setFillColor(sf::Color::Black);
     sf::Text text("Aventurier!\n", font);

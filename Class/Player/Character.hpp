@@ -25,6 +25,7 @@ class Character {
         ~Character();
 
         void jump();
+        void hook(shared_ptr<sf::RenderWindow> window);
         void fall();
         bool isCac();
         void shoot();
@@ -38,6 +39,7 @@ class Character {
         bool isFalling();
         int channelBat();
         void cacAttack();
+        void hookShoot(vector<shared_ptr<Block>> mapSFML);
         void stopSprint();
         bool isShooting();
         void channeling();
@@ -66,6 +68,7 @@ class Character {
         void unblockCharacter(vector<shared_ptr<Block>> mapSFML);
         void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
         void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
+        void hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
         void display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
         void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
@@ -89,6 +92,7 @@ class Character {
         int jumpCacRectPos;
 
         bool is_cac;
+        bool is_hooked;
         bool is_moving;
         bool is_jumping;
         bool is_falling;
@@ -104,8 +108,11 @@ class Character {
         Time switch_clock;
         Time sprint_clock;
 
-        sf::Vector2f move;
         sf::Sprite sprite;
+        sf::Vector2f move;
+        sf::Vector2f hookBeg;
+        sf::Vector2f hookEnd;
+        sf::Vector2f hookVec;
         sf::Vector2f oldPose;
 
         unique_ptr<MusicSFML> jump_sound;

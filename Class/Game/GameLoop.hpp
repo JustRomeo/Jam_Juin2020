@@ -13,6 +13,7 @@
 
 #include "Door.hpp"
 #include "Block.hpp"
+#include "Echap.hpp"
 #include "Window.hpp"
 #include "Ennemis.hpp"
 #include "MunPlus.hpp"
@@ -71,6 +72,7 @@ class GameLoop {
         shared_ptr<Character> perso2;
         shared_ptr<Sprite> background;
         ProjectileFactory projFactory;
+        shared_ptr<EchapMenu> echapMenu;
         shared_ptr<GameMusic> gameMusic;
         vector<shared_ptr<Block>> mapSFML;
         vector<shared_ptr<MunPlus>> PlusList;

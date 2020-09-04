@@ -56,6 +56,7 @@ Character::Character() {
     is_switching = false;
     is_channeling = false;
     is_sprinting = false;
+    is_hooked = false;
 
     cac_clock.restartClock();
     move_clock.restartClock();
@@ -310,6 +311,41 @@ void Character::switchAnimation()
     }
 }
 
+void Character::hookShoot(vector<shared_ptr<Block>> mapSFML)
+{
+    for (int i = 0; i < mapSFML.size(); i++) {
+        if (mapSFML[i]->getSprite().getGlobalBounds().contains(hookEnd)) {
+            is_hooked = true;
+            is_hooking = false;
+            return;
+        }
+    }
+    if (move_clock.getTimeDiff(0.1) == 1) {
+        hookEnd.x += hookVec.x;
+        hookEnd.y += hookVec.y;
+    }
+}
+
+void Character::hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML)
+{
+    sf::Vertex line[2];
+
+    hookBeg.y = sprite.getPosition().y + 40;
+    if (sprite.getScale().x > 0)
+        hookBeg.x = sprite.getPosition().x + 30;
+    else
+        hookBeg.x = sprite.getPosition().x - 30;
+    line[0].position = hookBeg;
+    line[0].color  = sf::Color::Red;
+    line[1].position = hookEnd;
+    line[1].color = sf::Color::Red;
+
+    window->draw(line, 2, sf::Lines);
+    if (is_hooking == true && is_hooked == false) {
+        hookShoot(mapSFML);
+    }
+}
+
 void Character::display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML) {
     if (is_shooting)
         shootAnimation();
@@ -323,11 +359,58 @@ void Character::display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<B
         switchAnimation();
     if (is_cac)
         cacAnimation();
+    if (is_hooking || is_hooked)
+        hookAnimation(window, mapSFML);
     hud->display(window, weapon_type, _lifes);
     hud->displaySprintBar(window, sprintBar);
     if (sprint_clock.getTimeDiff(0.1))
         sprintBar < 100 ? sprintBar++: sprintBar+=0;
     window->draw(sprite);
+}
+
+void Character::hook(shared_ptr<sf::RenderWindow> window)
+{
+    sf::Vector2i cursor;
+
+    if (!is_jumping && !is_falling && !is_shooting && !is_channeling) {
+        is_hooking = true;
+        hookBeg.y = sprite.getPosition().y + 40;
+        if (sprite.getScale().x > 0)
+            hookBeg.x = sprite.getPosition().x + 30;
+        else
+            hookBeg.x = sprite.getPosition().x - 30;
+
+        sf::Vector2i pixelPos = sf::Mouse().getPosition(*window);
+        sf::Vector2f cursor = window->mapPixelToCoords(pixelPos);
+
+        hookVec.x = cursor.x - hookBeg.x;
+        hookVec.y = cursor.y - hookBeg.y;
+        if (hookVec.x > 0 && hookVec.y > 0) {
+            while (hookVec.x > 5.0 && hookVec.y > 5.0) {
+                hookVec.x = hookVec.x / 2.0;
+                hookVec.y = hookVec.y / 2.0;
+            }
+        }
+        if (hookVec.x < 0 && hookVec.y < 0) {
+            while (hookVec.x < -5.0 && hookVec.y < -5.0) {
+                hookVec.x = hookVec.x / 2.0;
+                hookVec.y = hookVec.y / 2.0;
+            }
+        }
+        if (hookVec.x < 0 && hookVec.y > 0) {
+            while (hookVec.x < -5.0 && hookVec.y > 5.0) {
+                hookVec.x = hookVec.x / 2.0;
+                hookVec.y = hookVec.y / 2.0;
+            }
+        }
+        if (hookVec.x > 0 && hookVec.y < 0) {
+            while (hookVec.x > 5.0 && hookVec.y < -5.0) {
+                hookVec.x = hookVec.x / 2.0;
+                hookVec.y = hookVec.y / 2.0;
+            }
+        }
+        hookEnd = hookBeg;
+    }
 }
 
 void Character::jump() {
