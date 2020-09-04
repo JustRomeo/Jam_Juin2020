@@ -2,9 +2,7 @@
 #include "System.hpp"
 #include "Exception.hpp"
 
-Mapper::Mapper() {
-    _map = {};
-}
+Mapper::Mapper() {_map = {};}
 Mapper::~Mapper() {}
 
 bool Mapper::isReady(void) {
@@ -40,6 +38,7 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
             else if (_map[i][j] == '2');
             else if (_map[i][j] == '3');
             else if (_map[i][j] == 'P');
+            else if (_map[i][j] == 'S');
             else if (_map[i][j] == 'Y')
                 mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW)));
             else if (_map[i][j] == 'U')
@@ -47,7 +46,7 @@ vector<shared_ptr<Block>> Mapper::generate(void) {
             else if (_map[i][j] == 'B')
                 mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE)));
             else
-                throw (Exception("Unknown Symbol in File: Abort"));
+                throw Exception("Unknown Symbol in File: Abort");
         }
     }
     return mapSFML;

@@ -41,8 +41,10 @@ class GameLoop {
         int checkOpen(void);
         int shootEvent(void);
         void reset_map(void);
+        void setPlayerNumber(int);
         int switchWeaponEvent(void);
         int movementEvent(sf::Event);
+        int SecondmovementEvent(sf::Event);
         void MapGeneration(vector<string>);
         void PlusGeneration(vector<string>);
         void DoorGeneration(vector<string>);
@@ -53,6 +55,7 @@ class GameLoop {
         shared_ptr<Character> getCharacter(void) const;
         void checkDestruction(vector<shared_ptr<Block>> &);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &);
+        shared_ptr<Character> getSecondCharacter(void) const;
 
         shared_ptr<sf::RenderWindow> window;
 
@@ -65,6 +68,7 @@ class GameLoop {
         shared_ptr<sf::View> view;
         shared_ptr<ImageSFML> font;
         shared_ptr<Character> perso;
+        shared_ptr<Character> perso2;
         shared_ptr<Sprite> background;
         ProjectileFactory projFactory;
         shared_ptr<GameMusic> gameMusic;

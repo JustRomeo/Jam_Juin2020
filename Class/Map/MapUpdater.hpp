@@ -16,11 +16,11 @@ class MapUpdater {
         MapUpdater();
         ~MapUpdater();
 
+        void setPlayerPosition(vector<string>, shared_ptr<Character>);
         void BlockUpdate(sf::RenderWindow &, vector<shared_ptr<Block>>);
-        void setPlayerPosition(vector<string>, std::shared_ptr<Character>);
-        void checkDestruction(vector<shared_ptr<Block>> &, vector<std::shared_ptr<IProjectile>> &);
+        void setSecondPlayerPosition(vector<string>, shared_ptr<Character>);
+        void checkDestruction(vector<shared_ptr<Block>> &, vector<shared_ptr<IProjectile>> &);
         void EnnemiUpdate(sf::RenderWindow &, vector<shared_ptr<Ennemi>> &, vector<shared_ptr<Block>>, shared_ptr<Character> &);
-
     private:
     protected:
 };

@@ -26,6 +26,13 @@ void MapUpdater::setPlayerPosition(vector<string> map, shared_ptr<Character> per
                 perso->setSpritePosition(j * 157, i * 157 + 60);
 }
 
+void MapUpdater::setSecondPlayerPosition(vector<string> map, shared_ptr<Character> perso2) {
+    for (size_t i = 0; i < map.size(); i ++)
+        for (size_t j = 0; j < map[i].length(); j ++)
+            if (map[i][j] == 'S')
+                perso2->setSpritePosition(j * 157, i * 157 + 60);
+}
+
 void MapUpdater::checkDestruction(vector<shared_ptr<Block>> &mapSFML, vector<shared_ptr<IProjectile>> &projectile) {
     int res = -1;
 

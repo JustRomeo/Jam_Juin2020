@@ -33,6 +33,7 @@ GameLoop::GameLoop() {
         view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = make_shared<Sprite>("resources/Images/Game/space.png");
         perso = make_shared<Character>();
+        perso2 = make_shared<Character>();
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
         window->setView(*view);
     } catch (bad_alloc &e) {
@@ -57,7 +58,7 @@ int GameLoop::menu() {
     gameMusic->playMainMusic();
     try {
         while (res == -1) {
-            if (!MainMenu().Menu(window))
+            if (!MainMenu().Menu(window, *this))
                 return QUIT;
             value = MapMenu().choice(*this);
             if (value != RETURN) {
@@ -67,6 +68,8 @@ int GameLoop::menu() {
                 PlusGeneration(map);
                 MapGeneration(map);
                 MapUpdater().setPlayerPosition(map, perso);
+                if (_players > 1)
+                    MapUpdater().setSecondPlayerPosition(map, perso2);
                 ItemsGeneration(map);
                 return (gameLoop());
             }
@@ -187,6 +190,28 @@ int GameLoop::movementEvent(sf::Event event) {
     return (0);
 }
 
+int GameLoop::SecondmovementEvent(sf::Event event) {
+    if (!perso2->isShooting() && !perso2->isChanneling() && !perso2->isSwitching()) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+            perso2->sprint();
+        else
+            perso2->stopSprint();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::O) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            perso2->jump();
+            return (3);
+        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+            perso2->moveLeft(window, mapSFML);
+            return (3);
+        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+            return (3);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+            perso2->moveRigth(window, mapSFML);
+            return (3);
+        }
+    }
+    return (0);
+}
+
 int GameLoop::shootEvent() {
     if (perso->getWeapon() == 4)
         perso->channeling();
@@ -208,6 +233,7 @@ int GameLoop::switchWeaponEvent() {
     return (3);
 }
 
+enum GameIssue {Quit = -1, resume = 0, replay = 1, back = 2};
 int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
     sf::Event event;
 
@@ -228,17 +254,19 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         }
     } if (movementEvent(event) == 3)
         return (3);
+    if (_players > 1 && SecondmovementEvent(event) == 3)
+        return (3);
     if (perso->isActionPossible()) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
         switch (EchapMenu().Menu(window, _sound)) {
-            case -1: return -1; // Quit
-            case 0:  return 0;  // resume
-            case 1:  return 1;  // replay
-            case 2:  return 2;  // back
-            default: throw (Exception("Error: Menu Failed: Abort"));  // Error
+            case -1: return Quit;
+            case 0:  return resume;
+            case 1:  return replay;
+            case 2:  return back;
+            default: throw (Exception("Error: Menu Failed: Abort"));
         }
         return 1;
     }
@@ -252,8 +280,12 @@ void GameLoop::display() {
         PlusList[i]->display(window);
     MapUpdater().BlockUpdate(*window, mapSFML);
     MapUpdater().EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
+    if (_players > 1)
+        MapUpdater().EnnemiUpdate(*window, Ennemilist, mapSFML, perso2);
     window->draw(door->getSprite());
     perso->display(window, mapSFML);
+    if (_players > 1)
+        perso2->display(window, mapSFML);
     for (size_t i = 0; i < projectile.size(); i ++)
         projectile[i]->display(window);
     for (size_t i = 0; i < Itemslist.size(); i ++)
@@ -282,6 +314,8 @@ int GameLoop::gameLoop() {
             }
         this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
+        if (_players > 1)
+            perso2->invulnerability = perso2->invulnerability > 0 ? perso2->invulnerability - 1 : perso2->invulnerability;
         MapUpdater().checkDestruction(mapSFML, projectile);
         checkDeathEnemy(Ennemilist);
         display();
@@ -315,6 +349,8 @@ int GameLoop::gameLoop() {
 }
 
 int GameLoop::checkOpen() {return window->isOpen();}
+void GameLoop::setPlayerNumber(int nbr) {_players = nbr;}
 void GameLoop::clear() {window->clear(sf::Color::White);}
 shared_ptr<Character> GameLoop::getCharacter(void) const {return perso;}
 shared_ptr<sf::RenderWindow> GameLoop::getWindow(void) {return this->window;}
+shared_ptr<Character> GameLoop::getSecondCharacter(void) const {return perso2;}

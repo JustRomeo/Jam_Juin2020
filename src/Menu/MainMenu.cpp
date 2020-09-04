@@ -39,7 +39,7 @@ MainMenu::MainMenu() {
 }
 MainMenu::~MainMenu() {}
 
-bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
+bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
     sf::Event event;
     sf::Vector2i cursorPos;
 
@@ -61,7 +61,10 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
         while (window->pollEvent(event)) {
             if (play->isClicked(event))
                 return true;
-            else if (multi->isClicked(event))
+            else if (local->isClicked(event)) {
+                game.setPlayerNumber(2);
+                return true;
+            } else if (multi->isClicked(event))
                 Multi_Screen(window).display();
             else if (bugs->isClicked(event))
                 BugsScreen().form_panel(window);

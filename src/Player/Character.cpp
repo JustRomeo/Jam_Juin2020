@@ -117,7 +117,7 @@ void Character::moveChar(shared_ptr<sf::RenderWindow> window, int orient) {
     if (is_jumping || is_falling)
         is_sprinting ? move = {10.f * orient, 0.f} : move = {5.f * orient, 0.f};
     else
-        is_sprinting == true ? move = {20.f * orient, 0.f} : move;
+        is_sprinting ? move = {20.f * orient, 0.f} : move;
     view.move(move);
     sprite.move(move);
     window->setView(view);

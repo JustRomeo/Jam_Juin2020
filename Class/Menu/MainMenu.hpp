@@ -4,12 +4,13 @@
 #include <memory>
 
 #include "Button.hpp"
+#include "GameLoop.hpp"
 #include "TextSFML.hpp"
 #include "ImageSFML.hpp"
 #include "Exception.hpp"
 #include "Multiplayer.hpp"
-#include "EventHandler.hpp"
 #include "LibGraphics.hpp"
+#include "EventHandler.hpp"
 
 using namespace std;
 class MainMenu {
@@ -17,7 +18,7 @@ class MainMenu {
         MainMenu();
         ~MainMenu();
 
-        bool Menu(shared_ptr<sf::RenderWindow> window);
+        bool Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game);
 
     private:
         sf::Music *_music;
