@@ -61,7 +61,7 @@ void MapMenu::loadTexts(vector<string> maps) {
 
     go_back_button->setText("resources/character/arial.ttf", "back", 35, sf::Color::Black);
     for (size_t i = 0; i < maps.size(); i ++)
-        button[i]->setText("resources/character/arial.ttf", maps[i], 35, sf::Color::Black);
+        button[i]->setText("resources/character/arial.ttf", maps[i].replace(maps[i].find(".m"), 2, "M") , 35, sf::Color::Black);
 }
 
 void MapMenu::loadImages(vector<string> maps) {

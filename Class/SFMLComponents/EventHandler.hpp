@@ -12,8 +12,10 @@ class EventHandler {
         EventHandler() {}
         ~EventHandler() {}
 
-        bool isTabPressed(sf::Event event);
-        void inputEvent(sf::Event event, string &input);
+        bool isTabPressed(sf::Event);
+        void inputEvent(sf::Event, string &);
+        int EventType(shared_ptr<sf::RenderWindow>);
+
     private:
 };
 

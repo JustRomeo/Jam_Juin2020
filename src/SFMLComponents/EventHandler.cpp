@@ -25,3 +25,13 @@ bool EventHandler::isTabPressed(sf::Event event) {
             return true;
     return false;
 }
+
+int EventHandler::EventType(shared_ptr<sf::RenderWindow> window) {
+    sf::Event event;
+
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::KeyReleased)
+            return event.key.code;
+    }
+    return -1;
+}
