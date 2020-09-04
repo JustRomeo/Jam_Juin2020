@@ -17,14 +17,14 @@ Multi_Screen::~Multi_Screen() {}
 
 void Multi_Screen::display(void) {
     sf::Event event;
-    ImageSFML *cursor;
-    ImageSFML *houseSFML;
-    ImageSFML *inviteSFML;
+    shared_ptr<ImageSFML> cursor;
+    shared_ptr<ImageSFML> houseSFML;
+    shared_ptr<ImageSFML> inviteSFML;
 
     try {
-        cursor = new ImageSFML("./resources/Images/Game/cursor.png");
-        houseSFML = new ImageSFML("./resources/Images/Multiplayer/house.png");
-        inviteSFML = new ImageSFML("./resources/Images/Multiplayer/incoming.jpg");
+        cursor = make_shared<ImageSFML>("./resources/Images/Game/cursor.png");
+        houseSFML = make_shared<ImageSFML>("./resources/Images/Multiplayer/house.png");
+        inviteSFML = make_shared<ImageSFML>("./resources/Images/Multiplayer/incoming.jpg");
 
         houseSFML->setPosition(sf::Vector2f(0, 0));
         inviteSFML->setPosition(sf::Vector2f(900, 0));
@@ -51,7 +51,6 @@ void Multi_Screen::display(void) {
                     _window->close();
         } catch (Exception &e) {
             _window->close();
-            // throw Exception("Displaying disfunctionnement:\n\t -> " + *e.what() + "ABORT");
         }
     }
 }

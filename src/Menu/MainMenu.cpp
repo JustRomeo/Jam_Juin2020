@@ -67,7 +67,7 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window) {
                 BugsScreen().form_panel(window);
             else if (ctrl->isClicked(event))
                 ControlPanel().control_panel(window);
-            else if (quit->isClicked(event))
+            else if (quit->isClicked(event) || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || event.type == sf::Event::Closed)
                 return false;
         }
     }
