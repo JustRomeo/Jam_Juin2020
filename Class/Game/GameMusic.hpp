@@ -11,28 +11,31 @@
 #include "MusicSFML.hpp"
 #include "Exception.hpp"
 
+using namespace std;
 class GameMusic {
     public:
         GameMusic();
         ~GameMusic();
-        void switch_music(int weapon);
+
+        void endAllMusic(void);
+        void endEndMusic(void);
+        void startEndMusic(void);
+        void playMainMusic(void);
+        void stopMainMusic(void);
+        void startDeathMusic(void);
         void pause_music(int weapon);
-        void startDeathMusic();
-        void endAllMusic();
-        void startEndMusic();
-        void endEndMusic();
-        void playMainMusic();
-        void stopMainMusic();
+        void switch_music(int weapon);
+
+    private:
+        shared_ptr<sf::Music> music;
+        shared_ptr<MusicSFML> music_1;
+        shared_ptr<MusicSFML> music_2;
+        shared_ptr<MusicSFML> music_3;
+        shared_ptr<MusicSFML> end_music;
+        shared_ptr<MusicSFML> death_perso;
+        shared_ptr<MusicSFML> death_ennemi;
 
     protected:
-    private:
-        std::shared_ptr<sf::Music> music;
-        std::shared_ptr<MusicSFML> music_1;
-        std::shared_ptr<MusicSFML> music_2;
-        std::shared_ptr<MusicSFML> music_3;
-        std::shared_ptr<MusicSFML> death_ennemi;
-        std::shared_ptr<MusicSFML> death_perso;
-        std::shared_ptr<MusicSFML> end_music;
 };
 
-#endif /* !GAMEMUSIC_HPP_ */
+#endif

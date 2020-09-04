@@ -5,25 +5,28 @@
 #include "ImageSFML.hpp"
 #include "LibGraphics.hpp"
 
+using namespace std;
 class EchapMenu {
     public:
         EchapMenu(bool &sound_on);
         ~EchapMenu();
 
-        int Menu(std::shared_ptr<sf::RenderWindow> window);
-        void dispEchapMenu(std::shared_ptr<sf::RenderWindow> windows);
-        void createButton();
+        void createButton(void);
+        int Menu(shared_ptr<sf::RenderWindow>);
+        void dispEchapMenu(shared_ptr<sf::RenderWindow>);
+
     private:
-        std::shared_ptr<Button> play;
-        std::shared_ptr<Button> back;
-        std::shared_ptr<Button> quit;
-        std::shared_ptr<ImageSFML> cursor;
-        std::shared_ptr<ImageSFML> background;
-        std::shared_ptr<ImageSFML> sound;
+        bool soundOn;
+
+        shared_ptr<Button> play;
+        shared_ptr<Button> back;
+        shared_ptr<Button> quit;
+        shared_ptr<ImageSFML> sound;
+        shared_ptr<ImageSFML> cursor;
         shared_ptr<ImageSFML> larrow;
         shared_ptr<ImageSFML> rarrow;
         shared_ptr<ImageSFML> controler;
-        bool soundOn;
+        shared_ptr<ImageSFML> background;
 
 };
 

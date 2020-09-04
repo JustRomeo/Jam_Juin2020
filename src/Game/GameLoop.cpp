@@ -261,7 +261,7 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
-        switch (EchapMenu().Menu(window, _sound)) {
+        switch (echapMenu->Menu(window)) {
             case -1: return Quit;
             case 0:  return resume;
             case 1:  return replay;
