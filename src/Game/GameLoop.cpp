@@ -6,7 +6,6 @@
 */
 
 #include "Door.hpp"
-#include "Echap.hpp"
 #include "Death.hpp"
 #include "System.hpp"
 #include "MapMenu.hpp"
@@ -34,6 +33,7 @@ GameLoop::GameLoop() {
         perso = make_shared<Character>();
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
         window->setView(*view);
+        echapMenu = make_shared<EchapMenu>(_sound);
     } catch (bad_alloc &e) {
         throw Exception("can't initiate window and view\n");
     }
@@ -234,7 +234,7 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
-        switch (EchapMenu().Menu(*window, _sound)) {
+        switch (echapMenu->Menu(window)) {
             case -1: return -1; // Quit
             case 0:  return 0;  // resume
             case 1:  return 1;  // replay

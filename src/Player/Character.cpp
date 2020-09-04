@@ -56,6 +56,7 @@ Character::Character() {
     is_switching = false;
     is_channeling = false;
     is_sprinting = false;
+    is_hooked = false;
 
     cac_clock.restartClock();
     move_clock.restartClock();
