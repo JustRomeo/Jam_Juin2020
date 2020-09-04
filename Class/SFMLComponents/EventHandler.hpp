@@ -1,5 +1,5 @@
-#ifndef __EVENTHANDLER__
-#define __EVENTHANDLER__
+#ifndef __EventHandler__
+#define __EventHandler__
 
 #include <memory>
 #include <iostream>
@@ -17,6 +17,7 @@ class EventHandler {
         int EventType(shared_ptr<sf::RenderWindow>);
 
     private:
+    protected:
 };
 
 #endif

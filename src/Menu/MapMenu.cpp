@@ -7,13 +7,13 @@ MapMenu::~MapMenu() {}
 
 size_t MapMenu::choice(GameLoop game) {
     sf::Event event;
-    ImageSFML *cursor;
     vector<string> maps;
-    ImageSFML *background;
+    shared_ptr<ImageSFML> cursor;
+    shared_ptr<ImageSFML> background;
 
     try {
-        cursor = new ImageSFML("resources/Images/Game/cursor.png");
-        background = new ImageSFML("resources/Images/Game/wallpaper.jpg");
+        cursor = make_shared<ImageSFML>("resources/Images/Game/cursor.png");
+        background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
 
         Paths().fillPathList(maps, "maps/");
         maps = getOnlyMaps(maps);
@@ -47,8 +47,6 @@ size_t MapMenu::choice(GameLoop game) {
 
 vector<string> MapMenu::getOnlyMaps(vector<string> files) {
     vector<string> maps;
-    vector<TextSfml> texts;
-    vector<ImageSFML> images;
 
     for (size_t i = 0; i < files.size(); i ++)
         if (files[i].find(".map") != string::npos)
@@ -57,8 +55,6 @@ vector<string> MapMenu::getOnlyMaps(vector<string> files) {
 }
 
 void MapMenu::loadTexts(vector<string> maps) {
-    vector<shared_ptr<TextSfml>> texts;
-
     go_back_button->setText("resources/character/arial.ttf", "back", 35, sf::Color::Black);
     for (size_t i = 0; i < maps.size(); i ++)
         button[i]->setText("resources/character/arial.ttf", maps[i].replace(maps[i].find(".m"), 2, "M") , 35, sf::Color::Black);

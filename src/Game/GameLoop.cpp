@@ -52,8 +52,8 @@ void GameLoop::EnnemiGeneration(vector<string> map)
 int GameLoop::menu()
 {
     int res = -1;
-    vector<string> map;
     size_t value;
+    vector<string> map;
 
     window->setMouseCursorVisible(false);
     gameMusic->playMainMusic();
