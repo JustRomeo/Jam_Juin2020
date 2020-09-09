@@ -49,10 +49,20 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
 }
 
+void FillRectangle(shared_ptr<sf::RenderWindow> window, sf::RectangleShape rectangle, shared_ptr<ImageSFML> image, int filler) {
+    rectangle.setSize(sf::Vector2f(filler, 25));
+    window->clear(sf::Color::Black);
+    window->draw(image->getSprite());
+    window->draw(rectangle);
+    window->display();
+}
+
 int GameLoop::menu() {
     int res = -1;
     size_t value;
     vector<string> map;
+    shared_ptr<ImageSFML> loader;
+    sf::RectangleShape rect(sf::Vector2f(200, 25));
 
     window->setMouseCursorVisible(true);
     gameMusic->playMainMusic();
@@ -61,16 +71,29 @@ int GameLoop::menu() {
             if (!MainMenu().Menu(window, *this))
                 return QUIT;
             value = MapMenu().choice(*this);
+            rect.setPosition(sf::Vector2f(200, 900));
+            rect.setFillColor(sf::Color::Green);
+            loader = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
+            FillRectangle(window, rect, loader, 1700 / 9 * 1);
+
             if (value != RETURN) {
                 map = System().openfile("maps/.map" + to_string(value));
+                FillRectangle(window, rect, loader, 1700 / 9 * 2);
                 reset_map();
+                FillRectangle(window, rect, loader, 1700 / 9 * 3);
                 EnnemiGeneration(map);
+                FillRectangle(window, rect, loader, 1700 / 9 * 4);
                 PlusGeneration(map);
+                FillRectangle(window, rect, loader, 1700 / 9 * 5);
                 MapGeneration(map);
+                FillRectangle(window, rect, loader, 1700 / 9 * 6);
                 MapUpdater().setPlayerPosition(map, perso);
+                FillRectangle(window, rect, loader, 1700 / 9 * 7);
                 if (_players > 1)
                     MapUpdater().setSecondPlayerPosition(map, perso2);
+                FillRectangle(window, rect, loader, 1700 / 9 * 8);
                 ItemsGeneration(map);
+                FillRectangle(window, rect, loader, 1700 / 9 * 9);
                 return (gameLoop());
             }
         }

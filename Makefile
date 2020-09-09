@@ -76,6 +76,7 @@ SFML = 	-lsfml-system	\
 		-lsfml-audio	\
 
 
+
 CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
 			-I./Class/Display			\
