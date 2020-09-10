@@ -24,9 +24,11 @@
 #include "Exception.hpp"
 #include "GameMusic.hpp"
 #include "Projectile.hpp"
+#include "LoadingBar.hpp"
 #include "LibGraphics.hpp"
 #include "IProjectile.hpp"
 #include "ProjectileFactory.hpp"
+
 
 using namespace std;
 class GameLoop {
@@ -43,7 +45,6 @@ class GameLoop {
         int checkOpen(void);
         int shootEvent(void);
         void reset_map(void);
-        void FillRectangle(int);
         void setPlayerNumber(int);
         int SecondshootEvent(void);
         int switchWeaponEvent(void);
@@ -61,10 +62,8 @@ class GameLoop {
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &);
         shared_ptr<Character> getSecondCharacter(void) const;
 
-        shared_ptr<ImageSFML> loader;
-        shared_ptr<TextSfml> loading_txt;
+        shared_ptr<LoadingBar> Bar;
         shared_ptr<sf::RenderWindow> window;
-        shared_ptr<sf::RectangleShape> rect;
 
     private:
         bool _sound;

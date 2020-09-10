@@ -19,23 +19,26 @@
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
     try {
+        auto image = sf::Image{};
+
+        if (!image.loadFromFile("resources/Images/Icon/icon.png"))
+            throw Exception("Loading Ressource Failed");
+        perso = make_shared<Character>();
+        perso2 = make_shared<Character>();
+        gameMusic = make_shared<GameMusic>();
+        echapMenu = make_shared<EchapMenu>(_sound);
+        view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
+        background = make_shared<Sprite>("resources/Images/Game/space.png");
+        font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
+        window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
+        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+
         _players = 1;
         _sound = true;
         _remote = Controler::KeyBoard;
-        gameMusic = make_shared<GameMusic>();
-        window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
-        window->setFramerateLimit(60);
-        auto image = sf::Image{};
-        if (!image.loadFromFile("resources/Images/Icon/icon.png"))
-            throw Exception("Loading Ressource Failed");
-        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
-        view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
-        background = make_shared<Sprite>("resources/Images/Game/space.png");
-        perso = make_shared<Character>();
-        perso2 = make_shared<Character>();
-        font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
+
         window->setView(*view);
-        echapMenu = make_shared<EchapMenu>(_sound);
+        window->setFramerateLimit(60);
     } catch (bad_alloc &e) {
         throw Exception("can't initiate window and view\n");
     }
@@ -45,25 +48,14 @@ GameLoop::~GameLoop() {}
 void GameLoop::EnnemiGeneration(vector<string> map) {
     size_t row = 0;
 
-    loading_txt->setString("Generation   des   Ennemis");
-    FillRectangle(1500 / 9 * 3);
+    Bar->load(window, "Generation   des   Ennemis");
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E') {
-                loading_txt->setString("Generation   des   Ennemis(" + to_string(row) + ")");
-                FillRectangle(1500 / 9 * 3);
+                Bar->load(window, "Generation   des   Ennemis(" + to_string(row) + ")");
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
                 row += 1;
             }
-}
-
-void GameLoop::FillRectangle(int filler) {
-    rect->setSize(sf::Vector2f(filler, 25));
-    window->clear(sf::Color::Black);
-    window->draw(loader->getSprite());
-    window->draw(loading_txt->getData());
-    window->draw(*rect);
-    window->display();
 }
 
 int GameLoop::menu() {
@@ -77,35 +69,30 @@ int GameLoop::menu() {
         while (res == -1) {
             if (!MainMenu().Menu(window, *this))
                 return QUIT;
+            Bar = make_shared<LoadingBar>(1500, 25, 22);
             value = MapMenu().choice(*this);
-            loader = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
-            loading_txt = make_shared<TextSfml>("Chargement   de   ", "./resources/Buttons/text/Aileron-HeavyItalic.otf", sf::Color::White, 200, 850);
-            rect = make_shared<sf::RectangleShape>(sf::Vector2f(200, 25));
-            rect->setPosition(sf::Vector2f(200, 900));
-            rect->setFillColor(sf::Color::Green);
-            FillRectangle(1500 / 9 * 1);
+            Bar->load(window, "Je fais un test");
 
             if (value != RETURN) {
                 map = System().openfile("maps/.map" + to_string(value));
-                FillRectangle(1500 / 9 * 2);
+                Bar->load(window);
                 reset_map();
-                FillRectangle(1500 / 9 * 3);
+                Bar->load(window);
                 EnnemiGeneration(map);
-                FillRectangle(1500 / 9 * 4);
+                Bar->load(window);
                 PlusGeneration(map);
-                FillRectangle(1500 / 9 * 5);
+                Bar->load(window);
                 MapGeneration(map);
-                loading_txt->setString("Placement   du   joueur   sur   la   map");
-                FillRectangle(1500 / 9 * 6);
+                Bar->load(window);
                 MapUpdater().setPlayerPosition(map, perso);
-                FillRectangle(1500 / 9 * 7);
+                Bar->load(window);
                 if (_players > 1) {
-                    loading_txt->setString("Placement   du   second   joueur   sur   la   map");
+                    Bar->load(window, "Placement   du   second   joueur   sur   la   map");
                     MapUpdater().setSecondPlayerPosition(map, perso2);
                 }
-                FillRectangle(1500 / 9 * 8);
+                Bar->load(window);
                 ItemsGeneration(map);
-                FillRectangle(1500 / 9 * 9);
+                Bar->load(window);
                 return (gameLoop());
             }
         }
@@ -116,20 +103,15 @@ int GameLoop::menu() {
 }
 
 void GameLoop::reset_map(void) {
-    loading_txt->setString("Nettoyage   de   la   map");
-    FillRectangle(1500 / 9 * 2);
+    Bar->load(window, "Nettoyage   de   la   map");
     mapSFML.clear();
-    loading_txt->setString("Nettoyage   des   boosters");
-    FillRectangle(1500 / 9 * 2);
+    Bar->load(window, "Nettoyage   des   boosters");
     PlusList.clear();
-    loading_txt->setString("Nettoyage   des   items");
-    FillRectangle(1500 / 9 * 2);
+    Bar->load(window, "Nettoyage   des   items");
     Itemslist.clear();
-    loading_txt->setString("Nettoyage   des   ennemis");
-    FillRectangle(1500 / 9 * 2);
+    Bar->load(window, "Nettoyage   des   ennemis");
     Ennemilist.clear();
-    loading_txt->setString("Nettoyage   des   projectiles");
-    FillRectangle(1500 / 9 * 2);
+    Bar->load(window, "Nettoyage   des   projectiles");
     projectile.clear();
 }
 
@@ -137,15 +119,13 @@ void GameLoop::ItemsGeneration(vector<string> map) {
     size_t row = 0;
     vector<string> items = System().openfile("./maps/.item1");
 
-    loading_txt->setString("Generation   des   Items");
-    FillRectangle(1500 / 9 * 8);
+    Bar->load(window, "Generation   des   Items");
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == '+') {
                 string name = System().strtowordarray(items[row], "|")[0];
 
-                loading_txt->setString("Generation   des   Items(" + to_string(row) + ")");
-                FillRectangle(1500 / 9 * 8);
+                Bar->load(window, "Generation   des   Items(" + to_string(row) + ")", false);
                 Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157)));
                 row += 1;
             }
@@ -154,14 +134,12 @@ void GameLoop::ItemsGeneration(vector<string> map) {
 void GameLoop::PlusGeneration(vector<string> map) {
     size_t row = 0;
 
-    loading_txt->setString("Generation   des   Boosters(" + to_string(row) + ")");
-    FillRectangle(1500 / 9 * 4);
+    Bar->load(window, "Generation   des   Boosters(" + to_string(row) + ")");
     for (size_t i = 0; i < map.size(); i ++) {
         for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3') {
                 row ++;
-                loading_txt->setString("Generation   des   Boosters(" + to_string(row) + ")");
-                FillRectangle(1500 / 9 * 4);
+                Bar->load(window, "Generation   des   Boosters(" + to_string(row) + ")", false);
             }
             switch(map[i][j]) {
                 case '1': PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60)); break;
@@ -176,11 +154,9 @@ void GameLoop::PlusGeneration(vector<string> map) {
 void GameLoop::MapGeneration(vector<string> _map) {
     size_t row = 0;
 
-    loading_txt->setString("Generation   de   la   Map");
-    FillRectangle(1500 / 9 * 5);
+    Bar->load(window, "Generation   de   la   Map");
     for (size_t i = 0; i < _map.size(); i ++) {
-        loading_txt->setString("Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")");
-        FillRectangle(1500 / 9 * 5);
+        Bar->load(window, "Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")", false);
         for (size_t j = 0; j < _map[i].length(); j ++, row ++) {
             switch(_map[i][j]) {
                 case '+': break;

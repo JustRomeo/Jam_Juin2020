@@ -20,6 +20,7 @@ SRC =	$(SRCP)main.cpp					\
 		\
 		$(COMP)EventHandler.cpp			\
 		$(COMP)ImageSFML.cpp			\
+		$(COMP)LoadingBar.cpp			\
 		$(COMP)MusicSFML.cpp			\
 		$(COMP)TextSFML.cpp				\
 		$(COMP)WindowLib.cpp			\

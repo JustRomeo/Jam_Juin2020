@@ -49,6 +49,8 @@ void Multi_Screen::display(void) {
             while (_window->pollEvent(event))
                 if (event.type == sf::Event::Closed)
                     _window->close();
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    return;
         } catch (Exception &e) {
             _window->close();
         }
