@@ -31,7 +31,6 @@ MainMenu::MainMenu() {
         local->setText("resources/Buttons/text/Aileron-Black.otf", "Local", 75, sf::Color::Black);
         background = std::make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
         cursor = std::make_shared<ImageSFML>("resources/Images/Game/cursor.png");
-
         cursor->setScale(sf::Vector2f(2.4, 2.4));
     } catch(Exception &e) {
         throw Exception("Error in MainMenu initialisation: " + *e.what());
