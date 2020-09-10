@@ -46,12 +46,12 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
     size_t row = 0;
 
     loading_txt->setString("Generation   des   Ennemis");
-    FillRectangle(1700 / 9 * 3);
+    FillRectangle(1500 / 9 * 3);
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'E') {
                 loading_txt->setString("Generation   des   Ennemis(" + to_string(row) + ")");
-                FillRectangle(1700 / 9 * 3);
+                FillRectangle(1500 / 9 * 3);
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
                 row += 1;
             }
@@ -83,26 +83,29 @@ int GameLoop::menu() {
             rect = make_shared<sf::RectangleShape>(sf::Vector2f(200, 25));
             rect->setPosition(sf::Vector2f(200, 900));
             rect->setFillColor(sf::Color::Green);
-            FillRectangle(1700 / 9 * 1);
+            FillRectangle(1500 / 9 * 1);
 
             if (value != RETURN) {
                 map = System().openfile("maps/.map" + to_string(value));
-                FillRectangle(1700 / 9 * 2);
+                FillRectangle(1500 / 9 * 2);
                 reset_map();
-                FillRectangle(1700 / 9 * 3);
+                FillRectangle(1500 / 9 * 3);
                 EnnemiGeneration(map);
-                FillRectangle(1700 / 9 * 4);
+                FillRectangle(1500 / 9 * 4);
                 PlusGeneration(map);
-                FillRectangle(1700 / 9 * 5);
+                FillRectangle(1500 / 9 * 5);
                 MapGeneration(map);
-                FillRectangle(1700 / 9 * 6);
+                loading_txt->setString("Placement   du   joueur   sur   la   map");
+                FillRectangle(1500 / 9 * 6);
                 MapUpdater().setPlayerPosition(map, perso);
-                FillRectangle(1700 / 9 * 7);
-                if (_players > 1)
+                FillRectangle(1500 / 9 * 7);
+                if (_players > 1) {
+                    loading_txt->setString("Placement   du   second   joueur   sur   la   map");
                     MapUpdater().setSecondPlayerPosition(map, perso2);
-                FillRectangle(1700 / 9 * 8);
+                }
+                FillRectangle(1500 / 9 * 8);
                 ItemsGeneration(map);
-                FillRectangle(1700 / 9 * 9);
+                FillRectangle(1500 / 9 * 9);
                 return (gameLoop());
             }
         }
@@ -114,19 +117,19 @@ int GameLoop::menu() {
 
 void GameLoop::reset_map(void) {
     loading_txt->setString("Nettoyage   de   la   map");
-    FillRectangle(1700 / 9 * 2);
+    FillRectangle(1500 / 9 * 2);
     mapSFML.clear();
     loading_txt->setString("Nettoyage   des   boosters");
-    FillRectangle(1700 / 9 * 2);
+    FillRectangle(1500 / 9 * 2);
     PlusList.clear();
     loading_txt->setString("Nettoyage   des   items");
-    FillRectangle(1700 / 9 * 2);
+    FillRectangle(1500 / 9 * 2);
     Itemslist.clear();
     loading_txt->setString("Nettoyage   des   ennemis");
-    FillRectangle(1700 / 9 * 2);
+    FillRectangle(1500 / 9 * 2);
     Ennemilist.clear();
     loading_txt->setString("Nettoyage   des   projectiles");
-    FillRectangle(1700 / 9 * 2);
+    FillRectangle(1500 / 9 * 2);
     projectile.clear();
 }
 
@@ -135,14 +138,14 @@ void GameLoop::ItemsGeneration(vector<string> map) {
     vector<string> items = System().openfile("./maps/.item1");
 
     loading_txt->setString("Generation   des   Items");
-    FillRectangle(1700 / 9 * 8);
+    FillRectangle(1500 / 9 * 8);
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == '+') {
                 string name = System().strtowordarray(items[row], "|")[0];
 
                 loading_txt->setString("Generation   des   Items(" + to_string(row) + ")");
-                FillRectangle(1700 / 9 * 8);
+                FillRectangle(1500 / 9 * 8);
                 Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157)));
                 row += 1;
             }
@@ -152,13 +155,13 @@ void GameLoop::PlusGeneration(vector<string> map) {
     size_t row = 0;
 
     loading_txt->setString("Generation   des   Boosters(" + to_string(row) + ")");
-    FillRectangle(1700 / 9 * 4);
+    FillRectangle(1500 / 9 * 4);
     for (size_t i = 0; i < map.size(); i ++) {
         for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3') {
                 row ++;
                 loading_txt->setString("Generation   des   Boosters(" + to_string(row) + ")");
-                FillRectangle(1700 / 9 * 4);
+                FillRectangle(1500 / 9 * 4);
             }
             switch(map[i][j]) {
                 case '1': PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60)); break;
@@ -174,10 +177,10 @@ void GameLoop::MapGeneration(vector<string> _map) {
     size_t row = 0;
 
     loading_txt->setString("Generation   de   la   Map");
-    FillRectangle(1700 / 9 * 5);
+    FillRectangle(1500 / 9 * 5);
     for (size_t i = 0; i < _map.size(); i ++) {
         loading_txt->setString("Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")");
-        FillRectangle(1700 / 9 * 5);
+        FillRectangle(1500 / 9 * 5);
         for (size_t j = 0; j < _map[i].length(); j ++, row ++) {
             switch(_map[i][j]) {
                 case '+': break;
