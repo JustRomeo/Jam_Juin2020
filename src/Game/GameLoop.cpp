@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2020
-** Jam
-** File description:
-** GameLoop
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Gameloop
 */
 
 #include "Door.hpp"

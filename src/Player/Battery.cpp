@@ -1,7 +1,7 @@
 /*
-** EPITECH PROJECT, 2020
-** Jam
-** File description:
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
 ** Battery
 */
 
