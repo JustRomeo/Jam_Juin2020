@@ -21,9 +21,11 @@ class MapMenu {
         vector<string> getOnlyMaps(vector<string>);
         void loadTexts(vector<string>);
         void loadImages(vector<string>);
+
     private:
         vector<shared_ptr<Button>> button;
         shared_ptr<Button> go_back_button;
+
     protected:
 };
 

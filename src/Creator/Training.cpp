@@ -5,6 +5,7 @@
 ** Training
 */
 
+#include "Map.hpp"
 #include "Training.hpp"
 
 Training::Training() {
@@ -40,12 +41,14 @@ void Training::Menu(shared_ptr<sf::RenderWindow> window) {
 
         window->display();
         while (window->pollEvent(event)) {
-            if (create->isClicked(event))
-                return;
-            else if (load->isClicked(event))
+            if (create->isClicked(event)) {
+                MapCreator _creator(50, 50);
+                _creator.creator(window);
+            } else if (load->isClicked(event))
                 return;
             else if (quit->isClicked(event) || event.type == sf::Event::Closed)
                 return;
         }
     }
 }
+
