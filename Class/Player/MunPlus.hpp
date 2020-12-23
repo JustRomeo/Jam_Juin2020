@@ -15,11 +15,10 @@ class MunPlus {
     public:
         MunPlus(int type, int x, int y);
         ~MunPlus();
-        void display(std::shared_ptr<sf::RenderWindow> window);
+
+        int getType() const;
         sf::FloatRect getMunShape();
-        int getType() {
-            return (type);
-        }
+        void display(std::shared_ptr<sf::RenderWindow> window);
 
     protected:
     private:

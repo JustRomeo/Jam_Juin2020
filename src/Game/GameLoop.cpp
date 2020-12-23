@@ -202,8 +202,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     else
         swordPoint.x -= persoSprite.getTextureRect().width * persoSprite.getScale().x * -1;
     for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j ++) {
-        if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint)
-            && perso->isCac())
+        if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint) && perso->isCac())
             Ennemilist.erase(Ennemilist.begin() + j);
     }
 }

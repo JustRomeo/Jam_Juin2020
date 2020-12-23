@@ -23,15 +23,15 @@ class OrangeProjectile : virtual public Projectile {
 
     protected:
     private:
-        std::shared_ptr<sf::Texture> texture;
+        int orient;
+        int posRect;
         sf::Sprite sprite;
         sf::Vector2f move;
         IProjectile::Type type;
-        std::vector<sf::IntRect> shootRect;
         std::vector<float> shootTime;
+        std::vector<sf::IntRect> shootRect;
         std::vector<sf::Vector2f> shootMove;
-        int posRect;
-        int orient;
+        std::shared_ptr<sf::Texture> texture;
 };
 
-#endif /* !ORANGEPROJECTILE_HPP_ */
+#endif

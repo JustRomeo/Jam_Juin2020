@@ -25,7 +25,6 @@ class Character {
         ~Character();
 
         void jump();
-        void hook(shared_ptr<sf::RenderWindow> window);
         void fall();
         bool isCac();
         void shoot();
@@ -39,7 +38,6 @@ class Character {
         bool isFalling();
         int channelBat();
         void cacAttack();
-        void hookShoot(vector<shared_ptr<Block>> mapSFML);
         void stopSprint();
         bool isShooting();
         void channeling();
@@ -62,7 +60,9 @@ class Character {
         void setSpritePosition(int, int);
         void addValue(shared_ptr<Objet>);
         vector<shared_ptr<Objet>> getItems(void) const;
+        void hook(shared_ptr<sf::RenderWindow> window);
         int checkFall(vector<shared_ptr<Block>> mapSFML);
+        void hookShoot(vector<shared_ptr<Block>> mapSFML);
         int not_colision(vector<shared_ptr<Block>> mapSFML);
         int collisionFall(vector<shared_ptr<Block>> mapSFML);
         void unblockCharacter(vector<shared_ptr<Block>> mapSFML);

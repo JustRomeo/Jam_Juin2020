@@ -12,7 +12,7 @@ OrangeProjectile::OrangeProjectile(int _orient, sf::Vector2f pos, int desCap): P
     texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png") == false)
         throw(Exception("resources load failed"));
-    type = IProjectile::YELLOW;
+    type = IProjectile::Orange;
     posRect = 0;
     orient = _orient;
     sprite.setTexture(*texture);
@@ -85,14 +85,15 @@ int OrangeProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     return (-1);
 }
 
-int OrangeProjectile::checkKill(std::shared_ptr<Ennemi> ennemi)
-{
+int OrangeProjectile::checkKill(std::shared_ptr<Ennemi> ennemi) {
     sf::FloatRect bullet = sprite.getGlobalBounds();
     sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
 
-    if (bullet.intersects(g) == true) {
-        destructionCapacity--;
-        return (1);
+    if (this->type != ennemi->getType())
+        return -1;
+    if (bullet.intersects(g)) {
+        destructionCapacity --;
+        return 1;
     }
-    return (-1);
+    return -1;
 }

@@ -12,7 +12,7 @@ GreenProjectile::GreenProjectile(int _orient, sf::Vector2f pos, int desCap): Pro
      texture = std::make_shared<sf::Texture>();
     if (texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png") == false)
         throw(Exception("resources load failed"));
-    type = IProjectile::CHARGED;
+    type = IProjectile::Purple;
     posRect = 0;
     orient = _orient;
     sprite.setTexture(*texture);
@@ -100,9 +100,9 @@ int GreenProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     sf::Vector2f rangePosition;
     int j = 0;
 
-    for (int i = 0; i < mapSFML.size(); i++) {
+    for (int i = 0; i < mapSFML.size(); i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (bullet.intersects(g) == true) {
+        if (bullet.intersects(g)) {
             rangePosition.y = sprite.getPosition().y - 80;
             if (mapSFML[i]->getSprite().getPosition().x - sprite.getPosition().x > 0)
                 rangePosition.x = sprite.getPosition().x;
@@ -112,13 +112,11 @@ int GreenProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
             explosionRange.setRadius(120.f);
             while (j < mapSFML.size()) {
                 r = mapSFML[j]->getSprite().getGlobalBounds();
-                if (r.intersects(explosionRange.getGlobalBounds()) == true
-                    && mapSFML[j]->getType() != Block::Type::UNBREAKABLE) {
+                if (r.intersects(explosionRange.getGlobalBounds()) && mapSFML[j]->getType() != Block::Type::UNBREAKABLE) {
                     mapSFML.erase(mapSFML.begin() + j);
                     j = 0;
-                    //return (1);
                 }
-                j++;
+                j ++;
             }
             return (0);
         }
@@ -126,14 +124,15 @@ int GreenProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     return (-1);
 }
 
-int GreenProjectile::checkKill(std::shared_ptr<Ennemi> ennemi)
-{
+int GreenProjectile::checkKill(std::shared_ptr<Ennemi> ennemi) {
     sf::FloatRect bullet = sprite.getGlobalBounds();
     sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
 
-    if (bullet.intersects(g) == true) {
-        destructionCapacity--;
-        return (1);
+    if (this->type != ennemi->getType())
+        return -1;
+    if (bullet.intersects(g)) {
+        destructionCapacity --;
+        return 1;
     }
-    return (-1);
+    return -1;
 }

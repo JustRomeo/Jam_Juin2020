@@ -8,23 +8,24 @@
 #ifndef IPROJECTILE_HPP_
 #define IPROJECTILE_HPP_
 
-#include "LibGraphics.hpp"
-#include "Exception.hpp"
 #include "Block.hpp"
 #include "Ennemis.hpp"
+#include "Exception.hpp"
+#include "LibGraphics.hpp"
 
 class IProjectile {
     public:
-        enum Type {YELLOW, BLUE, PURPLE, CHARGED};
+        enum Type {Blue, Green, Orange, Purple};
+
         virtual ~IProjectile() = default;
         virtual void animation() = 0;
         virtual int getCurrentCapacity() = 0;
-        virtual void display(std::shared_ptr<sf::RenderWindow> window) = 0;
         virtual int checkKill(std::shared_ptr<Ennemi> ennemi) = 0;
+        virtual void display(std::shared_ptr<sf::RenderWindow> window) = 0;
         virtual int checkDestruction(vector<shared_ptr<Block>> &mapSFML) = 0;
 
     protected:
     private:
 };
 
-#endif /* !IPROJECTILE_HPP_ */
+#endif

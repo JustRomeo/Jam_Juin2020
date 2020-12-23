@@ -33,4 +33,4 @@ class Button {
         sf::RectangleShape button;
 };
 
-#endif /* !BUTTON_HPP_ */
+#endif

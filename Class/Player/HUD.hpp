@@ -12,24 +12,26 @@
 #include "Battery.hpp"
 #include <memory>
 
+using namespace std;
 class HUD {
     public:
         HUD();
         ~HUD();
-        void display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int life);
+
         int getMunBattery();
         int decBatteryMun();
+        void incWeaponType();
         void batteryChanneling();
         void incMun(int batteryNb);
-        void incWeaponType();
-        void displaySprintBar(std::shared_ptr<sf::RenderWindow> window, int sprintBar);
+        void displaySprintBar(shared_ptr<sf::RenderWindow> window, int sprintBar);
+        void display(shared_ptr<sf::RenderWindow> window, int weapon_type, int life);
 
     protected:
     private:
         int nbHeart;
         int weapon_type;
-        std::vector<std::shared_ptr<ImageSFML>> heart;
-        std::vector<std::shared_ptr<Battery>> battery;
+        vector<shared_ptr<ImageSFML>> heart;
+        vector<shared_ptr<Battery>> battery;
 };
 
-#endif /* !HUD_HPP_ */
+#endif

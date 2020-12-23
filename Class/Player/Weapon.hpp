@@ -19,12 +19,12 @@ class Weapon {
 
     protected:
     private:
+        int weapon_type;
+        WeaponType weaponType;
         MusicSFML *shot_sound1;
         MusicSFML *shot_sound2;
         MusicSFML *shot_sound3;
         MusicSFML *shot_sound4;
-        int weapon_type;
-        WeaponType weaponType;
 };
 
 #endif /* !WEAPON_HPP_ */

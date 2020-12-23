@@ -7,12 +7,11 @@
 
 #include "PurpleProjectile.hpp"
 
-PurpleProjectile::PurpleProjectile(int _orient, sf::Vector2f pos, int desCap): Projectile(desCap)
-{
+PurpleProjectile::PurpleProjectile(int _orient, sf::Vector2f pos, int desCap): Projectile(desCap) {
     texture = std::make_shared<sf::Texture>();
-    if (texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png") == false)
+    if (!texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png"))
         throw(Exception("resources load failed"));
-    type = IProjectile::PURPLE;
+    type = IProjectile::Purple;
     move_clock.restart();
     anim_clock.restart();
     posRect = 0;
@@ -34,8 +33,7 @@ PurpleProjectile::PurpleProjectile(int _orient, sf::Vector2f pos, int desCap): P
         pos.y -= 6;
         sprite.setScale(sf::Vector2f(1.5, 1.5));
         shootMove.push_back(sf::Vector2f(30.f, 0.f));
-    }
-    else {
+    } else {
         pos.x += 20;
         pos.y -= 6;
         sprite.setScale(sf::Vector2f(-1.5, 1.5));
@@ -45,61 +43,56 @@ PurpleProjectile::PurpleProjectile(int _orient, sf::Vector2f pos, int desCap): P
     sprite.setPosition(pos);
 }
 
-PurpleProjectile::~PurpleProjectile()
-{
-}
+PurpleProjectile::~PurpleProjectile() {}
 
-void PurpleProjectile::animation()
-{
+void PurpleProjectile::animation() {
     sf::Vector2f pos = sprite.getPosition();
 
     if (getTimeAnim(shootTime[posRect]) == 1) {
         if (posRect < shootRect.size() - 1) {
-            posRect++;
+            posRect ++;
             sprite.setTextureRect(shootRect[posRect]);
         }
     }
 }
 
-void PurpleProjectile::movement()
-{
+void PurpleProjectile::movement() {
     if (getTimeMov(0.05) == 1)
         sprite.move(shootMove[posRect]);
 }
 
-void PurpleProjectile::display(std::shared_ptr<sf::RenderWindow> window)
-{
+void PurpleProjectile::display(std::shared_ptr<sf::RenderWindow> window) {
     animation();
     movement();
     window->draw(sprite);
 }
 
-int PurpleProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
-{
+int PurpleProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML) {
     sf::FloatRect bullet = sprite.getGlobalBounds();
     sf::FloatRect g = mapSFML[0]->getSprite().getGlobalBounds();
 
-    for (int i = 0; i < mapSFML.size(); i++) {
+    for (size_t i = 0; i < mapSFML.size(); i++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
-        if (bullet.intersects(g) == true) {
+        if (bullet.intersects(g)) {
             if (mapSFML[i]->getType() == Block::Type::PURPLE) {
                 mapSFML.erase(mapSFML.begin() + i);
-                return (0);
+                return 0;
             }
-            return (0);
+            return 0;
         }
     }
     return (-1);
 }
 
-int PurpleProjectile::checkKill(std::shared_ptr<Ennemi> ennemi)
-{
+int PurpleProjectile::checkKill(std::shared_ptr<Ennemi> ennemi) {
     sf::FloatRect bullet = sprite.getGlobalBounds();
     sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
 
-    if (bullet.intersects(g) == true) {
-        destructionCapacity--;
-        return (1);
+    if (this->type != ennemi->getType())
+        return -1;
+    if (bullet.intersects(g)) {
+        destructionCapacity --;
+        return 1;
     }
-    return (-1);
+    return -1;
 }

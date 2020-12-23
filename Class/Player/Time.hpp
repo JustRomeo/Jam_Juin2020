@@ -15,6 +15,7 @@ class Time {
     public:
         Time();
         ~Time();
+
         int getTimeDiff(float timeDiff);
         void restartClock();
 
@@ -23,5 +24,5 @@ class Time {
         sf::Clock clock;
 };
 
-#endif /* !TIME_HPP_ */
+#endif
 

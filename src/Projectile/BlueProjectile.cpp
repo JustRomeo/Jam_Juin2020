@@ -10,9 +10,9 @@
 BlueProjectile::BlueProjectile(int _orient, sf::Vector2f pos, int desCap): Projectile(desCap)
 {
     texture = std::make_shared<sf::Texture>();
-    if (texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png") == false)
+    if (!texture->loadFromFile("./resources/Images/Game/sonor_shockwaves.png"))
         throw(Exception("resources load failed"));
-    type = IProjectile::BLUE;
+    type = IProjectile::Blue;
     move_clock.restart();
     anim_clock.restart();
     posRect = 0;
@@ -35,8 +35,7 @@ BlueProjectile::BlueProjectile(int _orient, sf::Vector2f pos, int desCap): Proje
         pos.y -= 12;
         sprite.setScale(sf::Vector2f(1.5, 1.5));
         shootMove.push_back(sf::Vector2f(30.f, 0.f));
-    }
-    else {
+    } else {
         pos.x -= 20;
         pos.y -= 10;
         sprite.setScale(sf::Vector2f(-1.5, 1.5));
@@ -93,14 +92,15 @@ int BlueProjectile::checkDestruction(vector<shared_ptr<Block>> &mapSFML)
     return (-1);
 }
 
-int BlueProjectile::checkKill(std::shared_ptr<Ennemi> ennemi)
-{
+int BlueProjectile::checkKill(std::shared_ptr<Ennemi> ennemi) {
     sf::FloatRect bullet = sprite.getGlobalBounds();
     sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
 
-    if (bullet.intersects(g) == true) {
-        destructionCapacity--;
-        return (1);
+    if (this->type != ennemi->getType())
+        return -1;
+    if (bullet.intersects(g)) {
+        destructionCapacity --;
+        return 1;
     }
-    return (-1);
+    return -1;
 }

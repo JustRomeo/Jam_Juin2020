@@ -1,6 +1,20 @@
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "Ennemis.hpp"
 
+static int _number = 0;
 Ennemi::Ennemi(int X, int Y) {
+    srand(time(NULL));
+    int rdom_type = rand() % 4;
+    switch (rdom_type) {
+        case 0: _type = Type::Blue; break;
+        case 1: _type = Type::Green; break;
+        case 2: _type = Type::Orange; break;
+        case 3: _type = Type::Purple; break;
+        default: throw Exception("Unkown number for create ennemi type:" + to_string(rdom_type));
+    }
+
     left = true;
     is_falling = false;
     move_clock.restart();
@@ -8,7 +22,13 @@ Ennemi::Ennemi(int X, int Y) {
     _texture = new sf::Texture;
     gravity = sf::Vector2f(0, 0);
     try {
-        this->setTexture("resources/Images/Game/robot.png");
+        switch (_type) {
+            case 0: this->setTexture("resources/Images/Game/robot_blue.png"); break;
+            case 1: this->setTexture("resources/Images/Game/robot_green.png"); break;
+            case 2: this->setTexture("resources/Images/Game/robot_orange.png"); break;
+            case 3: this->setTexture("resources/Images/Game/robot_purple.png"); break;
+            default: throw Exception("Unkown number for create ennemi type:" + to_string(rdom_type));
+        }
     } catch(Exception &e) {
         cout << e.what() << endl;
     }
@@ -38,15 +58,14 @@ bool Ennemi::isFalllingStop(std::vector<std::shared_ptr<Block>> mapSFML) {
     if (_sprite.getScale().x > 0) {
         charact_mx.x += (_sprite.getTextureRect().width * 2) - 15;
         charact_xm.x += 15;
-    }
-    else {
+    } else {
         charact_mx.x -= (_sprite.getTextureRect().width * 2) - 15;
         charact_xm.x -= 15;
     }
     for (size_t i = 0; i < mapSFML.size() - 1; i ++) {
         ColisionArea = mapSFML[i]->getSprite().getGlobalBounds();
-        if (entite.intersects(ColisionArea) == true && _sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y ||
-            (entite.contains(charact_mx) == true  || entite.contains(charact_xm) == true)) {
+        if (entite.intersects(ColisionArea) && _sprite.getPosition().y < mapSFML[i]->getSprite().getPosition().y ||
+            (entite.contains(charact_mx)  || entite.contains(charact_xm))) {
             _sprite.setTextureRect(sf::IntRect(315, 20, 44, 58));
             y = mapSFML[i]->getSprite().getPosition().y - (_sprite.getTextureRect().height * 2);
             _sprite.setPosition(_sprite.getPosition().x, y);
@@ -63,12 +82,11 @@ void Ennemi::move(vector<shared_ptr<Block>> mapSFML)
         this->left = false;
     else if (this->isColisionned(mapSFML) && !this->left)
         this->left = true;
-    if (this->checkFall(mapSFML) || is_falling == true)  {
+    if (this->checkFall(mapSFML) || is_falling)  {
         if (isFalllingStop(mapSFML)) {
             is_falling = false;
             gravity.y = 0;
-        }
-        else if (getTimeDiff(0.07) == 1)
+        } else if (getTimeDiff(0.07) == 1)
             this->movePosition(left ? -2 : 2, gravity.y += 2);
     } else if (left)
         goLeft();
@@ -89,8 +107,7 @@ bool Ennemi::checkFall(std::vector<std::shared_ptr<Block>> mapSFML) {
         entite.x += (_sprite.getTextureRect().width * 2) / 2;
         charact_mx.x += (_sprite.getTextureRect().width * 2);
         //charact_xm.x += 15;
-    }
-    else {
+    } else {
         entite.x -= (_sprite.getTextureRect().width * 2) / 2;
         charact_mx.x -= (_sprite.getTextureRect().width * 2);
         //charact_xm.x -= 15;
@@ -182,7 +199,9 @@ void Ennemi::setPosition(int x, int y) {
     _sprite.setPosition(_pos);
 }
 
-sf::Vector2f Ennemi::getPosition(void) {return _pos;}
+int Ennemi::getType(void) const {return _type;}
 sf::Vector2f Ennemi::getSize(void) const {return _size;}
-sf::Texture *Ennemi::getTexture(void) {return _texture;}
+void Ennemi::setType(Type newtype) {this->_type = newtype;}
+sf::Vector2f Ennemi::getPosition(void) const {return _pos;}
 sf::Sprite Ennemi::getSprite(void) const {return (_sprite);}
+sf::Texture *Ennemi::getTexture(void) const {return _texture;}
