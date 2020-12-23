@@ -6,6 +6,7 @@
 */
 
 #include "MainMenu.hpp"
+#include "Training.hpp"
 #include "BugsScreen.hpp"
 #include "ControlPanel.hpp"
 
@@ -69,7 +70,7 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
             } else if (multi->isClicked(event))
                 Multi_Screen(window).display();
             else if (bugs->isClicked(event))
-                Training();
+                Training().Menu(window);
             // else if (bugs->isClicked(event))
             //     BugsScreen().form_panel(window);
             else if (ctrl->isClicked(event))

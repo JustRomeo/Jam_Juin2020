@@ -27,6 +27,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(COMP)TextSFML.cpp				\
 		$(COMP)WindowLib.cpp			\
 		$(CREP)Map.cpp					\
+		$(CREP)Training.cpp				\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
