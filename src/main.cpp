@@ -17,8 +17,11 @@
 #include "MapUpdater.hpp"
 #include "ErrorHandling.hpp"
 
+#include "Map.hpp"
+
 using namespace std;
 int main(int ac, char **av, char **env) {
+    // MapCreator(20, 20);
     int replay = 1;
     shared_ptr<GameLoop> game;
     vector<string> map = System().openfile("maps/.map1");

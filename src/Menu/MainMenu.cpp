@@ -69,7 +69,9 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
             } else if (multi->isClicked(event))
                 Multi_Screen(window).display();
             else if (bugs->isClicked(event))
-                BugsScreen().form_panel(window);
+                Training();
+            // else if (bugs->isClicked(event))
+            //     BugsScreen().form_panel(window);
             else if (ctrl->isClicked(event))
                 ControlPanel().control_panel(window);
             else if (quit->isClicked(event) || event.type == sf::Event::Closed)

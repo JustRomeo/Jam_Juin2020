@@ -7,8 +7,10 @@
 
 SRCP =	src/
 DISP =	src/Display/
+CREP =	src/Creator/
 GAMP =	src/Game/
 INTP =	src/Interface/
+LVLP =	src/Level/
 MAPP =	src/Map/
 MENP = 	src/Menu/
 PLAP =	src/Player/
@@ -24,6 +26,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(COMP)MusicSFML.cpp			\
 		$(COMP)TextSFML.cpp				\
 		$(COMP)WindowLib.cpp			\
+		$(CREP)Map.cpp					\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
@@ -80,6 +83,7 @@ SFML = 	-lsfml-system	\
 
 CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
+			-I./Class/Creator			\
 			-I./Class/Display			\
 			-I./Class/Game				\
 			-I./Class/Interface			\
