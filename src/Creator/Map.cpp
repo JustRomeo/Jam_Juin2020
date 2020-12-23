@@ -13,6 +13,7 @@ MapCreator::MapCreator(size_t width, size_t heigh) {
     _width = width;
     _heigh = heigh;
     makeMapBounds();
+    view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
 }
 
 MapCreator::~MapCreator() {}
@@ -65,6 +66,7 @@ void MapCreator::event_handling(shared_ptr<sf::RenderWindow> window) {
                 block_row ++;
             else if (event.mouseWheel.delta < 0)
                 block_row --;
+            block_row = block_row > 3 ? 0 : block_row;
         } else if (event.type == sf::Event::MouseButtonPressed) {
             switch(block_row) {
                 case 0: _mapimg.push_back(make_shared<ImageSFML>("resources/Images/Map/blockCobble.png")); break;
@@ -78,8 +80,22 @@ void MapCreator::event_handling(shared_ptr<sf::RenderWindow> window) {
             blockpos.y = sf::Mouse::getPosition().y - (sf::Mouse::getPosition().y % 157);
             _mapimg[_mapimg.size() - 1]->setScale(sf::Vector2f(0.5, 0.5));
             _mapimg[_mapimg.size() - 1]->setPosition(blockpos);
-            _map[sf::Mouse::getPosition().x / 157][sf::Mouse::getPosition().y / 157] = '#';
+            switch(block_row) {
+                case 0: _map[sf::Mouse::getPosition().x / 157][sf::Mouse::getPosition().y / 157] = '#'; break;
+                case 1: _map[sf::Mouse::getPosition().x / 157][sf::Mouse::getPosition().y / 157] = 'B'; break;
+                case 2: _map[sf::Mouse::getPosition().x / 157][sf::Mouse::getPosition().y / 157] = 'U'; break;
+                case 3: _map[sf::Mouse::getPosition().x / 157][sf::Mouse::getPosition().y / 157] = 'Y'; break;
+                default: throw Exception("Create New Bloc Failed: " + to_string(block_row) + " indexe unkown.");
+            }
         }
+        if (sf::Mouse::getPosition().x < 25)
+            view->setCenter(view->getCenter().x - 5, view->getCenter().y);
+        if (sf::Mouse::getPosition().y < 25)
+            view->setCenter(view->getCenter().x, view->getCenter().y - 5);
+        if (sf::Mouse::getPosition().x > 1895)
+            view->setCenter(view->getCenter().x + 5, view->getCenter().y);
+        if (sf::Mouse::getPosition().y > 1055)
+            view->setCenter(view->getCenter().x, view->getCenter().y + 5);
     }
 }
 
@@ -102,14 +118,16 @@ void MapCreator::creator(shared_ptr<sf::RenderWindow> window) {
     sf::Event event;
     sf::Vector2i cursorPos;
 
+    view->setCenter(sf::Vector2f(1920 / 2, 1080 / 2));
+    window->setView(*view);
     window->setFramerateLimit(20);
     while (window->isOpen()) {
         window->clear(sf::Color::Black);
 
         event_handling(window);
-        drawWhichUnderMouse(window);
         for (size_t i = 0; i < _mapimg.size(); i ++)
             window->draw(_mapimg[i]->getSprite());
+        drawWhichUnderMouse(window);
         window->display();
     }
 }
