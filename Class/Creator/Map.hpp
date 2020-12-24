@@ -25,8 +25,8 @@ class MapCreator {
         vector<string> getMap(void) const;
         void addChar(char c, size_t x, size_t y);
         void creator(shared_ptr<sf::RenderWindow> window);
-        void event_handling(shared_ptr<sf::RenderWindow> window);
         void drawWhichUnderMouse(shared_ptr<sf::RenderWindow> window);
+        void event_handling(shared_ptr<sf::RenderWindow> window, sf::Event event);
 
     private:
         size_t _heigh;
@@ -34,6 +34,8 @@ class MapCreator {
         size_t block_row;
         vector<string> _map;
         shared_ptr<sf::View> view;
+        shared_ptr<ImageSFML> save;
+        shared_ptr<ImageSFML> leave;
         vector<shared_ptr<ImageSFML>> _mapimg;
 
     protected:

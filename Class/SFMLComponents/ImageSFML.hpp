@@ -23,6 +23,7 @@ class ImageSFML {
         sf::Sprite getSprite() const;
         void setPosition(sf::Vector2f);
         shared_ptr<sf::Texture> getTexture(void);
+        bool isClickedinView(sf::Event event, sf::View view);
 
     private:
         size_t _width;

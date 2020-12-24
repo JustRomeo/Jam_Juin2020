@@ -35,6 +35,21 @@ bool ImageSFML::isClicked(sf::Event event) {
     if (event.type == sf::Event::MouseButtonPressed)
         if ((mouse.y > _pos.y && mouse.y < _pos.y + _heigh) && (mouse.x > _pos.x && mouse.x < _pos.x + _width))
             return true;
+        else
+            cout << "Mouse.x: " << mouse.x << " & Mouse.y" << mouse.y << " || _pos.x: " << _pos.x << " & _pos.y" << _pos.y << endl;
+    return false;
+}
+
+bool ImageSFML::isClickedinView(sf::Event event, sf::View view) {
+    sf::Vector2i mouse(sf::Mouse::getPosition());
+    sf::Vector2i _view(view.getCenter().x - (1920 / 2), view.getCenter().y - (1080 / 2));
+
+    mouse.y -= 65;
+    if (event.type == sf::Event::MouseButtonPressed)
+        if ((mouse.y + _view.y > _pos.y && mouse.y + _view.y < _pos.y + _heigh) && (mouse.x + _view.x > _pos.x && mouse.x + _view.x < _pos.x + _width))
+            return true;
+        // else
+        //     cout << "Mouse.x: " << mouse.x + _view.x << " & Mouse.y: " << mouse.y + _view.y << " \t|| _pos.x: " << _pos.x << " & _pos.y: " << _pos.y << endl;
     return false;
 }
 
