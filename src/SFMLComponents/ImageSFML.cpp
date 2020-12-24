@@ -48,8 +48,6 @@ bool ImageSFML::isClickedinView(sf::Event event, sf::View view) {
     if (event.type == sf::Event::MouseButtonPressed)
         if ((mouse.y + _view.y > _pos.y && mouse.y + _view.y < _pos.y + _heigh) && (mouse.x + _view.x > _pos.x && mouse.x + _view.x < _pos.x + _width))
             return true;
-        // else
-        //     cout << "Mouse.x: " << mouse.x + _view.x << " & Mouse.y: " << mouse.y + _view.y << " \t|| _pos.x: " << _pos.x << " & _pos.y: " << _pos.y << endl;
     return false;
 }
 
@@ -59,12 +57,15 @@ void ImageSFML::setTexture(string path) {
     _sprite.setTexture(*_texture);
 }
 
+
 void ImageSFML::setPosition(sf::Vector2f pos) {
     _pos = pos;
     _sprite.setPosition(pos);
 }
 
-sf::Sprite ImageSFML::getSprite(void) const {return (_sprite);}
-shared_ptr<sf::Texture> ImageSFML::getTexture(void) {return this->_texture;}
+sf::Sprite ImageSFML::getSprite(void) {return (_sprite);}
+void ImageSFML::setSprite(sf::Sprite newone) {_sprite = newone;}
 void ImageSFML::setRotate(float angle) {_sprite.setRotation(angle);}
 void ImageSFML::setScale(sf::Vector2f size) {_sprite.setScale(size);}
+shared_ptr<sf::Texture> ImageSFML::getTexture(void) {return this->_texture;}
+void ImageSFML::setSprite(sf::Texture newtexture) {_sprite.setTexture(newtexture);}

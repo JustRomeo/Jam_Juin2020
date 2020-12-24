@@ -32,10 +32,12 @@ class MapCreator {
         size_t _heigh;
         size_t _width;
         size_t block_row;
+        bool isPersoPlaced;
         vector<string> _map;
         shared_ptr<sf::View> view;
         shared_ptr<ImageSFML> save;
         shared_ptr<ImageSFML> leave;
+        shared_ptr<ImageSFML> _back;
         vector<shared_ptr<ImageSFML>> _mapimg;
 
     protected:

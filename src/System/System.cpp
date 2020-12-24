@@ -67,7 +67,6 @@ int System::createFolder(string name) {
     if (name == "")
         throw Exception("Error: Empty Folder Name");
     mkdir(name.c_str(), 00777);
-    cout << "\t -> " << name << ": successfull created" << endl;
     return 0;
 }
 
@@ -85,7 +84,6 @@ int System::setPath(string filepath) {
 void System::createFile(string name, vector<string> file) {
     ofstream outfile(Paths().getPath() + name);
 
-    cout << "Path du fichier: " << Paths().getPath() + name << endl;
     for (size_t i = 0; i < file.size(); i ++)
         outfile << file[i] << endl;
     outfile.close();
