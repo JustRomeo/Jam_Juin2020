@@ -184,11 +184,13 @@ void MapCreator::creator(shared_ptr<sf::RenderWindow> window) {
 
         while (window->pollEvent(event)) {
             if (save->isClickedinView(event, *view)) {
-                System().createFile("/maps/.map_" + to_string(rand()), _map);
-                view->setCenter(0, 0);
+                view->setCenter(sf::Vector2f(window->getSize().x / 2, window->getSize().y / 2));
+                window->setView(*view);
+                System().createFile("/maps/.map" + to_string(rand()), _map);
                 return;
             } else if (leave->isClickedinView(event, *view)) {
-                view->setCenter(0, 0);
+                view->setCenter(sf::Vector2f(window->getSize().x / 2, window->getSize().y / 2));
+                window->setView(*view);
                 return;
             }
             event_handling(window, event);
@@ -202,7 +204,8 @@ void MapCreator::creator(shared_ptr<sf::RenderWindow> window) {
         window->draw(leave->getSprite());
         window->display();
     }
-    view->setCenter(0, 0);
+    view->setCenter(sf::Vector2f(window->getSize().x / 2, window->getSize().y / 2));
+    window->setView(*view);
     return;
 }
 

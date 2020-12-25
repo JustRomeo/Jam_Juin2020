@@ -1,11 +1,17 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Echap Menu File
+*/
+
 #include <iostream>
 
 #include "Echap.hpp"
 #include "GameLoop.hpp"
 #include "WindowLib.hpp"
 
-EchapMenu::EchapMenu(bool &sound_on)
-{
+EchapMenu::EchapMenu(bool &sound_on) {
     GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
 
     soundOn = sound_on;
@@ -50,12 +56,9 @@ EchapMenu::EchapMenu(bool &sound_on)
     larrow->setScale(sf::Vector2f(0.25, 0.25));
     controler->setScale(controler_on == GameLoop::Controler::KeyBoard ? sf::Vector2f(0.3, 0.3) : sf::Vector2f(1, 1));
 }
-EchapMenu::~EchapMenu()
-{
-}
+EchapMenu::~EchapMenu() {}
 
-void EchapMenu::dispEchapMenu(std::shared_ptr<sf::RenderWindow> window)
-{
+void EchapMenu::dispEchapMenu(std::shared_ptr<sf::RenderWindow> window) {
     cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 130));
     window->clear();
     window->draw(background->getSprite());
@@ -71,8 +74,7 @@ void EchapMenu::dispEchapMenu(std::shared_ptr<sf::RenderWindow> window)
 }
 
 enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
-int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window)
-{
+int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window) {
     sf::Event event;
     sf::Joystick joys;
     bool connected = sf::Joystick::isConnected(0);
@@ -90,9 +92,6 @@ int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window)
         float positionY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
         cout << "Position X:" << positionX << " | Y:" << positionY << endl;
     }
-
-    // Is button #2 pressed on joystick #0?
-    // bool pressed = sf::Joystick::isButtonPressed(0, 2);
 
     window->setView(window->getDefaultView());
     window->setMouseCursorVisible(false);

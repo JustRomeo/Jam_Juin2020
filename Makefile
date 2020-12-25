@@ -81,8 +81,6 @@ SFML = 	-lsfml-system	\
 		-lsfml-graphics	\
 		-lsfml-audio	\
 
-
-
 CPPFLAGS =	-I./include/				\
 			-I./Class/ 					\
 			-I./Class/Creator			\

@@ -20,10 +20,10 @@ size_t MapMenu::choice(GameLoop game) {
         loadImages(maps);
         loadTexts(maps);
         cursor->setScale(sf::Vector2f(2.4, 2.4));
+        background->setScale(sf::Vector2f(1.6, 1.6));
     } catch (Exception &e) {
         throw Exception("Initialisation failed: " + *e.what());
-    }
-    while (game.getWindow()->isOpen()) {
+    } while (game.getWindow()->isOpen()) {
         cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         game.getWindow()->draw(background->getSprite());
         for(size_t i = 0; i < maps.size(); i ++)
@@ -36,7 +36,7 @@ size_t MapMenu::choice(GameLoop game) {
                 if (button[i]->isClicked(event))
                     return i + 1;
                 if (go_back_button->isClicked(event))
-                    return (-1);
+                    return -1;
             }
         }
         game.getWindow()->draw(cursor->getSprite());
@@ -55,7 +55,7 @@ vector<string> MapMenu::getOnlyMaps(vector<string> files) {
 }
 
 void MapMenu::loadTexts(vector<string> maps) {
-    go_back_button->setText("resources/character/arial.ttf", "back", 35, sf::Color::Black);
+    go_back_button->setText("resources/character/arial.ttf", "Back", 35, sf::Color::Black);
     for (size_t i = 0; i < maps.size(); i ++)
         button[i]->setText("resources/character/arial.ttf", maps[i].replace(maps[i].find(".m"), 2, "M") , 35, sf::Color::Black);
 }

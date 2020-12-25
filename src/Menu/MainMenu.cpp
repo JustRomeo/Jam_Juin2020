@@ -17,12 +17,13 @@ MainMenu::MainMenu() {
         tuto = make_shared<ImageSFML>("resources/Buttons/Tuto.png");
         cursor = make_shared<ImageSFML>("resources/Images/Game/cursor.png");
         background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
+        manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
+
         play = make_shared<Button>(sf::Vector2f(800, 200), sf::Vector2f(250, 100));
         ctrl = make_shared<Button>(sf::Vector2f(800, 650), sf::Vector2f(250, 100));
         quit = make_shared<Button>(sf::Vector2f(800, 800), sf::Vector2f(250, 100));
         local = make_shared<Button>(sf::Vector2f(800, 350), sf::Vector2f(250, 100));
         multi = make_shared<Button>(sf::Vector2f(800, 500), sf::Vector2f(250, 100));
-        manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
 
         play->setColor(sf::Color::White, sf::Color::Black, 5);
         ctrl->setColor(sf::Color::White, sf::Color::Black, 5);

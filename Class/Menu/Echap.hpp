@@ -1,3 +1,10 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Echap Menu Class
+*/
+
 #ifndef __ECHAPMENU__
 #define __ECHAPMENU__
 

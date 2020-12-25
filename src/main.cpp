@@ -21,7 +21,6 @@
 
 using namespace std;
 int main(int ac, char **av, char **env) {
-    // MapCreator(20, 20);
     int replay = 1;
     shared_ptr<GameLoop> game;
     vector<string> map = System().openfile("maps/.map1");
@@ -32,8 +31,7 @@ int main(int ac, char **av, char **env) {
     } catch (Exception &e) {
         cout << e.what() << endl;
         return 84;
-    }
-    while (replay == 1) {
+    } while (replay == 1) {
         if (!ErrorHandling().isEnvDisplay(env))
             return 84;
         try {
