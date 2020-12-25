@@ -10,6 +10,7 @@
 #include "Exception.hpp"
 #include "Multiplayer.hpp"
 #include "LibGraphics.hpp"
+#include "ManetteSFML.hpp"
 #include "EventHandler.hpp"
 
 using namespace std;
@@ -18,18 +19,24 @@ class MainMenu {
         MainMenu();
         ~MainMenu();
 
+        void remoteChoice(shared_ptr<sf::RenderWindow> window);
         bool Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game);
 
     private:
+        bool isRemoteUsed;
         sf::Music *_music;
-        std::shared_ptr<Button> play;
-        std::shared_ptr<Button> quit;
-        std::shared_ptr<Button> bugs;
-        std::shared_ptr<Button> ctrl;
-        std::shared_ptr<Button> multi;
-        std::shared_ptr<Button> local;
-        std::shared_ptr<ImageSFML> cursor;
-        std::shared_ptr<ImageSFML> background;
+        size_t _remote_row;
+        shared_ptr<Button> play;
+        shared_ptr<Button> quit;
+        shared_ptr<Button> ctrl;
+        shared_ptr<Button> multi;
+        shared_ptr<Button> local;
+        shared_ptr<ImageSFML> tuto;
+        shared_ptr<ImageSFML> bugs;
+        shared_ptr<ImageSFML> cursor;
+        shared_ptr<ManetteSFML> remote;
+        shared_ptr<ImageSFML> background;
+        shared_ptr<ImageSFML> manette_cursor;
 };
 
 #endif

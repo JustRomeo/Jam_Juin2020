@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "ImageSFML.hpp"
 
 using namespace std;
@@ -35,8 +36,6 @@ bool ImageSFML::isClicked(sf::Event event) {
     if (event.type == sf::Event::MouseButtonPressed)
         if ((mouse.y > _pos.y && mouse.y < _pos.y + _heigh) && (mouse.x > _pos.x && mouse.x < _pos.x + _width))
             return true;
-        else
-            cout << "Mouse.x: " << mouse.x << " & Mouse.y" << mouse.y << " || _pos.x: " << _pos.x << " & _pos.y" << _pos.y << endl;
     return false;
 }
 
