@@ -20,7 +20,6 @@ enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
     try {
         auto image = sf::Image{};
-
         if (!image.loadFromFile("resources/Images/Icon/icon.png"))
             throw Exception("Loading Ressource Failed");
         perso = make_shared<Character>();
@@ -40,7 +39,7 @@ GameLoop::GameLoop() {
         window->setView(*view);
         window->setFramerateLimit(60);
     } catch (bad_alloc &e) {
-        throw Exception("can't initiate window and view\n");
+        throw Exception("Can't initiate window and view\n");
     }
 }
 GameLoop::~GameLoop() {}
@@ -56,6 +55,10 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
                 row += 1;
             }
+}
+
+void GameLoop::reloadPerso(shared_ptr<sf::Texture> texture) {
+    perso = make_shared<Character>(texture);
 }
 
 int GameLoop::menu() {
@@ -87,7 +90,7 @@ int GameLoop::menu() {
                 MapUpdater().setPlayerPosition(map, perso);
                 Bar->load(window);
                 if (_players > 1) {
-                    Bar->load(window, "Placement   du   second   joueur   sur   la   map");
+                    Bar->load(window, "Placement   du   second   joueur   sur   la   map.");
                     MapUpdater().setSecondPlayerPosition(map, perso2);
                 }
                 Bar->load(window);
@@ -347,8 +350,6 @@ void GameLoop::display() {
 }
 
 int GameLoop::gameLoop() {
-    size_t loop = 0;
-
     if (!Cinematique().Intro(window, perso))
         return QUIT;
     gameMusic->stopMainMusic();
@@ -356,7 +357,7 @@ int GameLoop::gameLoop() {
     view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
-    window->setMouseCursorVisible(true);
+    window->setMouseCursorVisible(false);
     while (window->isOpen()) {
         for (size_t i = 0; i < Itemslist.size(); i ++)
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {

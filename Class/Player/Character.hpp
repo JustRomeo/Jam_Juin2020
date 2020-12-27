@@ -21,7 +21,7 @@
 using namespace std;
 class Character {
     public:
-        Character();
+        Character(shared_ptr<sf::Texture> = nullptr);
         ~Character();
 
         void jump();
@@ -43,8 +43,8 @@ class Character {
         void channeling();
         void restartPos();
         bool isSwitching();
-        bool isChanneling();
         bool isSprinting();
+        bool isChanneling();
         int getMunBattery();
         void cacAnimation();
         void createAnimRec();
@@ -56,6 +56,7 @@ class Character {
         bool isActionPossible();
         void channelingAnimation();
         void setMoving(bool status);
+        void changeSprite(string path);
         sf::Vector2f getSpriteMid(void);
         void setSpritePosition(int, int);
         void addValue(shared_ptr<Objet>);
@@ -67,18 +68,17 @@ class Character {
         int collisionFall(vector<shared_ptr<Block>> mapSFML);
         void unblockCharacter(vector<shared_ptr<Block>> mapSFML);
         void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
-        void moveChar(std::shared_ptr<sf::RenderWindow> window, int orient);
+        void moveChar(shared_ptr<sf::RenderWindow> window, int orient);
+        void display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void moveLeft(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void moveRigth(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
         void hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void display(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void moveLeft(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void moveRigth(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void jumpAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
-        void fallingAnimation(std::shared_ptr<sf::RenderWindow> window, std::vector<std::shared_ptr<Block>> mapSFML);
+        void jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void fallingAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
 
         int _lifes;
         int invulnerability;
 
-    protected:
     private:
         int move_Y;
         int move_Xmax;
@@ -131,6 +131,8 @@ class Character {
         vector<shared_ptr<Objet>> _objects;
         shared_ptr<sf::Texture> textureFight;
         vector<sf::IntRect> jumpCacAttackRect;
+
+    protected:
 };
 
 #endif

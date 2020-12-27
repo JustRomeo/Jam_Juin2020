@@ -2,7 +2,7 @@
 ** Projet: SoundWaves
 ** Devs: Alexandre & Roméo
 ** File:
-** MainMenu
+** Main Menu File
 */
 
 #include "MainMenu.hpp"
@@ -13,11 +13,18 @@
 MainMenu::MainMenu() {
     try {
         remote = make_shared<ManetteSFML>();
+
         bugs = make_shared<ImageSFML>("resources/Buttons/Bugs.png");
         tuto = make_shared<ImageSFML>("resources/Buttons/Tuto.png");
+        change = make_shared<ImageSFML>("resources/Buttons/change_off.png");
         cursor = make_shared<ImageSFML>("resources/Images/Game/cursor.png");
         background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
         manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
+
+        texture_1 = make_shared<sf::Texture>();
+        texture_2 = make_shared<sf::Texture>();
+        texture_1->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png");
+        texture_2->loadFromFile("./resources/character/adventurer-v1.5-Sheet_1.png");
 
         play = make_shared<Button>(sf::Vector2f(800, 200), sf::Vector2f(250, 100));
         ctrl = make_shared<Button>(sf::Vector2f(800, 650), sf::Vector2f(250, 100));
@@ -74,40 +81,62 @@ void drawImages(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<ImageSFML
         window->draw(images[i]->getSprite());
 }
 
+void MainMenu::changeCustomPlayer(shared_ptr<sf::Texture> new_texture, GameLoop &game) {
+    perso_sprite = make_shared<sf::Sprite>(*new_texture);
+    perso_sprite->setTextureRect(sf::IntRect(65, 5, 19, 32));
+    perso_sprite->setScale(sf::Vector2f(3, 3));
+    perso_sprite->setPosition(sf::Vector2f(1200, 350));
+    game.reloadPerso(new_texture);
+}
+
+bool MainMenu::buttonsChoice(shared_ptr<sf::RenderWindow> window, sf::Event event, GameLoop &game) {
+    if (play->isClicked(event))
+        return true;
+    else if (local->isClicked(event)) {
+        game.setPlayerNumber(2);
+        return true;
+    } else if (multi->isClicked(event))
+        Multi_Screen(window).display();
+    else if (tuto->isClicked(event))
+        Training().Menu(window);
+    else if (bugs->isClicked(event))
+        BugsScreen().form_panel(window);
+    else if (ctrl->isClicked(event))
+        ControlPanel().control_panel(window);
+    else if (change->isClicked(event))
+        changeCustomPlayer(texture_2, game);
+    return false;
+}
+
 bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
     sf::Event event;
-    sf::Vector2i cursorPos;
     sf::Vector2i last = sf::Mouse::getPosition();
+
+    changeCustomPlayer(texture_1, game);
+    change->setPosition(sf::Vector2f(1200, 450));
+    change->loadAsButton("./resources/Buttons/change_on.png", "./resources/Buttons/change_clicked.png");
 
     window->setFramerateLimit(20);
     while (window->isOpen()) {
         cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         window->clear();
 
-        drawImages(window, {background, bugs, tuto});
+        drawImages(window, {background, bugs, tuto, change});
+        window->draw(*perso_sprite);
         drawButtons(window, {play, local, multi, ctrl, quit});
 
         remoteChoice(window);
         window->display();
         while (window->pollEvent(event)) {
+            change->update(event);
+
             if (sf::Mouse::getPosition().x != last.x || sf::Mouse::getPosition().y != last.y)
                 isRemoteUsed = false;
             if (remote->getJoysDirection() != ManetteSFML::Nothing)
                 isRemoteUsed = true;
-            if (play->isClicked(event))
+            if (buttonsChoice(window, event, game))
                 return true;
-            else if (local->isClicked(event)) {
-                game.setPlayerNumber(2);
-                return true;
-            } else if (multi->isClicked(event))
-                Multi_Screen(window).display();
-            else if (tuto->isClicked(event))
-                Training().Menu(window);
-            else if (bugs->isClicked(event))
-                BugsScreen().form_panel(window);
-            else if (ctrl->isClicked(event))
-                ControlPanel().control_panel(window);
-            else if (quit->isClicked(event) || event.type == sf::Event::Closed)
+            if (quit->isClicked(event) || event.type == sf::Event::Closed)
                 return false;
             last = sf::Mouse::getPosition();
         }

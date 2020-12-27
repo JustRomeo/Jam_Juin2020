@@ -7,7 +7,7 @@
 
 #include "Character.hpp"
 
-Character::Character() {
+Character::Character(shared_ptr<sf::Texture> theone) {
     jump_sound = make_unique<MusicSFML>();
     coli_sound = make_unique<MusicSFML>();
     shot_sound1 = make_unique<MusicSFML>();
@@ -19,14 +19,15 @@ Character::Character() {
         jump_sound->load("resources/Sounds/sounds/Jump.ogg");
         coli_sound->load("resources/Sounds/sounds/Colision.ogg");
         _lifes = 3;
-        texture = make_shared<sf::Texture>();
+        texture = theone == nullptr ? make_shared<sf::Texture>() : make_shared<sf::Texture>(*theone);
         textureFight = make_shared<sf::Texture>();
         shot_sound1->load("resources/Sounds/sounds/shot1.ogg");
         shot_sound2->load("resources/Sounds/sounds/shot2.ogg");
         shot_sound3->load("resources/Sounds/sounds/shot3.ogg");
         shot_sound4->load("resources/Sounds/sounds/channelingShot.ogg");
-        if (!texture->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png"))
-            throw(Exception("resources load failed"));
+        if (theone == nullptr)
+            if (!texture->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png"))
+                throw(Exception("resources load failed"));
         if (!textureFight->loadFromFile("./resources/character/adventurer-bow-Sheet.png"))
             throw(Exception("resources load failed"));
     } catch (Exception &e) {
@@ -34,8 +35,8 @@ Character::Character() {
     }
     sprite.setTexture(*texture);
     sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
-    sprite.setScale(sf::Vector2f(3.f, 3.f));
-    sprite.setPosition(sf::Vector2f(200.f, 1102.f - (32.f * 3)));
+    sprite.setScale(sf::Vector2f(3, 3));
+    sprite.setPosition(sf::Vector2f(200, 1102 - (32 * 3)));
     move_Y = 43;
     sprintBar = 100;
     notMove_Y = 6;
@@ -46,7 +47,6 @@ Character::Character() {
     invulnerability = 0;
     cacRectPos = 0;
     jumpCacRectPos = 0;
-
     is_cac = false;
     is_moving = false;
     is_jumping = false;
@@ -112,13 +112,13 @@ void Character::moveChar(shared_ptr<sf::RenderWindow> window, int orient) {
     sf::View view = window->getView();
     sf::Vector2f move;
 
-    is_sprinting ? move = {20.f * orient, 0.f} : move = {10.f * orient, 0.f};
+    is_sprinting ? move = sf::Vector2f(20 * orient, 0) : move = sf::Vector2f(10 * orient, 0);
     if (is_sprinting)
         sprintBar > 0 ? sprintBar -- : is_sprinting = false;
     if (is_jumping || is_falling)
-        is_sprinting ? move = {10.f * orient, 0.f} : move = {5.f * orient, 0.f};
+        is_sprinting ? move = sf::Vector2f(10 * orient, 0) : move = sf::Vector2f(5 * orient, 0);
     else
-        is_sprinting ? move = {20.f * orient, 0.f} : move;
+        is_sprinting ? move = sf::Vector2f(20 * orient, 0) : move;
     view.move(move);
     sprite.move(move);
     window->setView(view);
@@ -136,7 +136,7 @@ void Character::moveLeft(shared_ptr<sf::RenderWindow> window,
         return;
     if (sprite.getScale().x > 0) {
         sf::Vector2f pos = sprite.getPosition();
-        pos.x += 55.f;
+        pos.x += 55;
         sprite.setPosition(pos);
         sprite.setScale(-3, 3);
     } if (!is_jumping && !is_falling) {
@@ -162,7 +162,7 @@ void Character::moveRigth(shared_ptr<sf::RenderWindow> window,
         return;
     if (sprite.getScale().x < 0) {
         sf::Vector2f pos = sprite.getPosition();
-        pos.x -= 55.f;
+        pos.x -= 55;
         sprite.setPosition(pos);
         sprite.setScale(3, 3);
     } if (!is_jumping && !is_falling) {
@@ -311,16 +311,14 @@ void Character::switchAnimation()
     }
 }
 
-void Character::hookShoot(vector<shared_ptr<Block>> mapSFML)
-{
-    for (int i = 0; i < mapSFML.size(); i++) {
+void Character::hookShoot(vector<shared_ptr<Block>> mapSFML) {
+    for (size_t i = 0; i < mapSFML.size(); i++) {
         if (mapSFML[i]->getSprite().getGlobalBounds().contains(hookEnd)) {
             is_hooked = true;
             is_hooking = false;
             return;
         }
-    }
-    if (move_clock.getTimeDiff(0.1) == 1) {
+    } if (move_clock.getTimeDiff(0.1) == 1) {
         hookEnd.x += hookVec.x;
         hookEnd.y += hookVec.y;
     }
@@ -341,9 +339,8 @@ void Character::hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared
     line[1].color = sf::Color::Red;
 
     window->draw(line, 2, sf::Lines);
-    if (is_hooking == true && is_hooked == false) {
+    if (is_hooking && !is_hooked)
         hookShoot(mapSFML);
-    }
 }
 
 void Character::display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML) {
@@ -368,8 +365,7 @@ void Character::display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<B
     window->draw(sprite);
 }
 
-void Character::hook(shared_ptr<sf::RenderWindow> window)
-{
+void Character::hook(shared_ptr<sf::RenderWindow> window) {
     sf::Vector2i cursor;
 
     if (!is_jumping && !is_falling && !is_shooting && !is_channeling) {
@@ -390,20 +386,17 @@ void Character::hook(shared_ptr<sf::RenderWindow> window)
                 hookVec.x = hookVec.x / 2.0;
                 hookVec.y = hookVec.y / 2.0;
             }
-        }
-        if (hookVec.x < 0 && hookVec.y < 0) {
+        } if (hookVec.x < 0 && hookVec.y < 0) {
             while (hookVec.x < -5.0 && hookVec.y < -5.0) {
                 hookVec.x = hookVec.x / 2.0;
                 hookVec.y = hookVec.y / 2.0;
             }
-        }
-        if (hookVec.x < 0 && hookVec.y > 0) {
+        } if (hookVec.x < 0 && hookVec.y > 0) {
             while (hookVec.x < -5.0 && hookVec.y > 5.0) {
                 hookVec.x = hookVec.x / 2.0;
                 hookVec.y = hookVec.y / 2.0;
             }
-        }
-        if (hookVec.x > 0 && hookVec.y < 0) {
+        } if (hookVec.x > 0 && hookVec.y < 0) {
             while (hookVec.x > 5.0 && hookVec.y < -5.0) {
                 hookVec.x = hookVec.x / 2.0;
                 hookVec.y = hookVec.y / 2.0;
@@ -418,7 +411,7 @@ void Character::jump() {
         is_jumping = true;
         jump_sound->start();
         sprite.setTextureRect(sf::IntRect(65, 79, 21, 31));
-        move = sf::Vector2f(0.f, -20.f);
+        move = sf::Vector2f(0, -20);
     }
 }
 
@@ -426,7 +419,7 @@ void Character::fall() {
     if (!is_falling) {
         is_falling = true;
         sprite.setTextureRect(sf::IntRect(17, 52, 17, 22));
-        move = sf::Vector2f(0.f, 0.f);
+        move = sf::Vector2f(0, 0);
     }
 }
 
@@ -444,9 +437,9 @@ void Character::shoot() {
             toTurn = 1;
         sprite.setTexture(*textureFight);
         if (toTurn == 0)
-            sprite.setScale(sf::Vector2f(3.f, 3.f));
+            sprite.setScale(sf::Vector2f(3, 3));
         else
-            sprite.setScale(sf::Vector2f(-3.f, 3.f));
+            sprite.setScale(sf::Vector2f(-3, 3));
         sprite.setTextureRect(shootRect[shootRectPos]);
     }
 }
@@ -486,12 +479,23 @@ void Character::incWeapon() {
             toTurn = 1;
         sprite.setTexture(*textureFight);
         if (toTurn == 0)
-            sprite.setScale(sf::Vector2f(3.f, 3.f));
+            sprite.setScale(sf::Vector2f(3, 3));
         else
-            sprite.setScale(sf::Vector2f(-3.f, 3.f));
+            sprite.setScale(sf::Vector2f(-3, 3));
         switch_clock.restartClock();
         sprite.setTextureRect(sf::IntRect(10, 8, 40, 29));
     }
+}
+
+void Character::changeSprite(string path) {
+    if (path == "")
+        throw(Exception("Wrong Path."));
+    if (!texture->loadFromFile(path))
+        throw(Exception("resources load failed."));
+    sprite.setTexture(*texture);
+    sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
+    sprite.setScale(sf::Vector2f(3, 3));
+    sprite.setPosition(sf::Vector2f(200, 1102 - (32 * 3)));
 }
 
 void Character::spriteAnimation() {
@@ -532,9 +536,9 @@ void Character::unblockCharacter(vector<shared_ptr<Block>> mapSFML) {
     }
     for (size_t i = 0; i < mapSFML.size(); i++) {
         if (mapSFML[i]->getSprite().getGlobalBounds().contains(leftPoint))
-            sprite.move(sf::Vector2f(15.f, 0));
+            sprite.move(sf::Vector2f(15, 0));
         else if (mapSFML[i]->getSprite().getGlobalBounds().contains(rightPoint))
-            sprite.move(sf::Vector2f(-15.f, 0));
+            sprite.move(sf::Vector2f(-15, 0));
     }
 }
 
@@ -575,7 +579,7 @@ int Character::collisionFall(vector<shared_ptr<Block>> mapSFML) {
             sp.x > mapSFML[i]->getSprite().getPosition().x &&
             sp.x < mapSFML[i]->getSprite().getPosition().x + (mapSFML[i]->getSprite().getTextureRect().width * 0.5)) ||
             g.contains(charact_mx)  || g.contains(charact_xm)) {
-            y = mapSFML[i]->getSprite().getPosition().y - (30.f * 3) - 3;
+            y = mapSFML[i]->getSprite().getPosition().y - (30 * 3) - 3;
             sprite.setPosition(sprite.getPosition().x, y);
             if (not_colision(mapSFML) == 0)
                 unblockCharacter(mapSFML);

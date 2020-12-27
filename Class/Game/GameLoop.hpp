@@ -56,6 +56,7 @@ class GameLoop {
         void ItemsGeneration(vector<string>);
         void EnnemiGeneration(vector<string>);
         int getEvent(vector<shared_ptr<Block>>);
+        void reloadPerso(shared_ptr<sf::Texture>);
         shared_ptr<sf::RenderWindow> getWindow(void);
         shared_ptr<Character> getCharacter(void) const;
         void checkDestruction(vector<shared_ptr<Block>> &);
