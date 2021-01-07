@@ -19,6 +19,7 @@ class BlueProjectile : virtual public Projectile {
         void movement();
         void display(std::shared_ptr<sf::RenderWindow> window);
         int checkKill(std::shared_ptr<Ennemi> ennemi);
+        int checkKill(std::shared_ptr<Runner> ennemi);
         int checkDestruction(vector<shared_ptr<Block>> &mapSFML);
 
     protected:

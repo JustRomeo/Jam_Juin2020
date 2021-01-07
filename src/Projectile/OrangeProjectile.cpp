@@ -97,3 +97,14 @@ int OrangeProjectile::checkKill(std::shared_ptr<Ennemi> ennemi) {
     }
     return -1;
 }
+
+int OrangeProjectile::checkKill(std::shared_ptr<Runner> ennemi) {
+    sf::FloatRect bullet = sprite.getGlobalBounds();
+    sf::FloatRect g = ennemi->getSprite().getGlobalBounds();
+
+    if (bullet.intersects(g)) {
+        destructionCapacity --;
+        return 1;
+    }
+    return -1;
+}

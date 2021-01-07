@@ -32,9 +32,10 @@ SRC =	$(SRCP)main.cpp					\
 		$(DISP)Sprite.cpp				\
 		$(DISP)Window.cpp				\
 		$(GAMP)Ennemis.cpp				\
+		$(GAMP)GameLoop.cpp				\
 		$(GAMP)Objet.cpp				\
 		$(GAMP)Projectile.cpp			\
-		$(GAMP)GameLoop.cpp				\
+		$(GAMP)Runner.cpp				\
 		$(GAMP)Lootable.cpp				\
 		$(GAMP)GameMusic.cpp			\
 		$(INTP)Multiplayer.cpp			\

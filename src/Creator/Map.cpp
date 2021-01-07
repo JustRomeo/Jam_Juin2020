@@ -2,7 +2,7 @@
 ** Projet: SoundWaves
 ** Devs: Alexandre & Roméo
 ** File:
-** MapCreator
+** MapCreator File
 */
 
 #include <time.h>

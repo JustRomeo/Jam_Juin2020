@@ -15,6 +15,7 @@
 #include "Block.hpp"
 #include "Echap.hpp"
 #include "Window.hpp"
+#include "Runner.hpp"
 #include "Ennemis.hpp"
 #include "MunPlus.hpp"
 #include "Lootable.hpp"
@@ -28,7 +29,6 @@
 #include "LibGraphics.hpp"
 #include "IProjectile.hpp"
 #include "ProjectileFactory.hpp"
-
 
 using namespace std;
 class GameLoop {
@@ -61,6 +61,7 @@ class GameLoop {
         shared_ptr<Character> getCharacter(void) const;
         void checkDestruction(vector<shared_ptr<Block>> &);
         void checkDeathEnemy(vector<shared_ptr<Ennemi>> &);
+        void checkDeathRunner(vector<shared_ptr<Runner>> &);
         shared_ptr<Character> getSecondCharacter(void) const;
 
         shared_ptr<LoadingBar> Bar;
@@ -83,6 +84,7 @@ class GameLoop {
         vector<shared_ptr<Block>> mapSFML;
         vector<shared_ptr<MunPlus>> PlusList;
         vector<shared_ptr<Ennemi>> Ennemilist;
+        vector<shared_ptr<Runner>> Runnerlist;
         vector<shared_ptr<Lootable>> Itemslist;
         vector<shared_ptr<IProjectile>> projectile;
 

@@ -1,3 +1,10 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Loading Bar File
+*/
+
 #include "Exception.hpp"
 #include "LoadingBar.hpp"
 

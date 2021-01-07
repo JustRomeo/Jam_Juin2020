@@ -3,6 +3,17 @@
 MapUpdater::MapUpdater() {}
 MapUpdater::~MapUpdater() {}
 
+void MapUpdater::RunnerUpdate(sf::RenderWindow &window, vector<shared_ptr<Runner>> &Runnerlist, vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> &perso) {
+    for (size_t i = 0; i < Runnerlist.size(); i ++) {
+        window.draw(Runnerlist[i]->getSprite());
+        Runnerlist[i]->move(mapSFML, perso);
+        if (perso->invulnerability < 1 && sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Runnerlist[i]->getSprite().getGlobalBounds()))) {
+            perso->_lifes --;
+            perso->invulnerability += 60;
+        }
+    }
+}
+
 void MapUpdater::EnnemiUpdate(sf::RenderWindow &window, vector<shared_ptr<Ennemi>> &Ennemilist, vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> &perso) {
     for (size_t i = 0; i < Ennemilist.size(); i ++) {
         window.draw(Ennemilist[i]->getSprite());

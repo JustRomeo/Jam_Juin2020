@@ -49,12 +49,17 @@ void GameLoop::EnnemiGeneration(vector<string> map) {
 
     Bar->load(window, "Generation   des   Ennemis");
     for (size_t i = 0; i < map.size(); i ++)
-        for (size_t j = 0; j < map[i].length(); j ++)
+        for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == 'E') {
-                Bar->load(window, "Generation   des   Ennemis(" + to_string(row) + ")");
+                Bar->load(window, "Generation   des   Ennemis   Walkers(" + to_string(row) + ")");
                 Ennemilist.push_back(make_shared<Ennemi>(Ennemi(j * 157, i * 157)));
                 row += 1;
+            } else if (map[i][j] == 'R') {
+                Bar->load(window, "Generation   des   Ennemis   Runners(" + to_string(row) + ")");
+                Runnerlist.push_back(make_shared<Runner>(Runner(j * 157, i * 157)));
+                row += 1;
             }
+        }
 }
 
 void GameLoop::reloadPerso(shared_ptr<sf::Texture> texture) {
@@ -172,6 +177,7 @@ void GameLoop::MapGeneration(vector<string> _map) {
                 case 'B': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE))); break;
                 case 'E': break;
                 case 'P': break;
+                case 'R': break;
                 case 'S': break;
                 case 'U': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE))); break;
                 case 'Y': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW))); break;
@@ -207,6 +213,34 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j ++) {
         if (Ennemilist[j]->getSprite().getGlobalBounds().contains(swordPoint) && perso->isCac())
             Ennemilist.erase(Ennemilist.begin() + j);
+    }
+}
+
+void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
+    int res = -1;
+    sf::Sprite persoSprite = perso->getSprite();
+    sf::Vector2f swordPoint = persoSprite.getPosition();
+
+    for (size_t i = 0; i < projectile.size(); i ++) {
+        res = -1;
+        for (size_t j = 0; j < Runnerlist.size() && res != 0 && res != 1; j++) {
+            res = projectile[i]->checkKill(Runnerlist[j]);
+            if (projectile[i]->getCurrentCapacity() <= 0) {
+                if (_sound)
+                    gameMusic->startDeathMusic();
+                projectile.erase(projectile.begin() + i);
+            } if (res == 1)
+                Runnerlist.erase(Runnerlist.begin() + j);
+        }
+    }
+    swordPoint.y += (persoSprite.getTextureRect().height * persoSprite.getScale().y) / 3;
+    if (persoSprite.getScale().x > 0)
+        swordPoint.x += persoSprite.getTextureRect().width * persoSprite.getScale().x;
+    else
+        swordPoint.x -= persoSprite.getTextureRect().width * persoSprite.getScale().x * -1;
+    for (size_t j = 0; j < Runnerlist.size() && res != 0 && res != 1; j ++) {
+        if (Runnerlist[j]->getSprite().getGlobalBounds().contains(swordPoint) && perso->isCac())
+            Runnerlist.erase(Runnerlist.begin() + j);
     }
 }
 
@@ -336,8 +370,11 @@ void GameLoop::display() {
         PlusList[i]->display(window);
     MapUpdater().BlockUpdate(*window, mapSFML);
     MapUpdater().EnnemiUpdate(*window, Ennemilist, mapSFML, perso);
-    if (_players > 1)
+    MapUpdater().RunnerUpdate(*window, Runnerlist, mapSFML, perso);
+    if (_players > 1) {
+        MapUpdater().RunnerUpdate(*window, Runnerlist, mapSFML, perso2);
         MapUpdater().EnnemiUpdate(*window, Ennemilist, mapSFML, perso2);
+    }
     window->draw(door->getSprite());
     perso->display(window, mapSFML);
     if (_players > 1)
@@ -373,6 +410,7 @@ int GameLoop::gameLoop() {
             perso2->invulnerability = perso2->invulnerability > 0 ? perso2->invulnerability - 1 : perso2->invulnerability;
         MapUpdater().checkDestruction(mapSFML, projectile);
         checkDeathEnemy(Ennemilist);
+        checkDeathRunner(Runnerlist);
         display();
         clear();
         perso->checkCollMunPlus(PlusList);

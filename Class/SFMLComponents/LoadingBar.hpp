@@ -1,3 +1,10 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Loading Bar Class
+*/
+
 #ifndef __LoadingBar__
 #define __LoadingBar__
 

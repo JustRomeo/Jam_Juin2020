@@ -7,19 +7,16 @@
 
 #include "Projectile.hpp"
 
-Projectile::Projectile(int desCap)
-{
+Projectile::Projectile(int desCap) {
     move_clock.restart();
     anim_clock.restart();
     destructionCapacity = desCap;
 }
 
-Projectile::~Projectile()
-{
+Projectile::~Projectile() {
 }
 
-int Projectile::getTimeAnim(float diff)
-{
+int Projectile::getTimeAnim(float diff) {
     sf::Time time;
     float seconds = 0;
 
@@ -32,8 +29,7 @@ int Projectile::getTimeAnim(float diff)
     return (0);
 }
 
-int Projectile::getTimeMov(float diff)
-{
+int Projectile::getTimeMov(float diff) {
     sf::Time time;
     float seconds = 0;
 
@@ -46,7 +42,4 @@ int Projectile::getTimeMov(float diff)
     return (0);
 }
 
-int Projectile::getCurrentCapacity()
-{
-    return (destructionCapacity);
-}
+int Projectile::getCurrentCapacity() {return (destructionCapacity);}
