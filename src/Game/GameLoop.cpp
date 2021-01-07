@@ -188,6 +188,15 @@ void GameLoop::MapGeneration(vector<string> _map) {
     door = make_shared<Door>(_map);
 }
 
+void GameLoop::earnXp(shared_ptr<Character> &perso, size_t var) {
+    perso->exp += var;
+    while (perso->exp >= perso->lvl) {
+        perso->exp -= perso->lvl;
+        perso->lvl ++;
+        // cout << "New level reach: " << perso->lvl << " (exp: " << perso->exp << ")" << endl;
+    }
+}
+
 void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
     int res = -1;
     sf::Sprite persoSprite = perso->getSprite();
@@ -201,6 +210,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
                 if (_sound)
                     gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
+                earnXp(perso, 1);
             } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
         }
@@ -229,6 +239,7 @@ void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
                 if (_sound)
                     gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
+                earnXp(perso, 3);
             } if (res == 1)
                 Runnerlist.erase(Runnerlist.begin() + j);
         }

@@ -37,26 +37,30 @@ Character::Character(shared_ptr<sf::Texture> theone) {
     sprite.setTextureRect(sf::IntRect(65, 5, 19, 32));
     sprite.setScale(sf::Vector2f(3, 3));
     sprite.setPosition(sf::Vector2f(200, 1102 - (32 * 3)));
+
+    lvl = 1;
+    exp = 0;
     move_Y = 43;
-    sprintBar = 100;
     notMove_Y = 6;
+    cacRectPos = 0;
+    weapon_type = 1;
+    sprintBar = 100;
     move_Xmax = 315;
     shootRectPos = 0;
     channelRectPos = 0;
-    weapon_type = 1;
-    invulnerability = 0;
-    cacRectPos = 0;
     jumpCacRectPos = 0;
+    invulnerability = 0;
+
     is_cac = false;
+    is_hooked = false;
     is_moving = false;
     is_jumping = false;
-    is_shooting = false;
     is_falling = false;
     is_hooking = false;
+    is_shooting = false;
     is_switching = false;
-    is_channeling = false;
     is_sprinting = false;
-    is_hooked = false;
+    is_channeling = false;
 
     cac_clock.restartClock();
     move_clock.restartClock();

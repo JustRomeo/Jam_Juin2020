@@ -76,6 +76,8 @@ class Character {
         void jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
         void fallingAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
 
+        size_t exp;
+        size_t lvl;
         int _lifes;
         int invulnerability;
 
@@ -83,8 +85,8 @@ class Character {
         int move_Y;
         int move_Xmax;
         int notMove_Y;
-        int weapon_type;
         int sprintBar;
+        int weapon_type;
 
         int cacRectPos;
         int shootRectPos;

@@ -19,6 +19,7 @@ Runner::Runner(int X, int Y) {
     _texture = make_shared<sf::Texture>();
 
     setTexture("resources/Images/Game/runner.gif");
+
     _sprite->setPosition(_pos);
     _sprite->setScale(sf::Vector2f(2, 2));
     _sprite->setTextureRect(sf::IntRect(71, 16, 44, 62));
@@ -64,9 +65,7 @@ bool Runner::isFalllingStop(std::vector<std::shared_ptr<Block>> mapSFML) {
     return false;
 }
 
-int abs(int one, int two) {
-    return (one - two) * (one - two > 0 ? 1 : -1);
-}
+int abs(int one, int two) {return (one - two) * (one - two > 0 ? 1 : -1);}
 
 void Runner::move(vector<shared_ptr<Block>> mapSFML, shared_ptr<Character> player) {
     bool near = (abs(player->getSprite().getPosition().y, this->_pos.y) < 15 ? true : false);
