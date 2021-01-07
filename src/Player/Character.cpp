@@ -362,7 +362,7 @@ void Character::display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<B
         cacAnimation();
     if (is_hooking || is_hooked)
         hookAnimation(window, mapSFML);
-    hud->display(window, weapon_type, _lifes);
+    hud->display(window, weapon_type, _lifes, lvl);
     hud->displaySprintBar(window, sprintBar);
     if (sprint_clock.getTimeDiff(0.1))
         sprintBar < 100 ? sprintBar++: sprintBar+=0;

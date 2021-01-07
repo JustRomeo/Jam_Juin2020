@@ -24,7 +24,7 @@ class HUD {
         void batteryChanneling();
         void incMun(int batteryNb);
         void displaySprintBar(shared_ptr<sf::RenderWindow> window, int sprintBar);
-        void display(shared_ptr<sf::RenderWindow> window, int weapon_type, int life);
+        void display(shared_ptr<sf::RenderWindow> window, int weapon_type, int life, size_t lvl);
 
     protected:
     private:
