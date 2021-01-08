@@ -14,6 +14,7 @@ Character::Character(shared_ptr<sf::Texture> theone) {
     shot_sound2 = make_unique<MusicSFML>();
     shot_sound3 = make_unique<MusicSFML>();
     shot_sound4 = make_unique<MusicSFML>();
+    _comptree = make_shared<CompetenceTree>();
 
     try {
         jump_sound->load("resources/Sounds/sounds/Jump.ogg");
@@ -299,8 +300,7 @@ void Character::shootAnimation() {
     }
 }
 
-void Character::switchAnimation()
-{
+void Character::switchAnimation() {
     sf::IntRect rect;
 
     if (switch_clock.getTimeDiff(0.2) == 1) {
@@ -328,8 +328,7 @@ void Character::hookShoot(vector<shared_ptr<Block>> mapSFML) {
     }
 }
 
-void Character::hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML)
-{
+void Character::hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML) {
     sf::Vertex line[2];
 
     hookBeg.y = sprite.getPosition().y + 40;
@@ -476,7 +475,7 @@ void Character::incWeapon() {
     if (!is_switching && !is_jumping && !is_falling && !is_channeling && !is_shooting) {
         is_switching = true;
         hud->incWeaponType();
-        weapon_type++;
+        weapon_type ++;
         if (weapon_type > 4)
             weapon_type = 1;
         if (sprite.getScale().x < 0)
@@ -554,10 +553,10 @@ int Character::not_colision(vector<shared_ptr<Block>> mapSFML) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
         if (charact.intersects(g)) {
             coli_sound->start();
-            return (0);
+            return 0;
         }
     }
-    return (1);
+    return 1;
 }
 
 int Character::collisionFall(vector<shared_ptr<Block>> mapSFML) {
@@ -587,10 +586,10 @@ int Character::collisionFall(vector<shared_ptr<Block>> mapSFML) {
             sprite.setPosition(sprite.getPosition().x, y);
             if (not_colision(mapSFML) == 0)
                 unblockCharacter(mapSFML);
-            return (0);
+            return 0;
         }
     }
-    return (1);
+    return 1;
 }
 
 int Character::checkFall(vector<shared_ptr<Block>> mapSFML) {
@@ -613,10 +612,10 @@ int Character::checkFall(vector<shared_ptr<Block>> mapSFML) {
     for (size_t i = 0; i < mapSFML.size(); i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
         if (g.contains(charact) || g.contains(charact_xm) || g.contains(charact_mx))
-            return (0);
+            return 0;
     }
     fall();
-    return (1);
+    return 1;
 }
 
 void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
@@ -631,18 +630,15 @@ void Character::checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList) {
     }
 }
 
-bool Character::isActionPossible()
-{
-    if (is_jumping == false && is_falling == false && is_channeling == false &&
-        is_switching == false && is_shooting == false && is_cac == false && is_hooking == false &&
-        is_sprinting == false)
-        return (true);
-    return (false);
+bool Character::isActionPossible() {
+    if (!is_jumping && !is_falling && !is_channeling && !is_switching && !is_shooting && !is_cac && !is_hooking && !is_sprinting)
+        return true;
+    return false;
 }
 
 int Character::channelBat() {
     hud->batteryChanneling();
-    return (0);
+    return 0;
 }
 
 bool Character::isCac() {return (is_cac);}
@@ -654,7 +650,6 @@ void Character::stopSprint() {is_sprinting = false;}
 bool Character::isShooting() {return (is_shooting);}
 sf::Sprite Character::getSprite() {return (sprite);}
 bool Character::isSwitching() {return (is_switching);}
-//bool Character::isSprinting() {return (is_sprinting);}
 bool Character::isChanneling() {return (is_channeling);}
 int Character::getMun() {return (hud->getMunBattery());}
 void Character::setMoving(bool status) {is_moving = status;}

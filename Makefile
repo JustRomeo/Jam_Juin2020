@@ -53,6 +53,7 @@ SRC =	$(SRCP)main.cpp					\
 		$(MENP)MapMenu.cpp				\
 		$(PLAP)Battery.cpp				\
 		$(PLAP)Character.cpp			\
+		$(PLAP)CompetenceTree.cpp		\
 		$(PLAP)HUD.cpp					\
 		$(PLAP)MunPlus.cpp				\
 		$(PLAP)Time.cpp 				\

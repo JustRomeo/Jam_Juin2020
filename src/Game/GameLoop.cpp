@@ -101,7 +101,7 @@ int GameLoop::menu() {
                 Bar->load(window);
                 ItemsGeneration(map);
                 Bar->load(window);
-                return (gameLoop());
+                return gameLoop();
             }
         }
     } catch (Exception &e) {
@@ -148,8 +148,7 @@ void GameLoop::PlusGeneration(vector<string> map) {
             if (map[i][j] == '1' || map[i][j] == '2' || map[i][j] == '3') {
                 row ++;
                 Bar->load(window, "Generation   des   Boosters(" + to_string(row) + ")", false);
-            }
-            switch(map[i][j]) {
+            } switch(map[i][j]) {
                 case '1': PlusList.push_back(make_shared<MunPlus>(1, j * 157 + 50, i * 157 + 60)); break;
                 case '2': PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60)); break;
                 case '3': PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60)); break;
@@ -193,6 +192,7 @@ void GameLoop::earnXp(shared_ptr<Character> &perso, size_t var) {
     while (perso->exp >= perso->lvl) {
         perso->exp -= perso->lvl;
         perso->lvl ++;
+        perso._comptree->upgradebyLevel(perso->lvl);
         // cout << "New level reach: " << perso->lvl << " (exp: " << perso->exp << ")" << endl;
     }
 }
@@ -274,7 +274,7 @@ int GameLoop::movementEvent(sf::Event event) {
             return (3);
         }
     }
-    return (0);
+    return 0;
 }
 
 int GameLoop::SecondmovementEvent(sf::Event event) {
@@ -296,7 +296,7 @@ int GameLoop::SecondmovementEvent(sf::Event event) {
             return (3);
         }
     }
-    return (0);
+    return 0;
 }
 
 int GameLoop::shootEvent() {

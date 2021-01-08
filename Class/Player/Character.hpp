@@ -17,6 +17,7 @@
 #include "Exception.hpp"
 #include "MusicSFML.hpp"
 #include "LibGraphics.hpp"
+#include "CompetenceTree.hpp"
 
 using namespace std;
 class Character {
@@ -24,62 +25,63 @@ class Character {
         Character(shared_ptr<sf::Texture> = nullptr);
         ~Character();
 
-        void jump();
-        void fall();
-        bool isCac();
-        void shoot();
-        int getMun();
-        void sprint();
-        int getWeapon();
-        void incWeapon();
-        bool isJumping();
-        bool getMoving();
-        bool isHooking();
-        bool isFalling();
-        int channelBat();
-        void cacAttack();
-        void stopSprint();
-        bool isShooting();
-        void channeling();
-        void restartPos();
-        bool isSwitching();
-        bool isSprinting();
-        bool isChanneling();
-        int getMunBattery();
-        void cacAnimation();
-        void createAnimRec();
-        void shootAnimation();
-        sf::Sprite getSprite();
-        void switchAnimation();
-        void spriteAnimation();
-        void collisionProblem();
-        bool isActionPossible();
-        void channelingAnimation();
-        void setMoving(bool status);
-        void changeSprite(string path);
+        void jump(void);
+        void fall(void);
+        bool isCac(void);
+        void shoot(void);
+        int getMun(void);
+        void sprint(void);
+        int getWeapon(void);
+        void incWeapon(void);
+        bool isJumping(void);
+        bool getMoving(void);
+        bool isHooking(void);
+        bool isFalling(void);
+        int channelBat(void);
+        void cacAttack(void);
+        void setMoving(bool);
+        void stopSprint(void);
+        bool isShooting(void);
+        void channeling(void);
+        void restartPos(void);
+        bool isSwitching(void);
+        bool isSprinting(void);
+        bool isChanneling(void);
+        int getMunBattery(void);
+        void cacAnimation(void);
+        void createAnimRec(void);
+        void shootAnimation(void);
+        void changeSprite(string);
+        sf::Sprite getSprite(void);
+        void switchAnimation(void);
+        void spriteAnimation(void);
+        void collisionProblem(void);
+        bool isActionPossible(void);
+        void channelingAnimation(void);
         sf::Vector2f getSpriteMid(void);
         void setSpritePosition(int, int);
         void addValue(shared_ptr<Objet>);
+        void hook(shared_ptr<sf::RenderWindow>);
+        int checkFall(vector<shared_ptr<Block>>);
+        void hookShoot(vector<shared_ptr<Block>>);
+        int not_colision(vector<shared_ptr<Block>>);
+        int collisionFall(vector<shared_ptr<Block>>);
         vector<shared_ptr<Objet>> getItems(void) const;
-        void hook(shared_ptr<sf::RenderWindow> window);
-        int checkFall(vector<shared_ptr<Block>> mapSFML);
-        void hookShoot(vector<shared_ptr<Block>> mapSFML);
-        int not_colision(vector<shared_ptr<Block>> mapSFML);
-        int collisionFall(vector<shared_ptr<Block>> mapSFML);
-        void unblockCharacter(vector<shared_ptr<Block>> mapSFML);
-        void checkCollMunPlus(vector<shared_ptr<MunPlus>> &PlusList);
-        void moveChar(shared_ptr<sf::RenderWindow> window, int orient);
-        void display(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void moveLeft(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void moveRigth(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void hookAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
-        void fallingAnimation(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML);
+        void unblockCharacter(vector<shared_ptr<Block>>);
+        void moveChar(shared_ptr<sf::RenderWindow>, int);
+        void checkCollMunPlus(vector<shared_ptr<MunPlus>> &);
+        void display(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
+        void moveLeft(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
+        void moveRigth(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
+        void hookAnimation(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
+        void jumpAnimation(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
+        void fallingAnimation(shared_ptr<sf::RenderWindow>, vector<shared_ptr<Block>>);
 
         size_t exp;
         size_t lvl;
         int _lifes;
         int invulnerability;
+        shared_ptr<CompetenceTree> _comptree;
 
     private:
         int move_Y;
