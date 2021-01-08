@@ -21,39 +21,39 @@ HUD::~HUD() {}
 void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int life, size_t lvl) {
     int x = 800;
     int x1 = 20;
-    sf::Font font;
-    sf::Text text1;
-    sf::Text text2;
-    sf::Text lvltxt;
-    sf::RectangleShape hudBack = sf::RectangleShape(sf::Vector2f(500, 200));
+    shared_ptr<sf::Font> font = make_shared<sf::Font>();
+    shared_ptr<sf::Text> text1 = make_shared<sf::Text>();
+    shared_ptr<sf::Text> text2 = make_shared<sf::Text>();
+    shared_ptr<sf::Text> lvltxt = make_shared<sf::Text>();
+    shared_ptr<sf::RectangleShape> hudBack = make_shared<sf::RectangleShape>(sf::RectangleShape(sf::Vector2f(500, 200)));
 
-    if (font.loadFromFile("./resources/character/arial.ttf") == false)
+    if (!font->loadFromFile("./resources/character/arial.ttf"))
         throw(Exception("can't load police.ttf"));
 
-    text2.setFont(font);
-    text2.setString("Next:");
-    text2.setCharacterSize(30);
-    text2.setStyle(sf::Text::Bold);
-    text2.setPosition(window->getView().getCenter().x - 700 + x1, window->getView().getCenter().y + 450);
+    text2->setFont(*font);
+    text2->setString("Next:");
+    text2->setCharacterSize(30);
+    text2->setStyle(sf::Text::Bold);
+    text2->setPosition(window->getView().getCenter().x - 700 + x1, window->getView().getCenter().y + 450);
 
-    text1.setFont(font);
-    text1.setString("Ammo:");
-    text1.setCharacterSize(30);
-    text1.setStyle(sf::Text::Bold);
-    text1.setPosition(window->getView().getCenter().x - 915 + x1, window->getView().getCenter().y + 450);
+    text1->setFont(*font);
+    text1->setString("Ammo:");
+    text1->setCharacterSize(30);
+    text1->setStyle(sf::Text::Bold);
+    text1->setPosition(window->getView().getCenter().x - 915 + x1, window->getView().getCenter().y + 450);
 
-    lvltxt.setFont(font);
-    lvltxt.setString("lvl: " + to_string(lvl));
-    lvltxt.setCharacterSize(30);
-    lvltxt.setStyle(sf::Text::Bold);
-    lvltxt.setPosition(window->getView().getCenter().x - 915 + x1, window->getView().getCenter().y + 325);
+    lvltxt->setFont(*font);
+    lvltxt->setString("lvl: " + to_string(lvl));
+    lvltxt->setCharacterSize(30);
+    lvltxt->setStyle(sf::Text::Bold);
+    lvltxt->setPosition(window->getView().getCenter().x - 915 + x1, window->getView().getCenter().y + 325);
 
-    hudBack.setFillColor(sf::Color::Black);
-    hudBack.setPosition(window->getView().getCenter().x - 935 + x1, window->getView().getCenter().y + 300);
-    window->draw(hudBack);
-    window->draw(text1);
-    window->draw(text2);
-    window->draw(lvltxt);
+    hudBack->setFillColor(sf::Color::Black);
+    hudBack->setPosition(window->getView().getCenter().x - 935 + x1, window->getView().getCenter().y + 300);
+    window->draw(*hudBack);
+    window->draw(*text1);
+    window->draw(*text2);
+    window->draw(*lvltxt);
 
     battery[weapon_type - 1]->reloadBattery();
     battery[weapon_type - 1]->display(window, {window->getView().getCenter().x - 800, window->getView().getCenter().y + 450});
