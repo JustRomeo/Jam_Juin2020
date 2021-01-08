@@ -1,6 +1,12 @@
 #ifndef __CompetenceTree__
 #define __CompetenceTree__
 
+#include <memory>
+#include <iostream>
+
+#include "LibGraphics.hpp"
+
+using namespace std;
 class CompetenceTree {
     public:
         CompetenceTree();
@@ -9,10 +15,11 @@ class CompetenceTree {
         void upgradebyLevel(size_t lvl);
         sf::Vector2f getSpeed(void) const;
 
-    private:
+        float _spdshot;
+        float _spdreload;
         sf::Vector2f _speed;
         sf::Vector2f _lifeproj;
-        sf::Vector2f _spdreload;
+    private:
 
     protected:
 };

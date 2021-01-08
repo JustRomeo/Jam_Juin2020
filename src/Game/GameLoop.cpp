@@ -192,7 +192,7 @@ void GameLoop::earnXp(shared_ptr<Character> &perso, size_t var) {
     while (perso->exp >= perso->lvl) {
         perso->exp -= perso->lvl;
         perso->lvl ++;
-        perso._comptree->upgradebyLevel(perso->lvl);
+        perso->_comptree->upgradebyLevel(perso->lvl);
         // cout << "New level reach: " << perso->lvl << " (exp: " << perso->exp << ")" << endl;
     }
 }

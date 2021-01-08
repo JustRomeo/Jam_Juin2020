@@ -114,26 +114,25 @@ void Character::createAnimRec() {
 }
 
 void Character::moveChar(shared_ptr<sf::RenderWindow> window, int orient) {
-    sf::View view = window->getView();
     sf::Vector2f move;
+    sf::View view = window->getView();
 
-    is_sprinting ? move = sf::Vector2f(20 * orient, 0) : move = sf::Vector2f(10 * orient, 0);
+    is_sprinting ? move = sf::Vector2f((20 + _comptree->_speed.x) * orient, 0) : move = sf::Vector2f((10 + _comptree->_speed.x) * orient, 0);
     if (is_sprinting)
         sprintBar > 0 ? sprintBar -- : is_sprinting = false;
     if (is_jumping || is_falling)
-        is_sprinting ? move = sf::Vector2f(10 * orient, 0) : move = sf::Vector2f(5 * orient, 0);
+        is_sprinting ? move = sf::Vector2f((10 + _comptree->_speed.x) * orient, 0) : move = sf::Vector2f((5 + (_comptree->_speed.x / 2)) * orient, 0);
     else
-        is_sprinting ? move = sf::Vector2f(20 * orient, 0) : move;
+        is_sprinting ? move = sf::Vector2f((20 + _comptree->_speed.x) * orient, 0) : move;
     view.move(move);
     sprite.move(move);
     window->setView(view);
 }
 
-void Character::moveLeft(shared_ptr<sf::RenderWindow> window,
-    vector<shared_ptr<Block>> mapSFML) {
-    sf::IntRect rect = sprite.getTextureRect();
-    sf::View view= window->getView();
+void Character::moveLeft(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML) {
     float timeAnim;
+    sf::View view = window->getView();
+    sf::IntRect rect = sprite.getTextureRect();
 
     is_sprinting ? timeAnim = 0.005 : timeAnim = 0.01;
     is_moving = true;
@@ -155,11 +154,10 @@ void Character::moveLeft(shared_ptr<sf::RenderWindow> window,
         unblockCharacter(mapSFML);
 }
 
-void Character::moveRigth(shared_ptr<sf::RenderWindow> window,
-    vector<shared_ptr<Block>> mapSFML) {
-    sf::IntRect rect = sprite.getTextureRect();
-    sf::View view = window->getView();
+void Character::moveRigth(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Block>> mapSFML) {
     float timeAnim;
+    sf::View view = window->getView();
+    sf::IntRect rect = sprite.getTextureRect();
 
     is_sprinting ? timeAnim = 0.005 : timeAnim = 0.01;
     is_moving = true;
@@ -288,7 +286,7 @@ void Character::cacAnimation() {
 }
 
 void Character::shootAnimation() {
-    if (move_clock.getTimeDiff(0.06) == 1) {
+    if (move_clock.getTimeDiff(_comptree->_spdshot) == 1) {
         shootRectPos ++;
         if (shootRectPos > 8) {
             is_shooting = false;
@@ -303,7 +301,7 @@ void Character::shootAnimation() {
 void Character::switchAnimation() {
     sf::IntRect rect;
 
-    if (switch_clock.getTimeDiff(0.2) == 1) {
+    if (switch_clock.getTimeDiff(_comptree->_spdreload) == 1) {
         rect = sprite.getTextureRect();
         rect.left += 50;
         if (rect.left > 110) {
