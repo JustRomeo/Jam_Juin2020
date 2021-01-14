@@ -35,8 +35,7 @@ GameMusic::GameMusic() {
 
 GameMusic::~GameMusic() {}
 
-void GameMusic::pause_music(int weapon)
-{
+void GameMusic::pause_music(int weapon) {
     switch(weapon) {
         case 1: music_1->pause(); break;
         case 2: music_2->pause(); break;
@@ -44,8 +43,7 @@ void GameMusic::pause_music(int weapon)
     }
 }
 
-void GameMusic::switch_music(int weapon)
-{
+void GameMusic::switch_music(int weapon) {
     switch(weapon) {
         case 1: music_1->start(); break;
         case 2: music_2->start(); break;
@@ -54,11 +52,13 @@ void GameMusic::switch_music(int weapon)
 }
 
 
-void GameMusic::endAllMusic()
-{
+void GameMusic::endAllMusic() {
     music_1->stop();
     music_2->stop();
     music_3->stop();
+    end_music->stop();
+    death_perso->stop();
+    death_ennemi->stop();
 }
 
 void GameMusic::stopMainMusic() {music->stop();}

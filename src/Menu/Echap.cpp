@@ -33,13 +33,12 @@ EchapMenu::EchapMenu(bool &sound_on) {
         sound = std::make_shared<ImageSFML>("resources/Images/Menu/sound_off.png");
 
     play->setColor(sf::Color::White, sf::Color::Black, 5);
-    play->setText("resources/Buttons/text/Aileron-Black.otf", "play", 75, sf::Color::Black);
-
-    quit->setColor(sf::Color::White, sf::Color::Black, 5);
-    quit->setText("resources/Buttons/text/Aileron-Black.otf", "quit", 75, sf::Color::Black);
-
     back->setColor(sf::Color::White, sf::Color::Black, 5);
+    quit->setColor(sf::Color::White, sf::Color::Black, 5);
+
+    play->setText("resources/Buttons/text/Aileron-Black.otf", "play", 75, sf::Color::Black);
     back->setText("resources/Buttons/text/Aileron-Black.otf", "back", 75, sf::Color::Black);
+    quit->setText("resources/Buttons/text/Aileron-Black.otf", "quit", 75, sf::Color::Black);
 
     cursor->setScale(sf::Vector2f(2.4, 2.4));
     sound->setScale(sf::Vector2f(0.25, 0.25));
@@ -57,6 +56,16 @@ EchapMenu::EchapMenu(bool &sound_on) {
     controler->setScale(controler_on == GameLoop::Controler::KeyBoard ? sf::Vector2f(0.3, 0.3) : sf::Vector2f(1, 1));
 }
 EchapMenu::~EchapMenu() {}
+
+void EchapMenu::updateSong(void) {
+    soundOn = soundOn ? false : true;
+    if (!soundOn)
+        sound = std::make_shared<ImageSFML>("resources/Images/Menu/sound_off.png");
+    else
+        sound = std::make_shared<ImageSFML>("resources/Images/Menu/sound.png");
+    sound->setScale(sf::Vector2f(0.25, 0.25));
+    sound->setPosition(sf::Vector2f(50, 50));
+}
 
 void EchapMenu::dispEchapMenu(std::shared_ptr<sf::RenderWindow> window) {
     cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 130));
@@ -81,7 +90,6 @@ int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window) {
     size_t buttons = sf::Joystick::getButtonCount(0);
     GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
 
-    cout << (connected ? "A Joy's connected and support " : "No Joy's connected") << (connected ? to_string(buttons) : "") << (connected ? " buttons" : "") << endl;
     if (connected) {
         bool hasX = sf::Joystick::hasAxis(0, sf::Joystick::X);
         bool hasY = sf::Joystick::hasAxis(0, sf::Joystick::Y);
@@ -90,7 +98,6 @@ int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window) {
             throw Exception("Error: Disfunction Mannette");
         float positionX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
         float positionY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
-        cout << "Position X:" << positionX << " | Y:" << positionY << endl;
     }
 
     window->setView(window->getDefaultView());
@@ -105,10 +112,9 @@ int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window) {
                 return QUIT;
             else if (play->isClicked(event))
                 return PLAY;
-            else if (sound->isClicked(event)) {
-                soundOn = !soundOn;
-                sound->setTexture(soundOn ? "resources/Images/Menu/sound.png" : "resources/Images/Menu/sound_off.png");
-            } else if (larrow->isClicked(event) || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)) {
+            else if (sound->isClicked(event))
+                updateSong();
+            else if (larrow->isClicked(event) || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)) {
                 switch (controler_on) {
                     case GameLoop::Controler::KeyBoard: controler_on = GameLoop::Controler::RemoteXBOX; break;
                     case GameLoop::Controler::RemoteXBOX: controler_on = GameLoop::Controler::RemotePS; break;
@@ -134,3 +140,5 @@ int EchapMenu::Menu(std::shared_ptr<sf::RenderWindow> window) {
     }
     return false;
 }
+
+bool EchapMenu::isSoundOn(void) const {return soundOn;}

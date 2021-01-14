@@ -21,6 +21,7 @@
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
     try {
+        _sound = true;
         auto image = sf::Image{};
         if (!image.loadFromFile("resources/Images/Icon/icon.png"))
             throw Exception("Loading Ressource Failed");
@@ -75,7 +76,8 @@ int GameLoop::menu() {
     vector<string> map;
 
     window->setMouseCursorVisible(true);
-    gameMusic->playMainMusic();
+    if (_sound)
+        gameMusic->playMainMusic();
     try {
         while (res == -1) {
             if (!MainMenu().Menu(window, *this))
@@ -327,10 +329,10 @@ int GameLoop::SecondshootEvent() {
 
 int GameLoop::switchWeaponEvent() {
     perso->incWeapon();
-    if (!_sound)
-        return 3;
-    gameMusic->pause_music(perso->getWeapon());
-    gameMusic->switch_music(perso->getWeapon());
+    if (_sound) {
+        gameMusic->pause_music(perso->getWeapon());
+        gameMusic->switch_music(perso->getWeapon());
+    }
     return (3);
 }
 
@@ -341,24 +343,24 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
     while (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             window->close();
-            return (-1);
+            return -1;
         } if (perso->isActionPossible()) {
             if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left || InputControler().isShooting())
-                return (shootEvent());
+                return shootEvent();
             if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right || InputControler().isShooting()) {
                 perso->hook(window);
-                return (3);
+                return 3;
             }
         } if (InputControler().isSwitching())
-            return (switchWeaponEvent());
+            return switchWeaponEvent();
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
             perso->cacAttack();
-            return (3);
+            return 3;
         }
     } if (movementEvent(event) == 3)
-        return (3);
+        return 3;
     if (_players > 1 && SecondmovementEvent(event) == 3)
-        return (3);
+        return 3;
     if (perso->isActionPossible()) {
         perso->restartPos();
         window->setView(window->getView());
@@ -366,11 +368,14 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         window->setMouseCursorVisible(true);
         switch (echapMenu->Menu(window)) {
             case -1: return Quit;
-            case 0:  return resume;
+            case 0:  break;
             case 1:  return replay;
             case 2:  return back;
             default: throw (Exception("Error: Menu Failed: Abort"));
         }
+        _sound = echapMenu->isSoundOn();
+        if (!_sound)
+            gameMusic->endAllMusic();
         return 1;
     }
     return 0;

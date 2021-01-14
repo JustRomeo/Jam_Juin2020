@@ -52,7 +52,3 @@ bool InputControler::isRight(void) const {
         return true;
     return false;
 }
-
-// bool InputControler::setMappage() {
-
-// }

@@ -18,7 +18,9 @@ class EchapMenu {
         EchapMenu(bool &sound_on);
         ~EchapMenu();
 
+        void updateSong(void);
         void createButton(void);
+        bool isSoundOn(void) const;
         int Menu(shared_ptr<sf::RenderWindow>);
         void dispEchapMenu(shared_ptr<sf::RenderWindow>);
 
