@@ -28,6 +28,7 @@
 #include "LoadingBar.hpp"
 #include "LibGraphics.hpp"
 #include "IProjectile.hpp"
+#include "ManetteSFML.hpp"
 #include "ProjectileFactory.hpp"
 
 using namespace std;
@@ -87,6 +88,7 @@ class GameLoop {
         vector<shared_ptr<Ennemi>> Ennemilist;
         vector<shared_ptr<Runner>> Runnerlist;
         vector<shared_ptr<Lootable>> Itemslist;
+        shared_ptr<ManetteSFML> RemoteControler;
         vector<shared_ptr<IProjectile>> projectile;
 
     protected:

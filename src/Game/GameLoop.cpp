@@ -15,6 +15,8 @@
 #include "MapUpdater.hpp"
 #include "Multiplayer.hpp"
 #include "Cinematique.hpp"
+#include "InputControler.hpp"
+
 
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
@@ -35,6 +37,7 @@ GameLoop::GameLoop() {
         _players = 1;
         _sound = true;
         _remote = Controler::KeyBoard;
+        RemoteControler = make_shared<ManetteSFML>();
 
         window->setView(*view);
         window->setFramerateLimit(60);
@@ -193,7 +196,6 @@ void GameLoop::earnXp(shared_ptr<Character> &perso, size_t var) {
         perso->exp -= perso->lvl;
         perso->lvl ++;
         perso->_comptree->upgradebyLevel(perso->lvl);
-        // cout << "New level reach: " << perso->lvl << " (exp: " << perso->exp << ")" << endl;
     }
 }
 
@@ -257,19 +259,19 @@ void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
 
 int GameLoop::movementEvent(sf::Event event) {
     if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+        if (InputControler().isSprinting())
             perso->sprint();
         else
             perso->stopSprint();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (InputControler().isJumping()) {
             perso->jump();
             return (3);
-        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        } if (InputControler().isLeft()) {
             perso->moveLeft(window, mapSFML);
             return (3);
         } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (InputControler().isRight()) {
             perso->moveRigth(window, mapSFML);
             return (3);
         }
@@ -340,14 +342,14 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         if (event.type == sf::Event::Closed) {
             window->close();
             return (-1);
-        } if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left && perso->isActionPossible())
-            return (shootEvent());
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::U) && perso2->isActionPossible())
-            return SecondshootEvent();
-        if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right && perso->isActionPossible()) {
-            perso->hook(window);
-            return (3);
-        } if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F)
+        } if (perso->isActionPossible()) {
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left || InputControler().isShooting())
+                return (shootEvent());
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right || InputControler().isShooting()) {
+                perso->hook(window);
+                return (3);
+            }
+        } if (InputControler().isSwitching())
             return (switchWeaponEvent());
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
             perso->cacAttack();

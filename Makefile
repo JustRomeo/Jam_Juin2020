@@ -21,6 +21,7 @@ SYSP =	src/System/
 SRC =	$(SRCP)main.cpp					\
 		\
 		$(COMP)EventHandler.cpp			\
+		$(COMP)InputControler.cpp		\
 		$(COMP)ImageSFML.cpp			\
 		$(COMP)LoadingBar.cpp			\
 		$(COMP)ManetteSFML.cpp			\
