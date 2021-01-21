@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** Soundwaves
+** File description:
+** Input Controler
+*/
+
 #include "InputControler.hpp"
 
 InputControler::InputControler() {

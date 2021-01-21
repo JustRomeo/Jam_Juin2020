@@ -21,14 +21,13 @@
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
     try {
-        _sound = true;
         auto image = sf::Image{};
         if (!image.loadFromFile("resources/Images/Icon/icon.png"))
             throw Exception("Loading Ressource Failed");
         perso = make_shared<Character>();
         perso2 = make_shared<Character>();
         gameMusic = make_shared<GameMusic>();
-        echapMenu = make_shared<EchapMenu>(_sound);
+        echapMenu = make_shared<EchapMenu>();
         view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = make_shared<Sprite>("resources/Images/Game/space.png");
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
@@ -36,7 +35,6 @@ GameLoop::GameLoop() {
         window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
 
         _players = 1;
-        _sound = true;
         _remote = Controler::KeyBoard;
         RemoteControler = make_shared<ManetteSFML>();
 
@@ -76,8 +74,7 @@ int GameLoop::menu() {
     vector<string> map;
 
     window->setMouseCursorVisible(true);
-    if (_sound)
-        gameMusic->playMainMusic();
+    gameMusic->playMainMusic();
     try {
         while (res == -1) {
             if (!MainMenu().Menu(window, *this))
@@ -211,8 +208,7 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
         for (size_t j = 0; j < Ennemilist.size() && res != 0 && res != 1; j++) {
             res = projectile[i]->checkKill(Ennemilist[j]);
             if (projectile[i]->getCurrentCapacity() <= 0) {
-                if (_sound)
-                    gameMusic->startDeathMusic();
+                gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
                 earnXp(perso, 1);
             } if (res == 1)
@@ -240,8 +236,7 @@ void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
         for (size_t j = 0; j < Runnerlist.size() && res != 0 && res != 1; j++) {
             res = projectile[i]->checkKill(Runnerlist[j]);
             if (projectile[i]->getCurrentCapacity() <= 0) {
-                if (_sound)
-                    gameMusic->startDeathMusic();
+                gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
                 earnXp(perso, 3);
             } if (res == 1)
@@ -329,10 +324,8 @@ int GameLoop::SecondshootEvent() {
 
 int GameLoop::switchWeaponEvent() {
     perso->incWeapon();
-    if (_sound) {
-        gameMusic->pause_music(perso->getWeapon());
-        gameMusic->switch_music(perso->getWeapon());
-    }
+    gameMusic->pause_music(perso->getWeapon());
+    gameMusic->switch_music(perso->getWeapon());
     return (3);
 }
 
@@ -366,16 +359,22 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         window->setMouseCursorVisible(true);
-        switch (echapMenu->Menu(window)) {
+        if (echapMenu->Menu(window) == 0) {
+            // gameMusic->endAllMusic();
+            gameMusic->setLvl(echapMenu->getSoundLvl());
+            return 1;
+        } if (echapMenu->Menu(window) == 1) {
+            return replay;
+        } if (echapMenu->Menu(window) == -1) {
+            // System().createFile("Path", _map);
+            return Quit;
+        } switch (echapMenu->Menu(window)) {
             case -1: return Quit;
             case 0:  break;
             case 1:  return replay;
             case 2:  return back;
             default: throw (Exception("Error: Menu Failed: Abort"));
         }
-        _sound = echapMenu->isSoundOn();
-        if (!_sound)
-            gameMusic->endAllMusic();
         return 1;
     }
     return 0;
@@ -433,8 +432,7 @@ int GameLoop::gameLoop() {
         clear();
         perso->checkCollMunPlus(PlusList);
         if (perso->_lifes < 1) {
-            if (_sound)
-                gameMusic->startDeathMusic();
+            gameMusic->startDeathMusic();
             window->setMouseCursorVisible(true);
             switch(DeathMenu().Menu(*window)) {
                 case -1: window->close(); break;
@@ -452,8 +450,8 @@ int GameLoop::gameLoop() {
             }
         } catch (Exception &e) {
             throw Exception("Error in map event: " + *e.what());
-        } if (!_sound)
-            gameMusic->endAllMusic();
+        }
+        gameMusic->endAllMusic();
     }
     return QUIT;
 }

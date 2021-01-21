@@ -9,6 +9,7 @@
 
 GameMusic::GameMusic() {
     try {
+        soundlvl = 50;
         music = make_shared<sf::Music>();
         music_1 = make_shared<MusicSFML>();
         music_2 = make_shared<MusicSFML>();
@@ -51,7 +52,6 @@ void GameMusic::switch_music(int weapon) {
     }
 }
 
-
 void GameMusic::endAllMusic() {
     music_1->stop();
     music_2->stop();
@@ -59,6 +59,16 @@ void GameMusic::endAllMusic() {
     end_music->stop();
     death_perso->stop();
     death_ennemi->stop();
+}
+
+void GameMusic::setLvl(size_t lvl) {
+    soundlvl = lvl;
+    music_1->setVolume(soundlvl);
+    music_2->setVolume(soundlvl);
+    music_3->setVolume(soundlvl);
+    end_music->setVolume(soundlvl);
+    death_perso->setVolume(soundlvl);
+    death_ennemi->setVolume(soundlvl);
 }
 
 void GameMusic::stopMainMusic() {music->stop();}

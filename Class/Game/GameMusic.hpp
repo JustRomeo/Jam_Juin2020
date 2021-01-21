@@ -17,16 +17,18 @@ class GameMusic {
         GameMusic();
         ~GameMusic();
 
+        void setLvl(size_t);
+        void pause_music(int);
+        void switch_music(int);
         void endAllMusic(void);
         void endEndMusic(void);
         void startEndMusic(void);
         void playMainMusic(void);
         void stopMainMusic(void);
         void startDeathMusic(void);
-        void pause_music(int weapon);
-        void switch_music(int weapon);
 
     private:
+        size_t soundlvl;
         shared_ptr<sf::Music> music;
         shared_ptr<MusicSFML> music_1;
         shared_ptr<MusicSFML> music_2;

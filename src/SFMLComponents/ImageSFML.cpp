@@ -110,9 +110,14 @@ bool ImageSFML::isMouseOnImage(void) const {
     return false;
 }
 
+void ImageSFML::setScale(sf::Vector2f size) {
+    _sprite.setScale(size);
+    _width *= size.x;
+    _heigh *= size.y;
+}
+
 sf::Sprite ImageSFML::getSprite(void) {return (_sprite);}
 void ImageSFML::setSprite(sf::Sprite newone) {_sprite = newone;}
 void ImageSFML::setRotate(float angle) {_sprite.setRotation(angle);}
-void ImageSFML::setScale(sf::Vector2f size) {_sprite.setScale(size);}
 shared_ptr<sf::Texture> ImageSFML::getTexture(void) {return this->_texture;}
 void ImageSFML::setSprite(sf::Texture newtexture) {_sprite.setTexture(newtexture);}

@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** Soundwaves
+** File description:
+** Input Controler Class
+*/
+
 #ifndef __InputControler__
 #define __InputControler__
 

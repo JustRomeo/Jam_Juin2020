@@ -15,17 +15,17 @@
 using namespace std;
 class EchapMenu {
     public:
-        EchapMenu(bool &sound_on);
+        EchapMenu();
         ~EchapMenu();
 
-        void updateSong(void);
         void createButton(void);
-        bool isSoundOn(void) const;
+        size_t getSoundLvl(void) const;
+        void updateSong(sf::Event event);
         int Menu(shared_ptr<sf::RenderWindow>);
         void dispEchapMenu(shared_ptr<sf::RenderWindow>);
 
     private:
-        bool soundOn;
+        size_t soundlvl;
 
         shared_ptr<Button> play;
         shared_ptr<Button> back;
@@ -36,6 +36,9 @@ class EchapMenu {
         shared_ptr<ImageSFML> rarrow;
         shared_ptr<ImageSFML> controler;
         shared_ptr<ImageSFML> background;
+        shared_ptr<sf::RectangleShape> rectbase;
+        shared_ptr<sf::RectangleShape> rectload;
+        shared_ptr<sf::RectangleShape> rectcolo;
 
 };
 
