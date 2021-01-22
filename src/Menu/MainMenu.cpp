@@ -9,28 +9,34 @@
 #include "Training.hpp"
 #include "BugsScreen.hpp"
 #include "ControlPanel.hpp"
+#include "EventHandler.hpp"
 
 MainMenu::MainMenu() {
     try {
-        remote = make_shared<ManetteSFML>();
+        _mypseudo = "";
+        _remote_row = 0;
+        isRemoteUsed = false;
 
+        remote = make_shared<ManetteSFML>();
+        texture_1 = make_shared<sf::Texture>();
+        texture_2 = make_shared<sf::Texture>();
+        rectbase = make_shared<sf::RectangleShape>();
+        rectload = make_shared<sf::RectangleShape>();
         bugs = make_shared<ImageSFML>("resources/Buttons/Bugs.png");
         tuto = make_shared<ImageSFML>("resources/Buttons/Tuto.png");
         change = make_shared<ImageSFML>("resources/Buttons/change_off.png");
         cursor = make_shared<ImageSFML>("resources/Images/Game/cursor.png");
         background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
-        manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
-
-        texture_1 = make_shared<sf::Texture>();
-        texture_2 = make_shared<sf::Texture>();
-        texture_1->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png");
-        texture_2->loadFromFile("./resources/character/adventurer-v1.5-Sheet_1.png");
-
         play = make_shared<Button>(sf::Vector2f(800, 200), sf::Vector2f(250, 100));
         ctrl = make_shared<Button>(sf::Vector2f(800, 650), sf::Vector2f(250, 100));
         quit = make_shared<Button>(sf::Vector2f(800, 800), sf::Vector2f(250, 100));
         local = make_shared<Button>(sf::Vector2f(800, 350), sf::Vector2f(250, 100));
         multi = make_shared<Button>(sf::Vector2f(800, 500), sf::Vector2f(250, 100));
+        manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
+        pseudotxt = make_shared<TextSfml>("", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 775, 75);
+
+        texture_1->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png");
+        texture_2->loadFromFile("./resources/character/adventurer-v1.5-Sheet_1.png");
 
         play->setColor(sf::Color::White, sf::Color::Black, 5);
         ctrl->setColor(sf::Color::White, sf::Color::Black, 5);
@@ -55,8 +61,14 @@ MainMenu::MainMenu() {
         tuto->setPosition(sf::Vector2f(25, 200));
         manette_cursor->setPosition(sf::Vector2f(650, 300));
 
-        _remote_row = 0;
-        isRemoteUsed = false;
+        rectload->setSize(sf::Vector2f(298, 48));
+        rectbase->setFillColor(sf::Color::Black);
+        rectload->setFillColor(sf::Color::White);
+        rectbase->setSize(sf::Vector2f(300, 50));
+        rectbase->setPosition(sf::Vector2f(775, 75));
+        rectload->setPosition(sf::Vector2f(775, 75));
+        
+        pseudotxt->setSize(35);
     } catch(Exception &e) {
         throw Exception("Error in MainMenu initialisation: " + *e.what());
     }
@@ -122,13 +134,19 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
         window->clear();
 
         drawImages(window, {background, bugs, tuto, change});
+        window->draw(*rectbase);
+        window->draw(*rectload);
         window->draw(*perso_sprite);
+        window->draw(pseudotxt->getData());
         drawButtons(window, {play, local, multi, ctrl, quit});
 
         remoteChoice(window);
         window->display();
         while (window->pollEvent(event)) {
             change->update(event);
+            EventHandler().inputEvent(event, _mypseudo);
+            pseudotxt->setString(_mypseudo);
+            cout << "Pseudo: " << _mypseudo << endl;
 
             if (sf::Mouse::getPosition().x != last.x || sf::Mouse::getPosition().y != last.y)
                 isRemoteUsed = false;

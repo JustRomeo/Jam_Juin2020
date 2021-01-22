@@ -72,6 +72,7 @@ class GameLoop {
 
     private:
         bool _sound;
+        string _pseudo;
         size_t _players;
         Controler _remote;
 

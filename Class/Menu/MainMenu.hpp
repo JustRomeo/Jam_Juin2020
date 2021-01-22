@@ -32,9 +32,11 @@ class MainMenu {
         bool buttonsChoice(shared_ptr<sf::RenderWindow> window, sf::Event event, GameLoop &game);
 
     private:
+        string _mypseudo;
         bool isRemoteUsed;
         sf::Music *_music;
         size_t _remote_row;
+
         shared_ptr<Button> play;
         shared_ptr<Button> quit;
         shared_ptr<Button> ctrl;
@@ -45,11 +47,14 @@ class MainMenu {
         shared_ptr<ImageSFML> cursor;
         shared_ptr<ImageSFML> change;
         shared_ptr<ManetteSFML> remote;
+        shared_ptr<TextSfml> pseudotxt;
         shared_ptr<ImageSFML> background;
         shared_ptr<sf::Texture> texture_1;
         shared_ptr<sf::Texture> texture_2;
         shared_ptr<sf::Sprite> perso_sprite;
         shared_ptr<ImageSFML> manette_cursor;
+        shared_ptr<sf::RectangleShape> rectbase;
+        shared_ptr<sf::RectangleShape> rectload;
 };
 
 #endif

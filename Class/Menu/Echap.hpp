@@ -24,24 +24,13 @@ class EchapMenu {
         void updateSong(sf::Event);
         size_t getSoundLvl(void) const;
         void updateControler(sf::Event);
-        int Menu(shared_ptr<sf::RenderWindow>);
-
-        //DEVELOPPEMENT =======================================================
         InputControler getInput(void) const;
+        int Menu(shared_ptr<sf::RenderWindow>);
         void setControler(InputControler newone);
-        //DEVELOPPEMENT =======================================================
-
         void dispEchapMenu(shared_ptr<sf::RenderWindow>);
 
     private:
         size_t soundlvl;
-
-        //DEVELOPPEMENT =======================================================
-        shared_ptr<TextSfml> jumpText;
-        shared_ptr<TextSfml> switchText;
-        shared_ptr<TextSfml> sprintText;
-        shared_ptr<InputControler> _controler;
-        //DEVELOPPEMENT =======================================================
 
         shared_ptr<Button> play;
         shared_ptr<Button> back;
@@ -50,9 +39,13 @@ class EchapMenu {
         shared_ptr<ImageSFML> cursor;
         shared_ptr<ImageSFML> larrow;
         shared_ptr<ImageSFML> rarrow;
+        shared_ptr<TextSfml> jumpText;
+        shared_ptr<TextSfml> switchText;
+        shared_ptr<TextSfml> sprintText;
         shared_ptr<ImageSFML> controler;
         shared_ptr<ImageSFML> rectImage;
         shared_ptr<ImageSFML> _background;
+        shared_ptr<InputControler> _controler;
         shared_ptr<sf::RectangleShape> rectbase;
         shared_ptr<sf::RectangleShape> rectload;
         shared_ptr<sf::RectangleShape> rectcolo;

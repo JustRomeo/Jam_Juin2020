@@ -13,18 +13,10 @@
 #include "WindowLib.hpp"
 
 EchapMenu::EchapMenu() {
-    GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
-    
     soundlvl = 50;
-
-    //DEVELOPPEMENT ===========================================================
-    jumpText = make_shared<TextSfml>("jump key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 350);
-    switchText = make_shared<TextSfml>("switch key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 400);
-    sprintText = make_shared<TextSfml>("sprint key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 450);
+    GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
 
     _controler = make_shared<InputControler>();
-    //DEVELOPPEMENT ===========================================================
-
     rectbase = make_shared<sf::RectangleShape>();
     rectcolo = make_shared<sf::RectangleShape>();
     rectload = make_shared<sf::RectangleShape>();
@@ -36,6 +28,9 @@ EchapMenu::EchapMenu() {
     back = make_shared<Button>(sf::Vector2f(800, 575), sf::Vector2f(250, 100));
     quit = make_shared<Button>(sf::Vector2f(800, 700), sf::Vector2f(250, 100));
     rectImage = make_shared<ImageSFML>("resources/Images/Game/Menu_options.png");
+    jumpText = make_shared<TextSfml>("jump key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 350);
+    switchText = make_shared<TextSfml>("switch key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 400);
+    sprintText = make_shared<TextSfml>("sprint key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 450);
     controler = make_shared<ImageSFML>(controler_on == GameLoop::Controler::KeyBoard ? "resources/Images/Menu/Control.png" : "resources/Images/Menu/mannette.png");
     if (soundlvl != 0)
         sound = make_shared<ImageSFML>("resources/Images/Menu/sound.png");

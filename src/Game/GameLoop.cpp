@@ -21,6 +21,7 @@
 enum CHOICE {QUIT = 0, REPLAY = 1, RETURN = -1};
 GameLoop::GameLoop() {
     try {
+        _pseudo = "";
         auto image = sf::Image{};
         if (!image.loadFromFile("resources/Images/Icon/icon.png"))
             throw Exception("Loading Ressource Failed");
@@ -156,8 +157,7 @@ void GameLoop::PlusGeneration(vector<string> map) {
                 case '2': PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60)); break;
                 case '3': PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60)); break;
                 default: continue;
-            }            // gameMusic->endAllMusic();
-
+            }
         }
     }
 }
