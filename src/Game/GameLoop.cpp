@@ -28,6 +28,7 @@ GameLoop::GameLoop() {
         perso2 = make_shared<Character>();
         gameMusic = make_shared<GameMusic>();
         echapMenu = make_shared<EchapMenu>();
+        inputctrl = make_shared<InputControler>();
         view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
         background = make_shared<Sprite>("resources/Images/Game/space.png");
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
@@ -155,7 +156,8 @@ void GameLoop::PlusGeneration(vector<string> map) {
                 case '2': PlusList.push_back(make_shared<MunPlus>(2, j * 157 + 50, i * 157 + 60)); break;
                 case '3': PlusList.push_back(make_shared<MunPlus>(3, j * 157 + 50, i * 157 + 60)); break;
                 default: continue;
-            }
+            }            // gameMusic->endAllMusic();
+
         }
     }
 }
@@ -256,19 +258,19 @@ void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
 
 int GameLoop::movementEvent(sf::Event event) {
     if (!perso->isShooting() && !perso->isChanneling() && !perso->isSwitching()) {
-        if (InputControler().isSprinting())
+        if (inputctrl->isSprinting(event))
             perso->sprint();
         else
             perso->stopSprint();
-        if (InputControler().isJumping()) {
+        if (inputctrl->isJumping(event)) {
             perso->jump();
             return (3);
-        } if (InputControler().isLeft()) {
+        } if (inputctrl->isLeft(event)) {
             perso->moveLeft(window, mapSFML);
             return (3);
         } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
-        if (InputControler().isRight()) {
+        if (inputctrl->isRight(event)) {
             perso->moveRigth(window, mapSFML);
             return (3);
         }
@@ -338,13 +340,13 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
             window->close();
             return -1;
         } if (perso->isActionPossible()) {
-            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left || InputControler().isShooting())
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left || inputctrl->isShooting(event))
                 return shootEvent();
-            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right || InputControler().isShooting()) {
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right || inputctrl->isShooting(event)) {
                 perso->hook(window);
                 return 3;
             }
-        } if (InputControler().isSwitching())
+        } if (inputctrl->isSwitching(event))
             return switchWeaponEvent();
         if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::R) {
             perso->cacAttack();
@@ -358,9 +360,9 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         perso->restartPos();
         window->setView(window->getView());
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        echapMenu->setControler(*inputctrl);
         window->setMouseCursorVisible(true);
         if (echapMenu->Menu(window) == 0) {
-            // gameMusic->endAllMusic();
             gameMusic->setLvl(echapMenu->getSoundLvl());
             return 1;
         } if (echapMenu->Menu(window) == 1) {
@@ -377,6 +379,9 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
         }
         return 1;
     }
+    inputctrl->setJumpKey(echapMenu->getInput().getJumpKey());
+    inputctrl->setSwitchKey(echapMenu->getInput().getSwitchKey());
+    inputctrl->setSprintKey(echapMenu->getInput().getSprintKey());
     return 0;
 }
 

@@ -47,6 +47,7 @@ class GameLoop {
         int shootEvent(void);
         void reset_map(void);
         void setPlayerNumber(int);
+        void updateControler(void);
         int SecondshootEvent(void);
         int switchWeaponEvent(void);
         int movementEvent(sf::Event);
@@ -84,6 +85,7 @@ class GameLoop {
         shared_ptr<EchapMenu> echapMenu;
         shared_ptr<GameMusic> gameMusic;
         vector<shared_ptr<Block>> mapSFML;
+        shared_ptr<InputControler> inputctrl;
         vector<shared_ptr<MunPlus>> PlusList;
         vector<shared_ptr<Ennemi>> Ennemilist;
         vector<shared_ptr<Runner>> Runnerlist;

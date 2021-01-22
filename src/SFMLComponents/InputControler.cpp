@@ -10,41 +10,46 @@
 InputControler::InputControler() {
     _remote = false;
     remote = make_shared<ManetteSFML>();
+    
+    KeyJump = ' ';
+    KeySprint = 'r';
+    KeySwitching = 'f';
+
     _remote = remote->isConnected();
 }
 InputControler::~InputControler() {}
 
-bool InputControler::isJumping(void) const {
+bool InputControler::isJumping(sf::Event event) const {
     if (_remote && remote->getButtonsClicked() == ManetteSFML::Button::Croix)
         return true;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    if (event.key.code == KeyJump || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
         return true;
     return false;
 }
 
-bool InputControler::isShooting(void) const {
+bool InputControler::isShooting(sf::Event event) const {
     if (_remote && remote->getButtonsClicked() == ManetteSFML::Button::Carre)
         return true;
     return false;
 }
 
-bool InputControler::isSwitching(void) const {
+bool InputControler::isSwitching(sf::Event event) const {
     if (_remote && remote->getButtonsClicked() == ManetteSFML::Button::Triangle)
         return true;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+    if (event.key.code == KeySwitching)
         return true;
     return false;
 }
 
-bool InputControler::isSprinting(void) const {
+bool InputControler::isSprinting(sf::Event event) const {
     if (_remote && remote->getButtonsClicked() == ManetteSFML::Button::Rond)
         return true;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+    if (event.key.code == KeySprint)
         return true;
     return false;
 }
 
-bool InputControler::isLeft(void) const {
+bool InputControler::isLeft(sf::Event event) const {
     if (_remote && remote->getJoysDirection() == ManetteSFML::Gauche)
         return true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -52,10 +57,17 @@ bool InputControler::isLeft(void) const {
     return false;
 }
 
-bool InputControler::isRight(void) const {
+bool InputControler::isRight(sf::Event event) const {
     if (_remote && remote->getJoysDirection() == ManetteSFML::Droite)
         return true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         return true;
     return false;
 }
+
+void InputControler::setJumpKey(int key) {KeyJump = key;}
+int InputControler::getJumpKey(void) const {return KeyJump;}
+void InputControler::setSprintKey(int key) {KeySprint = key;}
+void InputControler::setSwitchKey(int key) {KeySwitching = key;}
+int InputControler::getSprintKey(void) const {return KeySprint;}
+int InputControler::getSwitchKey(void) const {return KeySwitching;}
