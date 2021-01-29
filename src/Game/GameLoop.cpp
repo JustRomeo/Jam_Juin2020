@@ -170,24 +170,31 @@ void GameLoop::MapGeneration(vector<string> _map) {
 
     Bar->load(window, "Generation   de   la   Map");
     for (size_t i = 0; i < _map.size(); i ++) {
-        Bar->load(window, "Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")", false);
-        for (size_t j = 0; j < _map[i].length(); j ++, row ++) {
-            switch(_map[i][j]) {
-                case '+': break;
-                case '#': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157))); break;
-                case ' ': break;
-                case 'o': break;
-                case '1': break;
-                case '2': break;
-                case '3': break;
-                case 'B': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE))); break;
-                case 'E': break;
-                case 'P': break;
-                case 'R': break;
-                case 'S': break;
-                case 'U': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE))); break;
-                case 'Y': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW))); break;
-                default:  throw (Exception("Unknown Symbol in File: Abort")); break;
+        if (_map[i].find("<i>") != string::npos) {
+            if (_map[i].find("pseudo") != string::npos)
+                _pseudo = System().strtowordarray(_map[i], "=")[1];
+            else if (_map[i].find("level") != string::npos)
+                perso->lvl = atoi(System().strtowordarray(_map[i], "=")[1].c_str());
+        } else {
+            for (size_t j = 0; j < _map[i].length(); j ++, row ++) {
+                Bar->load(window, "Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")", false);
+                switch(_map[i][j]) {
+                    case '+': break;
+                    case '#': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157))); break;
+                    case ' ': break;
+                    case 'o': break;
+                    case '1': break;
+                    case '2': break;
+                    case '3': break;
+                    case 'B': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::BLUE))); break;
+                    case 'E': break;
+                    case 'P': break;
+                    case 'R': break;
+                    case 'S': break;
+                    case 'U': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::PURPLE))); break;
+                    case 'Y': mapSFML.push_back(make_shared<Block>(Block(j * 157, i * 157, 157, Block::Type::YELLOW))); break;
+                    default:  throw (Exception(string("Unknown Symbol in File: (") + _map[i][j] + string(") Abort"))); break;
+                }
             }
         }
     }
