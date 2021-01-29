@@ -26,6 +26,7 @@ class MainMenu {
         MainMenu();
         ~MainMenu();
 
+        string getPseudo(void) const;
         void remoteChoice(shared_ptr<sf::RenderWindow> window);
         bool Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game);
         void changeCustomPlayer(shared_ptr<sf::Texture> new_texture, GameLoop &game);

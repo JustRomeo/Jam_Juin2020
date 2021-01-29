@@ -83,12 +83,12 @@ void MainMenu::remoteChoice(shared_ptr<sf::RenderWindow> window) {
         window->draw(cursor->getSprite());
 }
 
-void drawButtons(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Button>> buttons) {
+static void drawButtons(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<Button>> buttons) {
     for (size_t i = 0; i < buttons.size(); i ++)
         buttons[i]->drawButton(window);
 }
 
-void drawImages(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<ImageSFML>> images) {
+static void drawImages(shared_ptr<sf::RenderWindow> window, vector<shared_ptr<ImageSFML>> images) {
     for (size_t i = 0; i < images.size(); i ++)
         window->draw(images[i]->getSprite());
 }
@@ -146,7 +146,6 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
             change->update(event);
             EventHandler().inputEvent(event, _mypseudo);
             pseudotxt->setString(_mypseudo);
-            cout << "Pseudo: " << _mypseudo << endl;
 
             if (sf::Mouse::getPosition().x != last.x || sf::Mouse::getPosition().y != last.y)
                 isRemoteUsed = false;
@@ -161,3 +160,5 @@ bool MainMenu::Menu(shared_ptr<sf::RenderWindow> window, GameLoop &game) {
     }
     return false;
 }
+
+string MainMenu::getPseudo(void) const {return _mypseudo;}

@@ -83,6 +83,7 @@ class GameLoop {
         shared_ptr<Character> perso2;
         shared_ptr<Sprite> background;
         ProjectileFactory projFactory;
+        shared_ptr<TextSfml> pseudotxt;
         shared_ptr<EchapMenu> echapMenu;
         shared_ptr<GameMusic> gameMusic;
         vector<shared_ptr<Block>> mapSFML;

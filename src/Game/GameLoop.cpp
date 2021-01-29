@@ -34,7 +34,7 @@ GameLoop::GameLoop() {
         background = make_shared<Sprite>("resources/Images/Game/space.png");
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
         window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
-        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+        pseudotxt = make_shared<TextSfml>(_pseudo, "resources/character/arial.ttf", sf::Color::White, 0, 0);
 
         _players = 1;
         _remote = Controler::KeyBoard;
@@ -42,6 +42,7 @@ GameLoop::GameLoop() {
 
         window->setView(*view);
         window->setFramerateLimit(60);
+        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
     } catch (bad_alloc &e) {
         throw Exception("Can't initiate window and view\n");
     }
@@ -74,13 +75,15 @@ int GameLoop::menu() {
     int res = -1;
     size_t value;
     vector<string> map;
+    shared_ptr<MainMenu> _menu = make_shared<MainMenu>();
 
     window->setMouseCursorVisible(true);
     gameMusic->playMainMusic();
     try {
         while (res == -1) {
-            if (!MainMenu().Menu(window, *this))
+            if (!_menu->Menu(window, *this))
                 return QUIT;
+            _pseudo = _menu->getPseudo();
             Bar = make_shared<LoadingBar>(1500, 25, 22);
             value = MapMenu().choice(*this);
             Bar->load(window, "Je fais un test");
@@ -386,7 +389,13 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
 }
 
 void GameLoop::display() {
+    sf::Vector2f p_pos = perso->getSprite().getPosition();
+
+    p_pos.y -= 65;
+    pseudotxt->setPosition(p_pos);
+    pseudotxt->setString(_pseudo);
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
+
     window->draw(font->getSprite());
     for (size_t i = 0; i < PlusList.size(); i ++)
         PlusList[i]->display(window);
@@ -405,15 +414,18 @@ void GameLoop::display() {
         projectile[i]->display(window);
     for (size_t i = 0; i < Itemslist.size(); i ++)
         window->draw(Itemslist[i]->getImage()->getSprite());
+    window->draw(pseudotxt->getData());
     window->display();
 }
 
 int GameLoop::gameLoop() {
+    if (_pseudo == "")
+        _pseudo = "Player 1";
     if (!Cinematique().Intro(window, perso))
         return QUIT;
+
     gameMusic->stopMainMusic();
     window->setFramerateLimit(40);
-    view->setCenter(perso->getSprite().getPosition());
     window->setView(*view);
     font->setScale(sf::Vector2f(3, 3.5));
     window->setMouseCursorVisible(false);
