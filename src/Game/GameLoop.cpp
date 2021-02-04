@@ -206,6 +206,8 @@ void GameLoop::earnXp(shared_ptr<Character> &perso, size_t var) {
     while (perso->exp >= perso->lvl) {
         perso->exp -= perso->lvl;
         perso->lvl ++;
+        if (perso->lvl % 2 == 0)
+            perso->_comptree->setPoints(perso->_comptree->getPoints() + 1);
         perso->_comptree->upgradebyLevel(perso->lvl);
     }
 }
@@ -280,6 +282,8 @@ int GameLoop::movementEvent(sf::Event event) {
             return (3);
         } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+            perso->_comptree->ChooseMenu(window, view);
         if (inputctrl->isRight(event)) {
             perso->moveRigth(window, mapSFML);
             return (3);
@@ -398,6 +402,7 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
 void GameLoop::display() {
     sf::Vector2f p_pos = perso->getSprite().getPosition();
 
+    //Pseudo Max Len 40
     p_pos.y -= 65;
     pseudotxt->setPosition(p_pos);
     pseudotxt->setString(_pseudo);

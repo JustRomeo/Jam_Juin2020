@@ -7,6 +7,7 @@
 
 #include "Character.hpp"
 
+static bool isDoubleJump = false;
 Character::Character(shared_ptr<sf::Texture> theone) {
     jump_sound = make_unique<MusicSFML>();
     coli_sound = make_unique<MusicSFML>();
@@ -191,6 +192,7 @@ void Character::jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared
         move.y += 1;
         if (move.y > 0) {
             is_jumping = false;
+            isDoubleJump = false;
             sprite.setTextureRect(sf::IntRect(215, 77, 25, 31));
             is_falling = true;
         } else if (not_colision(mapSFML) == 1) {
@@ -201,6 +203,7 @@ void Character::jumpAnimation(shared_ptr<sf::RenderWindow> window, vector<shared
             sprite.setTextureRect(sf::IntRect(215, 77, 25, 36));
             view.setCenter(sprite.getPosition());
             is_jumping = false;
+            isDoubleJump = false;
             is_falling = true;
         }
         window->setView(view);
@@ -410,6 +413,11 @@ void Character::hook(shared_ptr<sf::RenderWindow> window) {
 void Character::jump() {
     if (!is_jumping && !is_falling) {
         is_jumping = true;
+        jump_sound->start();
+        sprite.setTextureRect(sf::IntRect(65, 79, 21, 31));
+        move = sf::Vector2f(0, -20);
+    } else if (_comptree->getDoubleJump() && !is_falling && is_jumping && !isDoubleJump && move.y > -7) {
+        isDoubleJump = true;
         jump_sound->start();
         sprite.setTextureRect(sf::IntRect(65, 79, 21, 31));
         move = sf::Vector2f(0, -20);

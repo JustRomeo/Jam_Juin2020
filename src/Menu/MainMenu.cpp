@@ -33,7 +33,7 @@ MainMenu::MainMenu() {
         local = make_shared<Button>(sf::Vector2f(800, 350), sf::Vector2f(250, 100));
         multi = make_shared<Button>(sf::Vector2f(800, 500), sf::Vector2f(250, 100));
         manette_cursor = make_shared<ImageSFML>("resources/Buttons/manette_cursor.jpg");
-        pseudotxt = make_shared<TextSfml>("", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 775, 75);
+        pseudotxt = make_shared<TextSfml>("", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 783, 75);
 
         texture_1->loadFromFile("./resources/character/adventurer-v1.5-Sheet.png");
         texture_2->loadFromFile("./resources/character/adventurer-v1.5-Sheet_1.png");
