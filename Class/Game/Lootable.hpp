@@ -11,7 +11,7 @@ using namespace std;
 class Lootable {
     public:
         enum TYPE {Undefined, Object, Potion};
-        Lootable(TYPE type, string name, size_t x, size_t y);
+        Lootable(TYPE type, string name, size_t x, size_t y, string path = "resources/Images/Game/Object/bonus.png");
         ~Lootable();
 
         void setFilepath(string);

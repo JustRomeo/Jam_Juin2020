@@ -614,8 +614,7 @@ int Character::checkFall(vector<shared_ptr<Block>> mapSFML) {
     } else {
         charact.x -= (sprite.getTextureRect().width * 3) / 2;
         charact_mx.x -= (sprite.getTextureRect().width * 3);
-    }
-    for (size_t i = 0; i < mapSFML.size(); i ++) {
+    } for (size_t i = 0; i < mapSFML.size(); i ++) {
         g = mapSFML[i]->getSprite().getGlobalBounds();
         if (g.contains(charact) || g.contains(charact_xm) || g.contains(charact_mx))
             return 0;

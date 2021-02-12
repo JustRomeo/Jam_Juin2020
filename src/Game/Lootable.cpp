@@ -1,11 +1,14 @@
 #include "Lootable.hpp"
 #include "Exception.hpp"
 
-Lootable::Lootable(TYPE type, string name, size_t x, size_t y) {
+Lootable::Lootable(TYPE type, string name, size_t x, size_t y, string path) {
     _type = type;
     _pos = sf::Vector2f(x, y);
     _objet = make_shared<Objet>(name, 0);
-    _image = make_shared<ImageSFML>("resources/Images/Game/Object/Chestplate.png");
+    if (path == "")
+        _image = make_shared<ImageSFML>("resources/Images/Game/Object/bonus.png");
+    else
+        _image = make_shared<ImageSFML>(path);
 
     _image->setPosition(sf::Vector2f(x + 60, y + 60));
     _image->setScale(sf::Vector2f(0.1, 0.1));

@@ -72,6 +72,7 @@ SRC =	$(SRCP)main.cpp					\
 OBJ =	$(SRC:.cpp=.o)
 
 CC =	g++ -o
+CC3 =	g++ -g3 -o
 
 CRIT =	--coverage -lcriterion
 WALL =	-Wall -Wextra -Werror
@@ -103,7 +104,7 @@ RM =	rm -rvf
 all:	$(NAME)
 
 $(NAME):	$(OBJ)
-			$(CC) $(NAME) $(OBJ) $(CPPFLAGS) $(WALL) -g3
+			$(CC) $(NAME) $(OBJ) $(CPPFLAGS) $(WALL)
 
 
 tests_run:		$(OBJT)
@@ -120,7 +121,7 @@ clean_test:		$(SRCT)
 				$(RM) $(CRITERION)
 
 valgrind:	$(OBJ)
-			$(CCO) $(NAME) -g3 $(OBJ) $(CPPFLAGS) $(WALL)
+			$(CC3) $(NAME) $(OBJ) $(CPPFLAGS) $(WALL)
 			$(RM) $(OBJ)
 			valgrind ./$(NAME)
 

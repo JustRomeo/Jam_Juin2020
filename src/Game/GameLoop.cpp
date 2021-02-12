@@ -135,15 +135,45 @@ void GameLoop::ItemsGeneration(vector<string> map) {
     vector<string> items = System().openfile("./maps/.item1");
 
     Bar->load(window, "Generation   des   Items");
-    for (size_t i = 0; i < map.size(); i ++)
-        for (size_t j = 0; j < map[i].length(); j ++)
+    for (size_t i = 0; i < map.size(); i ++) {
+        for (size_t j = 0; j < map[i].length(); j ++) {
             if (map[i][j] == '+') {
-                string name = System().strtowordarray(items[row], "|")[0];
+                int life = 0;
+                int speed = 0;
+                int max_life = 0;
+                string name = "";
+                string path = "";
+                Lootable::TYPE type = Lootable::TYPE::Undefined;
+                vector<string> tab = System().strtowordarray(items[row], "|");
 
+                for (size_t k = 0; k < tab.size(); k ++) {
+                    if (tab[k].find("name=") != string::npos)
+                        name = System().strtowordarray(tab[k], "=")[1];
+                    else if (tab[k].find("type=") != string::npos)
+                        type = atoi(System().strtowordarray(tab[k], "=")[1].c_str()) == 1 ? Lootable::TYPE::Object : Lootable::TYPE::Potion;
+                    else if (tab[k].find("path=") != string::npos)
+                        path = System().strtowordarray(tab[k], "=")[1];
+                    else if (tab[k].find("effect=") != string::npos) {
+                        vector<string> effects = System().strtowordarray(System().strtowordarray(tab[k], "=")[1], ";");
+
+                        for (size_t l = 0; l < effects.size(); l ++) {
+                            if (effects[l].find("speed:") != string::npos)
+                                speed += atoi(System().strtowordarray(effects[l], ":")[1].c_str());
+                            else if (effects[l].find("life:") != string::npos) {
+                                if (System().strtowordarray(effects[l], ":")[1].find("+") != string::npos)
+                                    max_life += atoi(System().strtowordarray(effects[l], ":")[1].replace(System().strtowordarray(effects[l], ":")[1].find("+"), sizeof("+"), "").c_str());
+                                else
+                                    life += atoi(System().strtowordarray(effects[l], ":")[1].c_str());
+                            }
+                        }
+                    }
+                }
                 Bar->load(window, "Generation   des   Items(" + to_string(row) + ")", false);
-                Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157)));
+                Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157, path)));
                 row += 1;
             }
+        }
+    }
 }
 
 void GameLoop::PlusGeneration(vector<string> map) {
