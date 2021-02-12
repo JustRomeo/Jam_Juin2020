@@ -30,6 +30,11 @@ void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int
     if (!font->loadFromFile("./resources/character/arial.ttf"))
         throw(Exception("can't load police.ttf"));
 
+    for (size_t i = heart.size(); i < life; i ++) {
+        heart.push_back(std::make_shared<ImageSFML>("resources/Images/Hud/heart.png"));
+        heart[i]->setScale(sf::Vector2f(0.25, 0.25));
+    }
+
     text2->setFont(*font);
     text2->setString("Next:");
     text2->setCharacterSize(30);
@@ -64,9 +69,9 @@ void HUD::display(std::shared_ptr<sf::RenderWindow> window, int weapon_type, int
         battery[0]->display(window, {window->getView().getCenter().x - 600, window->getView().getCenter().y + 450});
     sf::Vector2f viewpos = window->getView().getCenter();
     for (size_t i = 0; i < life; i ++) {
-        heart[i]->setPosition(sf::Vector2f(viewpos.x - x + 100, viewpos.y + 310));
+        heart[i]->setPosition(sf::Vector2f(viewpos.x - x, viewpos.y + 310));
         window->draw(heart[i]->getSprite());
-        x += 50;
+        x -= 50;
     }
 }
 

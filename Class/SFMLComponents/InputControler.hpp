@@ -35,9 +35,6 @@ class InputControler {
 
     private:
         int KeyJump;
-        int KeyLeft;
-        int KeyRight;
-        int KeyShoot;
         bool _remote;
         int KeySprint;
         int KeySwitching;

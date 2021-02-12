@@ -140,7 +140,6 @@ void GameLoop::ItemsGeneration(vector<string> map) {
             if (map[i][j] == '+') {
                 int life = 0;
                 int speed = 0;
-                int max_life = 0;
                 string name = "";
                 string path = "";
                 Lootable::TYPE type = Lootable::TYPE::Undefined;
@@ -161,15 +160,16 @@ void GameLoop::ItemsGeneration(vector<string> map) {
                                 speed += atoi(System().strtowordarray(effects[l], ":")[1].c_str());
                             else if (effects[l].find("life:") != string::npos) {
                                 if (System().strtowordarray(effects[l], ":")[1].find("+") != string::npos)
-                                    max_life += atoi(System().strtowordarray(effects[l], ":")[1].replace(System().strtowordarray(effects[l], ":")[1].find("+"), sizeof("+"), "").c_str());
-                                else
-                                    life += atoi(System().strtowordarray(effects[l], ":")[1].c_str());
+                                    life += atoi(System().strtowordarray(effects[l], ":")[1].replace(System().strtowordarray(effects[l], ":")[1].find("+"), sizeof(""), "").c_str());
                             }
                         }
                     }
                 }
                 Bar->load(window, "Generation   des   Items(" + to_string(row) + ")", false);
-                Itemslist.push_back(make_shared<Lootable>(Lootable(Lootable::TYPE::Object, name, j * 157, i * 157, path)));
+                shared_ptr<Lootable> item = make_shared<Lootable>(Lootable::TYPE::Object, name, j * 157, i * 157, path);
+                item->setLife(life);
+                item->setSpeed(speed);
+                Itemslist.push_back(make_shared<Lootable>(item));
                 row += 1;
             }
         }
@@ -475,10 +475,8 @@ int GameLoop::gameLoop() {
         for (size_t i = 0; i < Itemslist.size(); i ++)
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
                 perso->addValue(Itemslist[i]->getObject());
+                perso->_lifes += Itemslist[i]->getLife();
                 Itemslist.erase(Itemslist.begin() + i);
-
-                for (size_t i = 0; i < perso->getItems().size(); i ++)
-                    cout << perso->getItems()[i]->getName() << endl;
             }
         this->door->doorOpen(perso->getSprite());
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
