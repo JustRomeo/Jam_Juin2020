@@ -31,6 +31,7 @@ GameLoop::GameLoop() {
         echapMenu = make_shared<EchapMenu>();
         inputctrl = make_shared<InputControler>();
         view = make_shared<sf::View>(sf::FloatRect(0, 0, 1920, 1080));
+        shield = make_shared<ImageSFML>("resources/character/shield.png");
         background = make_shared<Sprite>("resources/Images/Game/space.png");
         font = make_shared<ImageSFML>("resources/Images/Game/sprite_font.png");
         window = make_shared<sf::RenderWindow>(sf::VideoMode(1920, 1080), "SoundWaves");
@@ -205,7 +206,10 @@ void GameLoop::MapGeneration(vector<string> _map) {
                 _pseudo = System().strtowordarray(_map[i], "=")[1];
             else if (_map[i].find("level") != string::npos)
                 perso->lvl = atoi(System().strtowordarray(_map[i], "=")[1].c_str());
+            else if (_map[i].find("life") != string::npos)
+                perso->_lifes = atoi(System().strtowordarray(_map[i], "=")[1].c_str());
         } else {
+            asciimap.push_back(_map[i]);
             for (size_t j = 0; j < _map[i].length(); j ++, row ++) {
                 Bar->load(window, "Generation   de   la   Map(" + to_string(row) + "/" + to_string(_map.size() * _map[i].length()) + ")", false);
                 switch(_map[i][j]) {
@@ -255,6 +259,8 @@ void GameLoop::checkDeathEnemy(vector<shared_ptr<Ennemi>> &Ennemilist) {
                 gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
                 earnXp(perso, 1);
+                if (perso->_comptree->getKillShield())
+                    perso->invulnerability = 120;
             } if (res == 1)
                 Ennemilist.erase(Ennemilist.begin() + j);
         }
@@ -283,6 +289,8 @@ void GameLoop::checkDeathRunner(vector<shared_ptr<Runner>> &Runnerlist) {
                 gameMusic->startDeathMusic();
                 projectile.erase(projectile.begin() + i);
                 earnXp(perso, 3);
+                if (perso->_comptree->getKillShield())
+                    perso->invulnerability = 120;
             } if (res == 1)
                 Runnerlist.erase(Runnerlist.begin() + j);
         }
@@ -406,15 +414,18 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
     } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         echapMenu->setControler(*inputctrl);
         window->setMouseCursorVisible(true);
-        if (echapMenu->Menu(window) == 0) {
+        for (size_t i = 0; i < asciimap.size(); i ++)
+            if (asciimap[i].find("P") != string::npos)
+                asciimap[i].replace(asciimap[i].find("P"), 1, " ");
+        asciimap[perso->getSprite().getPosition().y / 157][perso->getSprite().getPosition().x / 157] = 'P';
+        if (echapMenu->Menu(window, perso, _pseudo, asciimap) == 0) {
             gameMusic->setLvl(echapMenu->getSoundLvl());
             return 1;
-        } if (echapMenu->Menu(window) == 1) {
+        } if (echapMenu->Menu(window, perso, _pseudo, asciimap) == 1) {
             return replay;
-        } if (echapMenu->Menu(window) == -1) {
-            // System().createFile("Path", _map);
+        } if (echapMenu->Menu(window, perso, _pseudo, asciimap) == -1) {
             return Quit;
-        } switch (echapMenu->Menu(window)) {
+        } switch (echapMenu->Menu(window, perso, _pseudo, asciimap)) {
             case -1: return Quit;
             case 0:  break;
             case 1:  return replay;
@@ -431,9 +442,15 @@ int GameLoop::getEvent(vector<shared_ptr<Block>> mapSFML) {
 
 void GameLoop::display() {
     sf::Vector2f p_pos = perso->getSprite().getPosition();
+    sf::Vector2f s_pos = perso->getSprite().getPosition();
 
     //Pseudo Max Len 40
+    shield->setScale(sf::Vector2f(0.3, 0.3));
+
     p_pos.y -= 65;
+    s_pos.y -= 65;
+    s_pos.x -= 65;
+    shield->setPosition(s_pos);
     pseudotxt->setPosition(p_pos);
     pseudotxt->setString(_pseudo);
     font->setPosition(sf::Vector2f(window->getView().getCenter().x - 960, window->getView().getCenter().y - 550));
@@ -456,6 +473,8 @@ void GameLoop::display() {
         projectile[i]->display(window);
     for (size_t i = 0; i < Itemslist.size(); i ++)
         window->draw(Itemslist[i]->getImage()->getSprite());
+    if (perso->invulnerability > 0)
+        window->draw(shield->getSprite());
     window->draw(pseudotxt->getData());
     window->display();
 }
@@ -476,6 +495,7 @@ int GameLoop::gameLoop() {
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
                 perso->addValue(Itemslist[i]->getObject());
                 perso->_lifes += Itemslist[i]->getLife();
+                asciimap[Itemslist[i]->getPosition().y / 157][Itemslist[i]->getPosition().x / 157] = ' ';
                 Itemslist.erase(Itemslist.begin() + i);
             }
         this->door->doorOpen(perso->getSprite());

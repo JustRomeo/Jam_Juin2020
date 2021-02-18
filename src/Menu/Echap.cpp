@@ -193,8 +193,22 @@ void EchapMenu::dispEchapMenu(shared_ptr<sf::RenderWindow> window) {
     window->display();
 }
 
+void EchapMenu::saveGame(shared_ptr<Character> player, string pseudo, vector<string> _map) {
+    vector<string> save;
+
+    save.push_back("<i>pseudo=" + pseudo);
+    save.push_back("<i>level=" + to_string(player->lvl));
+    save.push_back("<i>life=" + to_string(player->_lifes));
+    for (size_t i = 0; i < _map.size(); i ++)
+        save.push_back(_map[i]);
+    string path = "maps/.map_" + pseudo;
+    if (path.find(" ") != string::npos)
+        path = path.replace(path.find(" "), 1, "_");
+    System().createFile(path, save);
+}
+
 enum CHOICE {QUIT = -1, PLAY = 0, REPLAY = 1, BACK = 2};
-int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window) {
+int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window, shared_ptr<Character> player, string pseudo, vector<string> _map) {
     sf::Event event;
     sf::Joystick joys;
     bool connected = sf::Joystick::isConnected(0);
@@ -222,6 +236,7 @@ int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window) {
             updateSong(event);
             updateControler(event);
             if (quit->isClicked(event)) {
+                saveGame(player, pseudo, _map);
                 // System().createFile("save", _map);
                 return QUIT;
             } else if (play->isClicked(event))

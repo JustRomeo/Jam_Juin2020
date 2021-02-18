@@ -16,7 +16,7 @@ class CompetenceTree {
 
         size_t getPoints(void);
         void setPoints(size_t);
-        bool getGrapin(void) const;
+        bool getKillShield(void) const;
         void upgradebyLevel(size_t);
         bool getDoubleJump(void) const;
         sf::Vector2f getSpeed(void) const;
@@ -31,7 +31,7 @@ class CompetenceTree {
     private:
         size_t pts;
         bool _db_jump;
-        bool _grappin;
+        bool _killshiel;
 
     protected:
 };

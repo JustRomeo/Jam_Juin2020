@@ -4,7 +4,7 @@ CompetenceTree::CompetenceTree() {
     pts = 0;
     _spdshot = 0.06;
     _db_jump = false;
-    _grappin = false;
+    _killshiel = false;
     _spdreload = 0.2;
     _speed = sf::Vector2f(0, 0);
     _lifeproj = sf::Vector2f(0, 0);
@@ -34,9 +34,9 @@ void CompetenceTree::ChooseMenu(shared_ptr<sf::RenderWindow> window, shared_ptr<
     string bpath = "resources/Images/Hud/blue_heart.png";
 
     shared_ptr<ImageSFML> comp_1 = make_shared<ImageSFML>(_db_jump ? bpath : rpath);
-    shared_ptr<ImageSFML> comp_2 = make_shared<ImageSFML>(_grappin ? bpath : rpath);
+    shared_ptr<ImageSFML> comp_2 = make_shared<ImageSFML>(_killshiel ? bpath : rpath);
     shared_ptr<TextSfml> comp_1_txt = make_shared<TextSfml>("Double Saut", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 1750 / 4, 800);
-    shared_ptr<TextSfml> comp_2_txt = make_shared<TextSfml>("Grapin", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 1750 / 4 * 3, 800);
+    shared_ptr<TextSfml> comp_2_txt = make_shared<TextSfml>("Kill Chield", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::Black, 1750 / 4 * 3, 800);
     shared_ptr<ImageSFML> background = make_shared<ImageSFML>("resources/Images/Menu/background_competence_tree.jpg");
 
     view->setCenter(sf::Vector2f(990, 540));
@@ -56,7 +56,7 @@ void CompetenceTree::ChooseMenu(shared_ptr<sf::RenderWindow> window, shared_ptr<
             if (comp_1->isClickedinView(event, *view) && pts > 0)
                 competenceChoice(comp_1, pts, _db_jump);
             else if (comp_2->isClickedinView(event, *view) && pts > 0)
-                competenceChoice(comp_2, pts, _grappin);
+                competenceChoice(comp_2, pts, _killshiel);
         }
         window->clear();
         window->draw(background->getSprite());
@@ -71,5 +71,5 @@ void CompetenceTree::ChooseMenu(shared_ptr<sf::RenderWindow> window, shared_ptr<
 
 size_t CompetenceTree::getPoints(void) {return pts;}
 void CompetenceTree::setPoints(size_t news) {pts = news;}
-bool CompetenceTree::getGrapin(void) const {return _grappin;}
 bool CompetenceTree::getDoubleJump(void) const {return _db_jump;}
+bool CompetenceTree::getKillShield(void) const {return _killshiel;}

@@ -77,9 +77,11 @@ class GameLoop {
         Controler _remote;
 
         shared_ptr<Door> door;
+        vector<string> asciimap;
         shared_ptr<sf::View> view;
         shared_ptr<ImageSFML> font;
         shared_ptr<Character> perso;
+        shared_ptr<ImageSFML> shield;
         shared_ptr<Character> perso2;
         shared_ptr<Sprite> background;
         ProjectileFactory projFactory;

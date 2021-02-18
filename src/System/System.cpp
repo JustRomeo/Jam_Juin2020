@@ -82,7 +82,8 @@ int System::setPath(string filepath) {
 }
 
 void System::createFile(string name, vector<string> file) {
-    ofstream outfile(Paths().getPath() + name);
+    // cout << Paths().getPath() + "/" + name << " successfull created !" << endl;
+    ofstream outfile(Paths().getPath() + "/" + name);
 
     for (size_t i = 0; i < file.size(); i ++)
         outfile << file[i] << endl;

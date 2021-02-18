@@ -11,6 +11,7 @@
 #include "Button.hpp"
 #include "TextSFML.hpp"
 #include "ImageSFML.hpp"
+#include "Character.hpp"
 #include "LibGraphics.hpp"
 #include "InputControler.hpp"
 
@@ -24,10 +25,11 @@ class EchapMenu {
         void updateSong(sf::Event);
         size_t getSoundLvl(void) const;
         void updateControler(sf::Event);
+        void setControler(InputControler);
         InputControler getInput(void) const;
-        int Menu(shared_ptr<sf::RenderWindow>);
-        void setControler(InputControler newone);
         void dispEchapMenu(shared_ptr<sf::RenderWindow>);
+        void saveGame(shared_ptr<Character>, string, vector<string>);
+        int Menu(shared_ptr<sf::RenderWindow>, shared_ptr<Character>, string, vector<string>);
 
     private:
         size_t soundlvl;
