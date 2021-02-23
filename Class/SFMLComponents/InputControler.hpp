@@ -21,8 +21,10 @@ class InputControler {
         ~InputControler();
 
         void setJumpKey(int);
+        void setTreeKey(int);
         void setSprintKey(int);
         void setSwitchKey(int);
+        int getTreeKey(void) const;
         int getJumpKey(void) const;
         int getSprintKey(void) const;
         int getSwitchKey(void) const;
@@ -30,11 +32,13 @@ class InputControler {
         bool isRight(sf::Event) const;
         bool isJumping(sf::Event) const;
         bool isShooting(sf::Event) const;
+        bool isTreeMenu(sf::Event) const;
         bool isSwitching(sf::Event) const;
         bool isSprinting(sf::Event) const;
 
     private:
         int KeyJump;
+        int KeyTree;
         bool _remote;
         int KeySprint;
         int KeySwitching;

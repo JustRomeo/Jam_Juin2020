@@ -16,6 +16,10 @@ size_t MapMenu::choice(GameLoop game) {
         background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
 
         Paths().fillPathList(maps, "maps/");
+        // cout << "After Fill" << endl;
+        // for (size_t i = 0; i < maps.size(); i ++)
+        //     cout << maps[i] << endl;
+        // exit(0);
         maps = getOnlyMaps(maps);
         loadImages(maps);
         loadTexts(maps);

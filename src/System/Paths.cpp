@@ -6,6 +6,7 @@
 Paths::Paths() {}
 Paths::~Paths() {}
 
+#include <bits/stdc++.h>
 void Paths::fillPathList(vector<string> &list, string filepath) {
     string str;
     DIR *Folder;
@@ -29,6 +30,7 @@ void Paths::fillPathList(vector<string> &list, string filepath) {
     }
     chdir("..");
     str.clear();
+    sort(list.begin(), list.end()); 
 }
 
 string Paths::getPath(void) {

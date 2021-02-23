@@ -1,12 +1,13 @@
-E: Ennemis
-#: Murs Incassables
-Y: Yellow Block
-B: Blue Block
-1: Yellow Ammo
-2: 
-3: Purple Ammo
-o: End Door
-U: Purple Block
 +: Items
+#: Murs Incassables
+1: Yellow Ammo
+2: Blue Ammo
+3: Purple Ammo
+B: Blue Block
+E: Ennemis
+o: End Door
 P: Player
+R: Runner Ennemi
 S: Second Player (local multiplayer)
+U: Purple Block
+Y: Yellow Block

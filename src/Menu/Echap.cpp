@@ -31,6 +31,7 @@ EchapMenu::EchapMenu() {
     jumpText = make_shared<TextSfml>("jump key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 350);
     switchText = make_shared<TextSfml>("switch key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 400);
     sprintText = make_shared<TextSfml>("sprint key:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 450);
+    TreeText = make_shared<TextSfml>("Tree Menu:", "resources/Buttons/text/Aileron-BlackItalic.otf", sf::Color::White, 1250, 500);
     controler = make_shared<ImageSFML>(controler_on == GameLoop::Controler::KeyBoard ? "resources/Images/Menu/Control.png" : "resources/Images/Menu/mannette.png");
     if (soundlvl != 0)
         sound = make_shared<ImageSFML>("resources/Images/Menu/sound.png");
@@ -52,7 +53,7 @@ EchapMenu::EchapMenu() {
     rectbase->setSize(sf::Vector2f(200, 20));
     rectcolo->setSize(sf::Vector2f(198, 18));
     rectload->setSize(sf::Vector2f(100, 20));
-    
+
     sound->setPosition(sf::Vector2f(750, 50));
     rectbase->setPosition(sf::Vector2f(845, 75));
     rectcolo->setPosition(sf::Vector2f(846, 76));
@@ -103,47 +104,54 @@ static string formatChar(string str, char c) {
     return str;
 }
 
-static bool c_keys[3] = {false, false, false};
+static bool c_keys[4] = {false, false, false, false};
 void EchapMenu::updateControler(sf::Event event) {
     sf::Vector2i _mouse = sf::Mouse::getPosition();
     GameLoop::Controler controler_on = GameLoop::Controler::KeyBoard;
     string string1 = formatChar(string("Jump key: "), c_keys[0] ? '?' : _controler->getJumpKey());
     string string2 = formatChar(string("Switch key: "), c_keys[1] ? '?' : _controler->getSwitchKey());
     string string3 = formatChar(string("Sprint key: "), c_keys[2] ? '?' : _controler->getSprintKey());
+    string string4 = formatChar(string("Tree Menu: "), c_keys[3] ? '?' : _controler->getTreeKey());
 
     _mouse.y -= 55;
     jumpText->setString(string1);
     switchText->setString(string2);
     sprintText->setString(string3);
+    TreeText->setString(string4);
 
     if (event.type == sf::Event::MouseButtonPressed && _mouse.x > 1250 && _mouse.x < 1600 && _mouse.y > 350 && _mouse.y < 400) {
-        cout << "First Key Pressed" << endl;
         c_keys[0] = true;
         c_keys[1] = false;
         c_keys[2] = false;
+        c_keys[3] = false;
     } else if (event.type == sf::Event::MouseButtonPressed && _mouse.x > 1250 && _mouse.x < 1600 && _mouse.y > 400 && _mouse.y < 450) {
-        cout << "Second Key Pressed" << endl;
         c_keys[0] = false;
         c_keys[1] = true;
         c_keys[2] = false;
+        c_keys[3] = false;
     } else if (event.type == sf::Event::MouseButtonPressed && _mouse.x > 1250 && _mouse.x < 1600 && _mouse.y > 450 && _mouse.y < 500) {
-        cout << "Third Key Pressed" << endl;
         c_keys[0] = false;
         c_keys[1] = false;
         c_keys[2] = true;
+        c_keys[3] = false;
+    } else if (event.type == sf::Event::MouseButtonPressed && _mouse.x > 1250 && _mouse.x < 1600 && _mouse.y > 500 && _mouse.y < 550) {
+        c_keys[0] = false;
+        c_keys[1] = false;
+        c_keys[2] = false;
+        c_keys[3] = true;
     }
 
     if (event.type == sf::Event::KeyPressed) {
-        cout << "New Key:" << event.key.code << endl;
         if (c_keys[0])
             _controler->setJumpKey(event.key.code + 97);
         else if (c_keys[1])
             _controler->setSwitchKey(event.key.code + 97);
         else if (c_keys[2])
             _controler->setSprintKey(event.key.code + 97);
-        c_keys[0] = false;
-        c_keys[1] = false;
-        c_keys[2] = false;
+        else if (c_keys[3])
+            _controler->setTreeKey(event.key.code + 97);
+        for (size_t i = 0; i < 4; i ++)
+            c_keys[i] = false;
     }
 
     if (larrow->isClicked(event) || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)) {
@@ -188,6 +196,7 @@ void EchapMenu::dispEchapMenu(shared_ptr<sf::RenderWindow> window) {
     window->draw(jumpText->getData());
     window->draw(switchText->getData());
     window->draw(sprintText->getData());
+    window->draw(TreeText->getData());
 
     window->draw(cursor->getSprite());
     window->display();
@@ -237,7 +246,6 @@ int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window, shared_ptr<Character> p
             updateControler(event);
             if (quit->isClicked(event)) {
                 saveGame(player, pseudo, _map);
-                // System().createFile("save", _map);
                 return QUIT;
             } else if (play->isClicked(event))
                 return PLAY;
@@ -249,6 +257,7 @@ int EchapMenu::Menu(shared_ptr<sf::RenderWindow> window, shared_ptr<Character> p
 }
 
 void EchapMenu::setControler(InputControler newone) {
+    _controler->setTreeKey(newone.getTreeKey());
     _controler->setJumpKey(newone.getJumpKey());
     _controler->setSprintKey(newone.getSprintKey());
     _controler->setSwitchKey(newone.getSwitchKey());

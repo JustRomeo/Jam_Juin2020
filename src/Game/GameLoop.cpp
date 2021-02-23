@@ -7,6 +7,7 @@
 
 #include "Door.hpp"
 #include "Death.hpp"
+#include "Paths.hpp"
 #include "System.hpp"
 #include "MapMenu.hpp"
 #include "GameLoop.hpp"
@@ -88,9 +89,11 @@ int GameLoop::menu() {
             Bar = make_shared<LoadingBar>(1500, 25, 22);
             value = MapMenu().choice(*this);
             Bar->load(window, "Je fais un test");
+            vector<string> names;
+            Paths().fillPathList(names, "maps/");
 
             if (value != RETURN) {
-                map = System().openfile("maps/.map" + to_string(value));
+                map = System().openfile("maps/" + MapMenu().getOnlyMaps(names)[value - 1]);
                 Bar->load(window);
                 reset_map();
                 Bar->load(window);
@@ -320,7 +323,7 @@ int GameLoop::movementEvent(sf::Event event) {
             return (3);
         } if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             return (3);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+        if (inputctrl->isTreeMenu(event))
             perso->_comptree->ChooseMenu(window, view);
         if (inputctrl->isRight(event)) {
             perso->moveRigth(window, mapSFML);

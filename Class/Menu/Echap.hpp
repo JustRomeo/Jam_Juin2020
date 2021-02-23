@@ -44,6 +44,7 @@ class EchapMenu {
         shared_ptr<TextSfml> jumpText;
         shared_ptr<TextSfml> switchText;
         shared_ptr<TextSfml> sprintText;
+        shared_ptr<TextSfml> TreeText;
         shared_ptr<ImageSFML> controler;
         shared_ptr<ImageSFML> rectImage;
         shared_ptr<ImageSFML> _background;

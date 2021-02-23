@@ -54,8 +54,12 @@ vector<string> System::openfile(string filepath) {
     vector<string> load;
 
     file.open(filepath);
-    if (!file.is_open())
-        throw (Exception("Can't open file to load"));
+    if (!file.is_open()) {
+        string str = "Can't open file (";
+        str += filepath;
+        str += ") to load";
+        throw (Exception(str));
+    }
     while (getline(file, line))
         load.push_back(line);
     file.close();

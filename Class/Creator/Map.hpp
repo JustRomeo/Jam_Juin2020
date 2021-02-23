@@ -35,6 +35,8 @@ class MapCreator {
         bool isPersoPlaced;
         vector<string> _map;
         shared_ptr<sf::View> view;
+        shared_ptr<ImageSFML> more;
+        shared_ptr<ImageSFML> less;
         shared_ptr<ImageSFML> save;
         shared_ptr<ImageSFML> leave;
         shared_ptr<ImageSFML> _back;

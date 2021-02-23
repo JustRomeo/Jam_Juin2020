@@ -10,10 +10,11 @@
 InputControler::InputControler() {
     _remote = false;
     remote = make_shared<ManetteSFML>();
-    
+
     KeyJump = ' ';
     KeySprint = 'r';
     KeySwitching = 'f';
+    KeyTree = 'y';
 
     _remote = remote->isConnected();
 }
@@ -65,8 +66,18 @@ bool InputControler::isRight(sf::Event event) const {
     return false;
 }
 
+bool InputControler::isTreeMenu(sf::Event event) const {
+    if (_remote && remote->getButtonsClicked() == ManetteSFML::Button::Rond)
+        return true;
+    if (event.key.code == KeyTree)
+        return true;
+    return false;
+}
+
 void InputControler::setJumpKey(int key) {KeyJump = key;}
 int InputControler::getJumpKey(void) const {return KeyJump;}
+void InputControler::setTreeKey(int key) {KeyTree = key;}
+int InputControler::getTreeKey(void) const {return KeyTree;}
 void InputControler::setSprintKey(int key) {KeySprint = key;}
 void InputControler::setSwitchKey(int key) {KeySwitching = key;}
 int InputControler::getSprintKey(void) const {return KeySprint;}
