@@ -1,3 +1,10 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Door Class
+*/
+
 #ifndef __DOOR__
 #define __DOOR__
 
@@ -13,28 +20,31 @@ class Door {
         Door(int X = 0, int Y = 0);
         ~Door();
 
-        void doorOpen(sf::Sprite persoSprite);
+        int getAnim();
         bool getOpen();
         void setOpening(bool);
-        int getAnim();
+        int getTimeDiff(float);
+        void setTexture(string);
+        bool isEnded(void) const;
+        void doorOpen(sf::Sprite);
         size_t getSize(void) const;
-        int getTimeDiff(float diff);
-        shared_ptr<sf::Texture> getTexture(void);
         sf::Vector2f getPosition(void);
-        void setTexture(string filepath);
+        void setPosition(sf::Vector2f);
         sf::Sprite getSprite(void) const;
-        void setPosition(sf::Vector2f pos);
-        void setPosition(vector<string> map);
+        void setPosition(vector<string>);
+        shared_ptr<sf::Texture> getTexture(void);
 
         bool alreadyopen;
+
     private:
+        bool _end;
         size_t _anim;
         size_t _size;
         bool _opening;
         sf::Vector2f pos;
-        shared_ptr<MusicSFML> openUp;
         sf::Sprite _sprite;
         sf::Clock move_clock;
+        shared_ptr<MusicSFML> openUp;
         shared_ptr<sf::Texture> _texture;
 };
 

@@ -1,8 +1,15 @@
+/*
+** Projet: SoundWaves
+** Devs: Alexandre & Roméo
+** File:
+** Door File
+*/
+
 #include "Door.hpp"
 
-Door::Door(int X, int Y)
-{
+Door::Door(int X, int Y) {
     _anim = 0;
+    _end = false;
     _opening = false;
     alreadyopen = false;
     move_clock.restart();
@@ -20,8 +27,7 @@ Door::Door(int X, int Y)
     _size = this->getSize();
 }
 
-Door::Door(vector<string> map)
-{
+Door::Door(vector<string> map) {
     _anim = 0;
     _opening = false;
     alreadyopen = false;
@@ -40,30 +46,23 @@ Door::Door(vector<string> map)
     _size = this->getSize();
 }
 
-Door::~Door()
-{
-}
+Door::~Door() {}
 
-void Door::setTexture(string filepath)
-{
+void Door::setTexture(string filepath) {
     if (!_texture->loadFromFile(filepath))
         throw (Exception("Loading Ressource Failed"));
     _sprite.setTexture(*_texture);
     _sprite.setTextureRect(sf::IntRect(0, 0, 260, 375));
 }
 
-void Door::setPosition(vector<string> map)
-{
+void Door::setPosition(vector<string> map) {
     for (size_t i = 0; i < map.size(); i ++)
         for (size_t j = 0; j < map[i].length(); j ++)
             if (map[i][j] == 'o')
                 this->setPosition(sf::Vector2f(j * 157, i * 157));
 }
 
-void Door::doorOpen(sf::Sprite persoSprite)
-{
-    if (!_opening)
-        return;
+void Door::doorOpen(sf::Sprite persoSprite) {
     if (_opening) {
         if (_anim == 0)
             openUp->start();
@@ -71,11 +70,11 @@ void Door::doorOpen(sf::Sprite persoSprite)
             _anim ++;
             _sprite.setTextureRect(sf::IntRect(_anim * 267, 0, 267, 375));
             _sprite.setScale(sf::Vector2f((float) 157 / 260, (float)157 / 375));
-        }
-    } else {
+        } else if (_anim >= 5)
+            _end = true;
+    } else
         if (persoSprite.getGlobalBounds().intersects(_sprite.getGlobalBounds()))
             setOpening(true);
-    }
 }
 
 int Door::getTimeDiff(float diff) {
@@ -86,9 +85,9 @@ int Door::getTimeDiff(float diff) {
     seconds = time.asMicroseconds() / 1000000.0;
     if (seconds > diff) {
         move_clock.restart();
-        return (1);
+        return 1;
     }
-    return (0);
+    return 0;
 }
 
 void Door::setPosition(sf::Vector2f pos) {
@@ -96,10 +95,11 @@ void Door::setPosition(sf::Vector2f pos) {
     _sprite.setPosition(this->pos);
 }
 
-bool Door::getOpen() { return _opening;}
 int Door::getAnim() {return _anim;}
+bool Door::getOpen() { return _opening;}
+bool Door::isEnded(void) const {return _end;}
 size_t Door::getSize(void) const {return _size;}
 void Door::setOpening(bool var) {_opening = var;}
 sf::Vector2f Door::getPosition(void) {return pos;}
-shared_ptr<sf::Texture> Door::getTexture(void) {return _texture;}
 sf::Sprite Door::getSprite(void) const {return (_sprite);}
+shared_ptr<sf::Texture> Door::getTexture(void) {return _texture;}

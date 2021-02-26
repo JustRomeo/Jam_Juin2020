@@ -12,14 +12,12 @@ size_t MapMenu::choice(GameLoop game) {
     shared_ptr<ImageSFML> background;
 
     try {
+        // TODO Tuto With specific map and background
+        Tuto = make_shared<ImageSFML>("./resources/Buttons/Tuto.png");
         cursor = make_shared<ImageSFML>("resources/Images/Game/cursor.png");
         background = make_shared<ImageSFML>("resources/Images/Game/wallpaper.jpg");
 
         Paths().fillPathList(maps, "maps/");
-        // cout << "After Fill" << endl;
-        // for (size_t i = 0; i < maps.size(); i ++)
-        //     cout << maps[i] << endl;
-        // exit(0);
         maps = getOnlyMaps(maps);
         loadImages(maps);
         loadTexts(maps);
@@ -30,6 +28,7 @@ size_t MapMenu::choice(GameLoop game) {
     } while (game.getWindow()->isOpen()) {
         cursor->setPosition(sf::Vector2f(sf::Mouse::getPosition().x - 75, sf::Mouse::getPosition().y - 110));
         game.getWindow()->draw(background->getSprite());
+        game.getWindow()->draw(Tuto->getSprite());
         for(size_t i = 0; i < maps.size(); i ++)
             button[i]->drawButton(game.getWindow());
         go_back_button->drawButton(game.getWindow());

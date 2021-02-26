@@ -23,6 +23,7 @@ class MapMenu {
         void loadImages(vector<string>);
 
     private:
+        shared_ptr<ImageSFML> Tuto;
         vector<shared_ptr<Button>> button;
         shared_ptr<Button> go_back_button;
 

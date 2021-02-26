@@ -494,14 +494,17 @@ int GameLoop::gameLoop() {
     font->setScale(sf::Vector2f(3, 3.5));
     window->setMouseCursorVisible(false);
     while (window->isOpen()) {
-        for (size_t i = 0; i < Itemslist.size(); i ++)
+        for (size_t i = 0; i < Itemslist.size(); i ++) {
             if (sf::IntRect(perso->getSprite().getGlobalBounds()).intersects(sf::IntRect(Itemslist[i]->getImage()->getSprite().getGlobalBounds()))) {
                 perso->addValue(Itemslist[i]->getObject());
                 perso->_lifes += Itemslist[i]->getLife();
                 asciimap[Itemslist[i]->getPosition().y / 157][Itemslist[i]->getPosition().x / 157] = ' ';
                 Itemslist.erase(Itemslist.begin() + i);
             }
-        this->door->doorOpen(perso->getSprite());
+        }
+        door->doorOpen(perso->getSprite());
+        if (door->isEnded())
+            cout << "Game Ended" << endl;
         perso->invulnerability = perso->invulnerability > 0 ? perso->invulnerability - 1 : perso->invulnerability;
         if (_players > 1)
             perso2->invulnerability = perso2->invulnerability > 0 ? perso2->invulnerability - 1 : perso2->invulnerability;
